@@ -206,9 +206,9 @@ def test_data_loader():
     Test function to verify the data loader works correctly.
     This function creates a data loader and tries to load all datasets.
     """
-    # Set the path to your data folder
-    # "../../data" means: go up two folders, then into 'data' folder
-    data_path = "../../data"
+    # Set the path to your data folder - CORRECTED PATH
+    # "../../../data" means: go up three folders, then into 'data' folder
+    data_path = "../../../data"
 
     # Create a new instance of our MentalHealthDataLoader class
     loader = MentalHealthDataLoader(data_path)
