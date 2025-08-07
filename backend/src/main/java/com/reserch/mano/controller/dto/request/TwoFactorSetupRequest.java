@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshTokenRequest {
+public class TwoFactorSetupRequest {
 
-    @NotBlank(message = "Refresh token is required")
-    private String refreshToken;
+    @NotBlank(message = "Secret is required")
+    private String secret;
+
+    @NotBlank(message = "Verification code is required")
+    private String verificationCode;
 }
