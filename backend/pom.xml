@@ -38,12 +38,30 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- Spring Boot OAuth2 Resource Server -->
+        <!-- Spring Boot Starter Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Spring Boot OAuth2 Client -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Web (if not already included) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Optional: For JWT handling (especially useful for Apple Sign In) -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
         <!-- Spring Boot Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
