@@ -38,4 +38,8 @@ public class Role {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
+    public enum RoleName {
+        ROLE_USER, ROLE_MODERATOR, ROLE_ADMIN, ROLE_RESEARCHER
+    }
+
 }
