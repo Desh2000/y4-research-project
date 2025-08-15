@@ -1,4 +1,3 @@
-
 """
 This module defines the GAN training loop, including loss functions, optimizers,
 and the training step for the Generator and Discriminator.
@@ -9,8 +8,10 @@ from tensorflow.keras import layers, Model
 # Import our previously defined GAN models
 from gan_model import Generator, Discriminator
 from data_loader import MentalHealthDataLoader  # Import our data loader
+from gan_monitor import GANMonitor  # Import the GANMonitor
 import numpy as np
 import pandas as pd
+import os # Import os for path manipulation
 
 # --- 1. Define Loss Functions ---
 # Loss functions tell our models how well they are performing.
@@ -20,7 +21,6 @@ import pandas as pd
 # This loss function is for the Discriminator when it tries to classify real images.
 # It should output 1 for real images.
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-
 
 def discriminator_loss(real_output, fake_output):
     """
@@ -34,7 +34,6 @@ def discriminator_loss(real_output, fake_output):
     # Total discriminator loss is the sum of these two.
     total_loss = real_loss + fake_loss
     return total_loss
-
 
 def generator_loss(fake_output):
     """
@@ -99,12 +98,14 @@ def train_step(real_data, generator, discriminator, latent_dim):
         zip(gradients_of_generator, generator.trainable_variables))
     discriminator_optimizer.apply_gradients(
         zip(gradients_of_discriminator, discriminator.trainable_variables))
+    
+    return gen_loss, disc_loss # Return losses for monitoring
 
 
 # --- 4. Main Training Loop ---
 # This function orchestrates the entire training process over multiple epochs.
 
-def train_gan(dataset, epochs, generator, discriminator, latent_dim, batch_size):
+def train_gan(dataset, epochs, generator, discriminator, latent_dim, batch_size, monitor):
     """
     Trains the GAN for a specified number of epochs.
 
@@ -115,20 +116,34 @@ def train_gan(dataset, epochs, generator, discriminator, latent_dim, batch_size)
         discriminator (tf.keras.Model): The Discriminator model.
         latent_dim (int): The dimension of the latent noise vector.
         batch_size (int): The number of samples per training batch.
+        monitor (GANMonitor): The monitor object to record and save training progress.
     """
     for epoch in range(epochs):
         print(f"\nEpoch {epoch + 1}/{epochs}")
+        epoch_gen_loss = 0.0
+        epoch_disc_loss = 0.0
+        num_batches = 0
         # Iterate over each batch of the dataset.
         for batch_num, data_batch in enumerate(dataset):
             # Perform one training step for the current batch.
-            train_step(data_batch, generator, discriminator, latent_dim)
-            if batch_num % 100 == 0:  # Print progress every 100 batches
-                print(f"  Batch {batch_num} completed.")
-
-        # Optional: You can add code here to save generated samples or model checkpoints
-        # after each epoch to monitor training progress.
-
+            gen_loss, disc_loss = train_step(data_batch, generator, discriminator, latent_dim)
+            epoch_gen_loss += gen_loss
+            epoch_disc_loss += disc_loss
+            num_batches += 1
+            if batch_num % 100 == 0: # Print progress every 100 batches
+                print(f"  Batch {batch_num} completed. Gen Loss: {gen_loss:.4f}, Disc Loss: {disc_loss:.4f}")
+        
+        # Calculate average losses for the epoch
+        avg_gen_loss = epoch_gen_loss / num_batches
+        avg_disc_loss = epoch_disc_loss / num_batches
+        monitor.record_losses(avg_gen_loss, avg_disc_loss)
+        print(f"Epoch {epoch + 1} completed. Avg Gen Loss: {avg_gen_loss:.4f}, Avg Disc Loss: {avg_disc_loss:.4f}")
+        
+        # Call the monitor's on_epoch_end method
+        monitor.on_epoch_end(epoch, generator, discriminator)
+        
     print("\nTraining complete!")
+    monitor.plot_losses() # Plot losses after training
 
 
 # --- Example Usage (for testing purposes) ---
@@ -175,10 +190,21 @@ if __name__ == "__main__":
         # Number of features in our processed data
         OUTPUT_DIM = processed_data.shape[1]
         EPOCHS = 50       # Number of training epochs
+        
+        # Define log directory for GANMonitor
+        # IMPORTANT FIX: Use a relative path from the project root for LOG_DIR
+        # This ensures the 'gan_logs' folder is created in the project root
+        # regardless of where the script is executed from.
+        current_script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(current_script_dir, "..", "..", ".."))
+        LOG_DIR = os.path.join(project_root, "gan_logs")
 
         # Initialize Generator and Discriminator
         generator = Generator(LATENT_DIM, OUTPUT_DIM)
         discriminator = Discriminator(OUTPUT_DIM)
+        
+        # Initialize GANMonitor
+        monitor = GANMonitor(LOG_DIR, LATENT_DIM, OUTPUT_DIM, sample_interval=5, checkpoint_interval=10)
 
         # Print model summaries to confirm their structure
         print("\n--- Generator Summary ---")
@@ -192,7 +218,7 @@ if __name__ == "__main__":
         # Start training the GAN
         print("\n--- Starting GAN Training ---")
         train_gan(train_dataset, EPOCHS, generator,
-                  discriminator, LATENT_DIM, BATCH_SIZE)
+                  discriminator, LATENT_DIM, BATCH_SIZE, monitor)
 
         # After training, you can generate some synthetic samples to see the results.
         print("\n--- Generating Synthetic Samples After Training ---")
@@ -204,9 +230,5 @@ if __name__ == "__main__":
         print("First 5 synthetic samples (normalized to [-1, 1]):")
         print(synthetic_samples.numpy()[:5])
 
-        # You would typically inverse-normalize these to their original scale
-        # for interpretation, but that requires storing min/max from preprocessing.
-
     else:
         print("Failed to load DASS dataset. Cannot proceed with GAN training example.")
-
