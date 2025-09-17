@@ -75,8 +75,11 @@ class Discriminator(Model):
             layers.Dropout(0.3),
             layers.Dense(256, activation='relu'),
             layers.Dropout(0.3),
-            # Sigmoid for binary classification (real/fake)
-            layers.Dense(1, activation='sigmoid')
+            # *** FIX APPLIED HERE ***
+            # Removed activation='sigmoid'. The model will now output raw logits.
+            # This is more numerically stable when used with a loss function
+            # that has `from_logits=True`.
+            layers.Dense(1)
         ])
 
     def call(self, inputs):
