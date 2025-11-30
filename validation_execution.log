@@ -1,0 +1,47 @@
+2025-11-30 22:32:07,916 - INFO - ================================================================================
+2025-11-30 22:32:07,917 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:32:07,917 - INFO - ================================================================================
+2025-11-30 22:32:07,921 - ERROR -    Expected location: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\src/config.py
+2025-11-30 22:32:07,921 - ERROR -    Error: No module named 'config'
+2025-11-30 22:32:59,427 - INFO - ================================================================================
+2025-11-30 22:32:59,427 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:32:59,427 - INFO - ================================================================================
+2025-11-30 22:32:59,441 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:32:59,441 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:37:22,313 - INFO - ================================================================================
+2025-11-30 22:37:22,313 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:37:22,313 - INFO - ================================================================================
+2025-11-30 22:37:22,334 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:37:22,334 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:40:24,366 - INFO - ================================================================================
+2025-11-30 22:40:24,366 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:40:24,366 - INFO - ================================================================================
+2025-11-30 22:40:24,366 - INFO - ✅ Successfully imported system configuration
+2025-11-30 22:40:24,366 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:40:24,366 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:40:28,309 - INFO - ✅ SDMetrics library imported successfully
+2025-11-30 22:40:28,309 - INFO - 
+🚀 Starting Production Validation Pipeline...
+
+2025-11-30 22:40:28,309 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-11-30 22:40:28,309 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:40:28,309 - ERROR - ❌ Real data file not found at: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:40:28,309 - INFO -    Have you run the data preprocessing step?
+2025-11-30 22:40:28,309 - ERROR - ❌ Failed to load real data. Exiting.
+2025-11-30 22:42:12,588 - INFO - ================================================================================
+2025-11-30 22:42:12,588 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:42:12,588 - INFO - ================================================================================
+2025-11-30 22:42:12,609 - INFO - ✅ Successfully imported system configuration
+2025-11-30 22:42:12,610 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:42:12,610 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:42:16,652 - INFO - ✅ SDMetrics library imported successfully
+2025-11-30 22:42:16,653 - INFO - 
+🚀 Starting Production Validation Pipeline...
+
+2025-11-30 22:42:16,653 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-11-30 22:42:16,653 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:42:16,653 - ERROR - ❌ Real data file not found at: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:42:16,654 - INFO -    Have you run the data preprocessing step?
+2025-11-30 22:42:16,654 - ERROR - ❌ Failed to load real data. Exiting.

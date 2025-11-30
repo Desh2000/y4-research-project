@@ -2,7 +2,17 @@
 Configuration Management for Privacy-Preserving Mental Health GAN System
 This module centralizes all configuration settings for easy management and scalability.
 
-Updated: November 24, 2025
+Directory Structure:
+ml-services/privacy-preserving-gan/
+├── config/
+│   └── config.py  (THIS FILE)
+├── src/
+│   ├── gan_model.py
+│   ├── data_loader.py
+│   └── ... (other source files)
+└── gan_logs/
+
+Updated: November 30, 2025
 Status: Production Ready
 """
 
@@ -10,10 +20,10 @@ import os
 from pathlib import Path
 
 # ==================== PROJECT PATHS ====================
-# Current file: ml-services/privacy-preserving-gan/src/config.py
+# Current file: ml-services/privacy-preserving-gan/config/config.py
 # Resolution chain:
 # .resolve() = absolute path
-# .parent = src
+# .parent = config
 # .parent.parent = privacy-preserving-gan
 # .parent.parent.parent = ml-services
 # .parent.parent.parent.parent = y4-research-project (ROOT)
@@ -35,15 +45,22 @@ REPORTS_DIR = LOGS_DIR / "reports"
 MODELS_DIR = LOGS_DIR / "models"
 
 # Create all directories
-for directory in [
-    CHECKPOINTS_DIR, PLOTS_DIR, REPORTS_DIR, SYNTHETIC_DATA_DIR,
-    PROCESSED_DATA_DIR, MODELS_DIR
-]:
+for directory in [CHECKPOINTS_DIR, PLOTS_DIR, REPORTS_DIR, SYNTHETIC_DATA_DIR, PROCESSED_DATA_DIR, MODELS_DIR]:
     directory.mkdir(parents=True, exist_ok=True)
 
+# ==================== HARDWARE CONFIGURATION ====================
+# ASUS ROG G15 G513QE Specifications
+HARDWARE_CONFIG = {
+    "laptop_model": "ASUS ROG G15 G513QE",
+    "ram_gb": 16,
+    "cpu": "Ryzen 9 5900HX (12 cores)",
+    "gpu": "RTX 3050 Ti (4GB VRAM)",
+    "secondary_gpu": "AMD Radeon Graphics",
+    "vram_gb": 4,
+    "vram_available_for_training": 3.5,
+}
+
 # ==================== DATASET CONFIGURATION ====================
-# Maps dataset keys to actual file paths and metadata
-# All paths are verified against actual files on disk
 
 DATASETS = {
     "DASS": {
@@ -52,21 +69,15 @@ DATASETS = {
         "data_type": "tabular",
         "modality": "survey",
         "description": "DASS-21 standardized psychological assessment",
-        "numerical_features": [
-            # Depression (Q1A-Q1G)
-            "Q1A", "Q1B", "Q1C", "Q1D", "Q1E", "Q1F", "Q1G",
-            # Anxiety (Q2A-Q2G)
-            "Q2A", "Q2B", "Q2C", "Q2D", "Q2E", "Q2F", "Q2G",
-            # Stress (Q3A-Q3G)
-            "Q3A", "Q3B", "Q3C", "Q3D", "Q3E", "Q3F", "Q3G",
-        ]
     },
 
     "MENTAL_HEALTH_TECH": {
         "name": "Mental Health in Tech Survey",
         "file_path": RAW_DATA_DIR / "Mental Health in Tech Survey.csv",
-        "processed_path": PROCESSED_DATA_DIR / "mental_health_tech_PROCESSED.csv",
-        "synthetic_path": SYNTHETIC_DATA_DIR / "mental_health_tech_SYNTHETIC.csv",
+        # CORRECTED: Matches output from data_unification.py
+        "processed_path": PROCESSED_DATA_DIR / "mental_health_tech_survey_PROCESSED.csv",
+        # CORRECTED: Matches output from production_ctgan_trainer.py
+        "synthetic_path": SYNTHETIC_DATA_DIR / "synthetic_mental_health_data_v1.csv",
         "data_type": "tabular",
         "modality": "survey",
         "description": "OSMI Tech Industry Mental Health Survey",
@@ -87,12 +98,7 @@ DATASETS = {
         "synthetic_path": SYNTHETIC_DATA_DIR / "sleep_health_SYNTHETIC.csv",
         "data_type": "tabular",
         "modality": "wearable",
-        "description": "Sleep metrics from wearable devices + lifestyle data",
-        "numerical_features": [
-            "Age", "Sleep_Duration", "Quality_of_Sleep", "Heart_Rate",
-            "Daily_Steps", "Stress_Level"
-        ],
-        "categorical_features": ["Gender", "Sleep_Disorder"]
+        "description": "Sleep metrics from wearable devices and lifestyle data",
     },
 
     "WEARABLE_IOT": {
@@ -115,15 +121,13 @@ DATASETS = {
 }
 
 # ==================== CTGAN TRAINER CONFIGURATION ====================
-# Settings specifically for CTGAN model training
+
 CTGAN_TRAINER_CONFIG = {
-    "dataset_key": "MENTAL_HEALTH_TECH",  # Primary dataset
+    "dataset_key": "MENTAL_HEALTH_TECH",
     "epochs": 600,
     "batch_size": 500,
     "verbose": True,
-    "log_frequency": 50,  # Log every N epochs
-
-    # CTGAN specific parameters
+    "log_frequency": 50,
     "embedding_dim": 128,
     "generator_dim": (256, 256),
     "discriminator_dim": (256, 256),
@@ -132,42 +136,34 @@ CTGAN_TRAINER_CONFIG = {
     "discriminator_decay": 1e-6,
     "batch_normalization": True,
     "dropout_discriminator": 0.2,
-
-    # Synthetic data generation
-    "synthetic_samples": 10000,  # Number of synthetic samples to generate
+    "synthetic_samples": 10000,
     "sampling_seed": 42,
 }
 
 # ==================== VALIDATION CONFIGURATION ====================
-# Settings for synthetic data validation
+
 VALIDATION_CONFIG = {
     "test_size": 0.2,
     "val_size": 0.1,
     "random_state": 42,
-
-    # Statistical metrics
     "statistical_metrics": [
-        "ks_complement",           # Kolmogorov-Smirnov
-        "tv_complement",           # Total Variation
-        "correlation_similarity",  # Feature correlation preservation
+        "ks_complement",
+        "tv_complement",
+        "correlation_similarity",
     ],
-
-    # Quality thresholds
     "quality_thresholds": {
-        "minimum_quality_score": 0.70,  # 70% minimum
-        "minimum_correlation_similarity": 0.85,  # 85% similarity in correlations
+        "minimum_quality_score": 0.70,
+        "minimum_correlation_similarity": 0.85,
     },
-
-    # Visualization settings
     "plot_heatmap": True,
     "plot_distributions": True,
-    "num_distributions_to_plot": 10,  # Show top 10 features
+    "num_distributions_to_plot": 10,
 }
 
 # ==================== DIFFERENTIAL PRIVACY CONFIGURATION ====================
-# Privacy budget and DP-SGD settings for future use
+
 DP_CONFIG = {
-    "enabled": False,  # Enable when implementing DP-CTGAN
+    "enabled": False,
     "l2_norm_clip": 1.0,
     "noise_multiplier": 1.1,
     "num_microbatches": 1,
@@ -176,60 +172,99 @@ DP_CONFIG = {
 }
 
 # ==================== MULTI-MODAL CONFIGURATION ====================
-# Roadmap for multi-modal synthetic data generation
+
 MULTIMODAL_CONFIG = {
+    "architecture_choice": "B_separate_gans_with_fusion",
     "modalities": {
         "tabular": {
             "enabled": True,
             "generator_type": "CTGAN",
-            "status": "✅ IMPLEMENTED (Phase 1)",
+            "status": "IMPLEMENTED (Phase 1)",
+            "vram_estimate_mb": 800,
         },
         "time_series": {
             "enabled": False,
             "generator_type": "TimeGAN",
-            "status": "⏳ PLANNED (Phase 2)",
-            "sequence_length": 168,  # 7 days * 24 hours
+            "status": "PLANNED (Phase 2)",
+            "sequence_length": 168,
             "output_features": ["heart_rate", "sleep", "activity", "steps", "calories"],
+            "vram_estimate_mb": 600,
         },
         "text": {
             "enabled": False,
             "generator_type": "SeqGAN",
-            "status": "⏳ PLANNED (Phase 3)",
+            "status": "PLANNED (Phase 3)",
             "max_length": 200,
             "vocab_size": 5000,
+            "vram_estimate_mb": 1000,
         },
     },
-    "unified_discriminator": False,  # Will enable in Phase 3
+    "fusion_layer": {
+        "enabled": False,
+        "fusion_type": "concatenation_with_attention",
+        "vram_estimate_mb": 200,
+    },
+}
+
+# ==================== INTERVENTION SIMULATION CONFIGURATION ====================
+
+INTERVENTION_CONFIG = {
+    "approach": "C_hybrid_rules_and_learned",
+    "intervention_types": [
+        "CBT",
+        "Medication",
+        "Exercise",
+        "Mindfulness",
+        "Crisis",
+    ],
+    "simulation_duration_weeks": [1, 2, 4, 8, 12],
+    "enable_causal_inference": True,
+    "enable_rl_optimization": True,
+    "rules_based_effects": {
+        "CBT": {"anxiety_reduction": 0.30, "depression_reduction": 0.25},
+        "Medication": {"anxiety_reduction": 0.40, "depression_reduction": 0.35},
+        "Exercise": {"anxiety_reduction": 0.20, "depression_reduction": 0.22},
+        "Mindfulness": {"anxiety_reduction": 0.15, "stress_reduction": 0.25},
+    },
+}
+
+# ==================== EVALUATION PRIORITY ====================
+
+EVALUATION_PRIORITY = {
+    "rank_1": "C_novelty_intervention_simulation",
+    "rank_2": "B_utility_downstream_task_performance",
+    "rank_3": "D_integration_component_feeding",
+    "rank_4": "A_privacy_guarantees_mathematical_rigor",
+    "defense_focus": "Intervention simulation novelty demonstrates research contribution",
 }
 
 # ==================== DEVICE & PERFORMANCE CONFIGURATION ====================
+
 DEVICE_CONFIG = {
     "use_gpu": True,
-    "gpu_memory_fraction": 0.8,
+    "gpu_memory_fraction": 0.875,
     "allow_memory_growth": True,
-    "mixed_precision": False,  # Enable for faster training (fp16)
+    "mixed_precision": True,
+    "max_batch_size_for_4gb_vram": 64,
+    "recommended_batch_size_for_safety": 32,
 }
 
 # ==================== LOGGING CONFIGURATION ====================
+
 LOGGING_CONFIG = {
     "log_level": "INFO",
     "log_file": LOGS_DIR / "gan_training.log",
     "console_output": True,
-
-    # Checkpoint settings
     "save_checkpoints": True,
-    "checkpoint_frequency": 50,  # Save every N epochs
-
-    # Visualization settings
+    "checkpoint_frequency": 50,
     "save_plots": True,
     "plot_frequency": 50,
-
-    # Report generation
     "generate_reports": True,
     "report_frequency": 100,
 }
 
 # ==================== FEEDBACK LOOP CONFIGURATION (PHASE 4) ====================
+
 FEEDBACK_LOOP_CONFIG = {
     "enabled": False,
     "max_feedback_cycles": 5,
@@ -238,6 +273,7 @@ FEEDBACK_LOOP_CONFIG = {
 }
 
 # ==================== API CONFIGURATION (PHASE 3) ====================
+
 API_CONFIG = {
     "flask_port": 5000,
     "fastapi_port": 8000,
@@ -247,6 +283,7 @@ API_CONFIG = {
 }
 
 # ==================== DEBUG & DEVELOPMENT ====================
+
 DEBUG_MODE = False
 VERBOSE = True
 RANDOM_SEED = 42
