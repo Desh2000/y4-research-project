@@ -3,18 +3,22 @@ MANO Component 1: Sequence Validation
 Ensures generated sequences meet quality requirements
 Date: December 18, 2025
 """
+import sys
+import os
+from pathlib import Path
+
+# Setup path to import config
+# Get the directory containing this script (src)
+current_dir = Path(__file__).resolve().parent
+# Get the parent directory (privacy-preserving-gan)
+project_dir = current_dir.parent
+# Add the config directory to sys.path
+sys.path.append(str(project_dir / 'config'))
+
 from normalization_config import NORMALIZATION_CONFIG, VALIDATION_THRESHOLDS
 import config
 import numpy as np
 import matplotlib.pyplot as plt
-import os
-import sys
-from pathlib import Path
-
-# Import configuration
-config_path = os.path.join(os.getcwd(), 'ml-services',
-                           'privacy-preserving-gan', 'config')
-sys.path.append(config_path)
 
 
 def validate_sequences(sequences_npz_path: str):
