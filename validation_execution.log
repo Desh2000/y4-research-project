@@ -1,0 +1,262 @@
+2025-11-30 22:32:07,916 - INFO - ================================================================================
+2025-11-30 22:32:07,917 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:32:07,917 - INFO - ================================================================================
+2025-11-30 22:32:07,921 - ERROR -    Expected location: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\src/config.py
+2025-11-30 22:32:07,921 - ERROR -    Error: No module named 'config'
+2025-11-30 22:32:59,427 - INFO - ================================================================================
+2025-11-30 22:32:59,427 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:32:59,427 - INFO - ================================================================================
+2025-11-30 22:32:59,441 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:32:59,441 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:37:22,313 - INFO - ================================================================================
+2025-11-30 22:37:22,313 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:37:22,313 - INFO - ================================================================================
+2025-11-30 22:37:22,334 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:37:22,334 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:40:24,366 - INFO - ================================================================================
+2025-11-30 22:40:24,366 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:40:24,366 - INFO - ================================================================================
+2025-11-30 22:40:24,366 - INFO - ✅ Successfully imported system configuration
+2025-11-30 22:40:24,366 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:40:24,366 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:40:28,309 - INFO - ✅ SDMetrics library imported successfully
+2025-11-30 22:40:28,309 - INFO - 
+🚀 Starting Production Validation Pipeline...
+
+2025-11-30 22:40:28,309 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-11-30 22:40:28,309 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:40:28,309 - ERROR - ❌ Real data file not found at: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:40:28,309 - INFO -    Have you run the data preprocessing step?
+2025-11-30 22:40:28,309 - ERROR - ❌ Failed to load real data. Exiting.
+2025-11-30 22:42:12,588 - INFO - ================================================================================
+2025-11-30 22:42:12,588 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-11-30 22:42:12,588 - INFO - ================================================================================
+2025-11-30 22:42:12,609 - INFO - ✅ Successfully imported system configuration
+2025-11-30 22:42:12,610 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-11-30 22:42:12,610 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-11-30 22:42:16,652 - INFO - ✅ SDMetrics library imported successfully
+2025-11-30 22:42:16,653 - INFO - 
+🚀 Starting Production Validation Pipeline...
+
+2025-11-30 22:42:16,653 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-11-30 22:42:16,653 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:42:16,653 - ERROR - ❌ Real data file not found at: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_PROCESSED.csv
+2025-11-30 22:42:16,654 - INFO -    Have you run the data preprocessing step?
+2025-11-30 22:42:16,654 - ERROR - ❌ Failed to load real data. Exiting.
+2025-12-04 13:36:07,915 - INFO - ================================================================================
+2025-12-04 13:36:07,915 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-12-04 13:36:07,915 - INFO - ================================================================================
+2025-12-04 13:36:07,949 - INFO - OK: Successfully imported system configuration
+2025-12-04 13:36:07,949 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-12-04 13:36:07,949 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-12-04 13:36:07,949 - INFO -    Hardware: ASUS ROG G15 G513QE
+2025-12-04 13:36:26,369 - INFO - OK: SDMetrics library imported successfully
+2025-12-04 13:36:26,369 - INFO - 
+Starting Production Validation Pipeline...
+
+2025-12-04 13:36:26,369 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-12-04 13:36:26,369 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_survey_PROCESSED.csv
+2025-12-04 13:36:26,396 - INFO - OK: Loaded real data: 1259 rows x 20 columns
+2025-12-04 13:36:26,396 - INFO - 
+--- Loading Synthetic Data: MENTAL_HEALTH_TECH ---
+2025-12-04 13:36:26,396 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\synthetic\synthetic_mental_health_data_v1.csv
+2025-12-04 13:36:26,500 - INFO - OK: Loaded synthetic data: 10000 rows x 170 columns
+2025-12-04 13:36:26,500 - INFO - 
+--- Ensuring Column Consistency ---
+2025-12-04 13:36:26,500 - WARNING - WARNING: Column mismatch detected!
+2025-12-04 13:36:26,501 - WARNING -    Columns in real but not synthetic: {'tech_company', 'anonymity', 'mental_health_consequence', 'supervisor', 'family_history', 'coworkers', 'treatment', 'Age', 'phys_health_consequence', 'self_employed', 'wellness_program', 'benefits', 'no_employees', 'leave', 'Country', 'Gender', 'work_interfere', 'care_options', 'seek_help', 'remote_work'}
+2025-12-04 13:36:26,501 - WARNING -    Columns in synthetic but not real: {'Q1E', 'Q23E', 'Q38I', 'Q28A', 'Q39I', 'VCL3', 'Q18E', 'Q16A', 'Q30I', 'VCL1', 'Q24A', 'VCL7', 'VCL14', 'VCL16', 'Q26E', 'Q11I', 'Q42A', 'VCL5', 'Q5E', 'testelapse', 'Q32I', 'Q13A', 'Q9A', 'TIPI2', 'Q21E', 'Q30A', 'Q13E', 'hand', 'Q28E', 'Q21I', 'Q9E', 'Q17E', 'Q26A', 'religion', 'VCL13', 'Q4A', 'orientation', 'Q24I', 'Q16E', 'Q14I', 'Q15I', 'Q25I', 'Q1A', 'Q13I', 'Q8I', 'Q27I', 'source', 'Q37I', 'VCL6', 'Q18I', 'Q16I', 'Q12E', 'engnat', 'TIPI8', 'Q33E', 'Q12I', 'Q38A', 'Q29I', 'Q10I', 'TIPI6', 'TIPI9', 'education', 'Q23I', 'VCL9', 'Q33A', 'Q35I', 'Q4I', 'age', 'Q34I', 'VCL10', 'uniquenetworklocation', 'Q10A', 'Q17I', 'Q31I', 'Q5A', 'Q17A', 'Q41I', 'TIPI1', 'Q7E', 'Q32E', 'Q6E', 'Q25A', 'screensize', 'Q27A', 'Q29E', 'gender', 'Q36I', 'Q11E', 'Q38E', 'Q39E', 'VCL4', 'Q20A', 'Q40E', 'Q19E', 'Q41A', 'Q42I', 'Q30E', 'urban', 'Q4E', 'Q6A', 'VCL11', 'Q22I', 'Q3E', 'Q23A', 'Q1I', 'Q15E', 'VCL12', 'Q10E', 'Q40I', 'Q2A', 'TIPI4', 'VCL2', 'Q8E', 'Q36E', 'Q39A', 'Q34E', 'Q7A', 'introelapse', 'Q33I', 'Q21A', 'Q3A', 'TIPI3', 'TIPI7', 'Q26I', 'Q6I', 'Q28I', 'Q14A', 'Q22E', 'Q31E', 'Q32A', 'Q19A', 'Q8A', 'Q11A', 'voted', 'Q19I', 'Q41E', 'VCL15', 'Q3I', 'TIPI10', 'Q34A', 'Q5I', 'Q2I', 'Q20E', 'Q35A', 'Q25E', 'Q9I', 'Q42E', 'familysize', 'Q18A', 'married', 'Q20I', 'Q36A', 'Q29A', 'Q24E', 'Q37A', 'Q12A', 'Q37E', 'Q35E', 'Q22A', 'surveyelapse', 'Q15A', 'Q2E', 'VCL8', 'TIPI5', 'Q31A', 'Q40A', 'Q27E', 'race', 'Q7I', 'Q14E'}
+2025-12-04 13:36:26,501 - INFO -    Using 0 common columns
+2025-12-04 13:36:26,503 - INFO - 
+--- Building Metadata for MENTAL_HEALTH_TECH ---
+2025-12-04 13:36:26,503 - INFO - OK: Metadata built: 20 columns
+2025-12-04 13:36:26,503 - INFO -    Categorical: 19
+2025-12-04 13:36:26,503 - INFO -    Numerical: 1
+2025-12-04 13:36:26,503 - INFO - 
+--- Generating Correlation Heatmaps ---
+2025-12-04 13:36:28,214 - INFO - OK: Correlation plot saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\plots\correlation_comparison_MENTAL_HEALTH_TECH.png
+2025-12-04 13:36:28,240 - INFO - 
+--- Generating Distribution Plots (top 6 features) ---
+2025-12-04 13:36:28,309 - ERROR - ERROR: Number of rows must be a positive integer, not 0
+2025-12-04 13:36:28,309 - INFO - 
+--- Running Statistical Quality Validation (SDMetrics) ---
+2025-12-04 13:36:28,309 - INFO - Initializing QualityReport...
+2025-12-04 13:36:28,331 - INFO - Computing quality metrics (this may take a moment)...
+2025-12-04 13:36:28,332 - ERROR - ERROR: The metadata does not match the data. The following columns are missing in the real/synthetic data or in the metadata: Age, Country, Gender, anonymity, benefits, care_options, coworkers, family_history, leave, mental_health_consequence, no_employees, phys_health_consequence, remote_work, seek_help, self_employed, supervisor, tech_company, treatment, wellness_program, work_interfere
+2025-12-04 13:36:28,333 - ERROR - 
+ERROR: Validation failed. Check logs for details.
+2025-12-04 14:51:16,862 - INFO - ================================================================================
+2025-12-04 14:51:16,862 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-12-04 14:51:16,862 - INFO - ================================================================================
+2025-12-04 14:51:16,880 - INFO - OK: Successfully imported system configuration
+2025-12-04 14:51:16,880 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-12-04 14:51:16,880 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-12-04 14:51:16,880 - INFO -    Hardware: ASUS ROG G15 G513QE
+2025-12-04 14:51:22,124 - INFO - OK: SDMetrics library imported successfully
+2025-12-04 14:51:22,124 - INFO - 
+Starting Production Validation Pipeline...
+
+2025-12-04 14:51:22,124 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-12-04 14:51:22,124 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_survey_PROCESSED.csv
+2025-12-04 14:51:22,141 - INFO - OK: Loaded real data: 1259 rows x 20 columns
+2025-12-04 14:51:22,141 - INFO - 
+--- Loading Synthetic Data: MENTAL_HEALTH_TECH ---
+2025-12-04 14:51:22,141 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\synthetic\synthetic_mental_health_data_v1.csv
+2025-12-04 14:51:22,233 - INFO - OK: Loaded synthetic data: 10000 rows x 170 columns
+2025-12-04 14:51:22,236 - INFO - 
+--- Ensuring Column Consistency ---
+2025-12-04 14:51:22,236 - WARNING - WARNING: Column mismatch detected!
+2025-12-04 14:51:22,236 - WARNING -    Columns in real but not synthetic: {'no_employees', 'tech_company', 'Country', 'mental_health_consequence', 'supervisor', 'wellness_program', 'care_options', 'coworkers', 'seek_help', 'Gender', 'Age', 'self_employed', 'work_interfere', 'leave', 'remote_work', 'treatment', 'family_history', 'phys_health_consequence', 'benefits', 'anonymity'}
+2025-12-04 14:51:22,236 - WARNING -    Columns in synthetic but not real: {'Q14E', 'Q29E', 'Q40E', 'Q24A', 'VCL8', 'Q31A', 'Q5E', 'Q16E', 'VCL1', 'Q34I', 'Q4A', 'Q5A', 'Q8E', 'age', 'Q23E', 'Q25A', 'Q38I', 'Q24E', 'TIPI8', 'Q8A', 'Q39I', 'VCL11', 'Q13E', 'Q22I', 'Q2E', 'Q6I', 'Q19A', 'VCL7', 'Q2I', 'Q9A', 'Q26E', 'Q35A', 'Q1A', 'Q4E', 'orientation', 'Q19E', 'VCL5', 'TIPI3', 'Q35E', 'Q15I', 'Q15E', 'Q18A', 'Q25E', 'hand', 'Q35I', 'Q13A', 'VCL16', 'Q27I', 'Q17I', 'VCL3', 'Q30E', 'Q30I', 'TIPI9', 'VCL6', 'Q4I', 'urban', 'introelapse', 'Q21E', 'VCL2', 'TIPI10', 'Q34A', 'Q14A', 'Q7I', 'Q37A', 'Q9E', 'Q15A', 'VCL15', 'married', 'Q26A', 'Q12E', 'Q33E', 'Q29A', 'Q1I', 'Q41E', 'VCL14', 'Q11E', 'Q32E', 'Q34E', 'Q25I', 'Q12A', 'Q26I', 'Q16A', 'Q28E', 'education', 'Q10E', 'Q36I', 'Q23A', 'VCL10', 'Q33A', 'Q42E', 'Q21I', 'TIPI6', 'Q29I', 'Q33I', 'Q7A', 'Q20E', 'Q32I', 'Q23I', 'Q2A', 'Q3A', 'Q14I', 'Q37I', 'Q1E', 'Q39E', 'race', 'TIPI1', 'Q6A', 'Q10I', 'Q22A', 'Q31E', 'testelapse', 'gender', 'Q3E', 'Q11I', 'Q28I', 'Q39A', 'Q32A', 'VCL12', 'VCL13', 'engnat', 'Q17E', 'TIPI5', 'Q18E', 'Q18I', 'Q10A', 'Q21A', 'Q6E', 'Q36E', 'voted', 'Q37E', 'uniquenetworklocation', 'Q27A', 'VCL4', 'religion', 'Q7E', 'TIPI4', 'Q9I', 'Q19I', 'Q41I', 'Q40A', 'Q24I', 'Q3I', 'Q31I', 'source', 'Q11A', 'Q13I', 'TIPI2', 'screensize', 'Q20I', 'Q42A', 'TIPI7', 'Q42I', 'Q27E', 'Q20A', 'Q36A', 'Q28A', 'Q8I', 'Q38A', 'Q12I', 'Q30A', 'Q16I', 'Q41A', 'familysize', 'Q17A', 'Q38E', 'surveyelapse', 'VCL9', 'Q40I', 'Q22E', 'Q5I'}
+2025-12-04 14:51:22,236 - INFO -    Using 0 common columns
+2025-12-04 14:51:22,245 - INFO - 
+--- Building Metadata for MENTAL_HEALTH_TECH ---
+2025-12-04 14:51:22,245 - INFO - OK: Metadata built: 20 columns
+2025-12-04 14:51:22,245 - INFO -    Categorical: 19
+2025-12-04 14:51:22,245 - INFO -    Numerical: 1
+2025-12-04 14:51:22,245 - INFO - 
+--- Generating Correlation Heatmaps ---
+2025-12-04 14:51:23,059 - INFO - OK: Correlation plot saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\plots\correlation_comparison_MENTAL_HEALTH_TECH.png
+2025-12-04 14:51:23,084 - INFO - 
+--- Generating Distribution Plots (top 6 features) ---
+2025-12-04 14:51:23,163 - ERROR - ERROR: Number of rows must be a positive integer, not 0
+2025-12-04 14:51:23,163 - INFO - 
+--- Running Statistical Quality Validation (SDMetrics) ---
+2025-12-04 14:51:23,163 - INFO - Initializing QualityReport...
+2025-12-04 14:51:23,166 - INFO - Computing quality metrics (this may take a moment)...
+2025-12-04 14:51:23,166 - ERROR - ERROR: The metadata does not match the data. The following columns are missing in the real/synthetic data or in the metadata: Age, Country, Gender, anonymity, benefits, care_options, coworkers, family_history, leave, mental_health_consequence, no_employees, phys_health_consequence, remote_work, seek_help, self_employed, supervisor, tech_company, treatment, wellness_program, work_interfere
+2025-12-04 14:51:23,170 - ERROR - 
+ERROR: Validation failed. Check logs for details.
+2025-12-04 14:52:17,323 - INFO - ================================================================================
+2025-12-04 14:52:17,323 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-12-04 14:52:17,323 - INFO - ================================================================================
+2025-12-04 14:52:17,326 - INFO - OK: Successfully imported system configuration
+2025-12-04 14:52:17,326 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-12-04 14:52:17,326 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-12-04 14:52:17,326 - INFO -    Hardware: ASUS ROG G15 G513QE
+2025-12-04 14:52:21,094 - INFO - OK: SDMetrics library imported successfully
+2025-12-04 14:52:21,094 - INFO - 
+Starting Production Validation Pipeline...
+
+2025-12-04 14:52:21,094 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-12-04 14:52:21,094 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_survey_PROCESSED.csv
+2025-12-04 14:52:21,107 - INFO - OK: Loaded real data: 1259 rows x 20 columns
+2025-12-04 14:52:21,107 - INFO - 
+--- Loading Synthetic Data: MENTAL_HEALTH_TECH ---
+2025-12-04 14:52:21,107 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\synthetic\synthetic_mental_health_data_v1.csv
+2025-12-04 14:52:21,177 - INFO - OK: Loaded synthetic data: 10000 rows x 170 columns
+2025-12-04 14:52:21,177 - INFO - 
+--- Ensuring Column Consistency ---
+2025-12-04 14:52:21,177 - WARNING - WARNING: Column mismatch detected!
+2025-12-04 14:52:21,177 - WARNING -    Columns in real but not synthetic: {'mental_health_consequence', 'work_interfere', 'phys_health_consequence', 'care_options', 'remote_work', 'self_employed', 'treatment', 'leave', 'family_history', 'coworkers', 'supervisor', 'Country', 'anonymity', 'benefits', 'tech_company', 'no_employees', 'wellness_program', 'Age', 'Gender', 'seek_help'}
+2025-12-04 14:52:21,177 - WARNING -    Columns in synthetic but not real: {'Q34E', 'married', 'Q38E', 'TIPI10', 'Q36A', 'Q3E', 'TIPI9', 'Q10E', 'Q36E', 'VCL7', 'VCL2', 'Q5E', 'TIPI3', 'Q23I', 'Q12A', 'VCL13', 'Q28I', 'VCL1', 'uniquenetworklocation', 'religion', 'Q8A', 'VCL3', 'VCL16', 'Q41A', 'TIPI4', 'Q29I', 'Q37A', 'Q9I', 'Q42A', 'Q19I', 'VCL14', 'Q37I', 'Q27I', 'Q3I', 'Q32I', 'Q8I', 'Q29E', 'Q17A', 'Q12E', 'Q40E', 'Q1A', 'Q10I', 'Q12I', 'Q5A', 'Q7A', 'Q18I', 'Q38A', 'Q21A', 'Q16A', 'Q35E', 'voted', 'Q16I', 'Q24I', 'Q24A', 'Q32A', 'VCL4', 'VCL6', 'age', 'Q20E', 'TIPI8', 'Q33A', 'Q2A', 'Q35I', 'Q14I', 'Q17I', 'Q18E', 'Q34I', 'gender', 'engnat', 'Q26A', 'Q39I', 'Q11I', 'Q2E', 'Q9E', 'Q31A', 'Q31E', 'Q5I', 'Q15A', 'TIPI1', 'VCL12', 'surveyelapse', 'Q22I', 'Q21E', 'Q7E', 'Q11E', 'Q30A', 'Q34A', 'TIPI5', 'Q28A', 'Q18A', 'Q33I', 'Q23A', 'Q15E', 'Q30E', 'Q4E', 'Q30I', 'Q39A', 'Q1E', 'VCL9', 'Q13A', 'orientation', 'Q8E', 'Q16E', 'testelapse', 'introelapse', 'Q1I', 'Q27E', 'education', 'Q14E', 'Q20A', 'Q31I', 'VCL15', 'Q4A', 'Q4I', 'Q6A', 'Q25A', 'TIPI2', 'Q2I', 'hand', 'Q26I', 'Q23E', 'Q33E', 'Q9A', 'TIPI6', 'Q22A', 'Q38I', 'Q40I', 'source', 'Q17E', 'Q20I', 'Q25I', 'Q10A', 'Q21I', 'Q24E', 'Q28E', 'Q40A', 'Q36I', 'Q26E', 'Q25E', 'Q32E', 'Q42I', 'Q3A', 'Q42E', 'VCL5', 'Q22E', 'Q6E', 'VCL10', 'VCL11', 'Q39E', 'Q13I', 'urban', 'familysize', 'VCL8', 'Q14A', 'Q37E', 'Q15I', 'Q27A', 'Q41I', 'Q19E', 'TIPI7', 'race', 'screensize', 'Q7I', 'Q6I', 'Q19A', 'Q29A', 'Q11A', 'Q41E', 'Q13E', 'Q35A'}
+2025-12-04 14:52:21,177 - INFO -    Using 0 common columns
+2025-12-04 14:52:21,177 - INFO - 
+--- Building Metadata for MENTAL_HEALTH_TECH ---
+2025-12-04 14:52:21,177 - INFO - OK: Metadata built: 20 columns
+2025-12-04 14:52:21,177 - INFO -    Categorical: 19
+2025-12-04 14:52:21,177 - INFO -    Numerical: 1
+2025-12-04 14:52:21,177 - INFO - 
+--- Generating Correlation Heatmaps ---
+2025-12-04 14:52:21,856 - INFO - OK: Correlation plot saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\plots\correlation_comparison_MENTAL_HEALTH_TECH.png
+2025-12-04 14:52:21,888 - INFO - 
+--- Generating Distribution Plots (top 6 features) ---
+2025-12-04 14:52:21,971 - ERROR - ERROR: Number of rows must be a positive integer, not 0
+2025-12-04 14:52:21,971 - INFO - 
+--- Running Statistical Quality Validation (SDMetrics) ---
+2025-12-04 14:52:21,971 - INFO - Initializing QualityReport...
+2025-12-04 14:52:21,974 - INFO - Computing quality metrics (this may take a moment)...
+2025-12-04 14:52:21,974 - ERROR - ERROR: The metadata does not match the data. The following columns are missing in the real/synthetic data or in the metadata: Age, Country, Gender, anonymity, benefits, care_options, coworkers, family_history, leave, mental_health_consequence, no_employees, phys_health_consequence, remote_work, seek_help, self_employed, supervisor, tech_company, treatment, wellness_program, work_interfere
+2025-12-04 14:52:21,974 - ERROR - 
+ERROR: Validation failed. Check logs for details.
+2025-12-04 15:17:40,582 - INFO - ================================================================================
+2025-12-04 15:17:40,582 - INFO - PRODUCTION VALIDATION: Synthetic Mental Health Data Quality Assessment
+2025-12-04 15:17:40,582 - INFO - ================================================================================
+2025-12-04 15:17:40,582 - INFO - OK: Successfully imported system configuration
+2025-12-04 15:17:40,582 - INFO -    Project Root: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project
+2025-12-04 15:17:40,582 - INFO -    Data Directory: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data
+2025-12-04 15:17:40,582 - INFO -    Hardware: ASUS ROG G15 G513QE
+2025-12-04 15:17:45,055 - INFO - OK: SDMetrics library imported successfully
+2025-12-04 15:17:45,055 - INFO - 
+Starting Production Validation Pipeline...
+
+2025-12-04 15:17:45,055 - INFO - 
+--- Loading Real Data: MENTAL_HEALTH_TECH ---
+2025-12-04 15:17:45,055 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\processed\mental_health_tech_survey_PROCESSED.csv
+2025-12-04 15:17:45,058 - INFO - OK: Loaded real data: 1259 rows x 20 columns
+2025-12-04 15:17:45,058 - INFO - 
+--- Loading Synthetic Data: MENTAL_HEALTH_TECH ---
+2025-12-04 15:17:45,064 - INFO -    Path: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\data\synthetic\synthetic_mental_health_data_v1.csv
+2025-12-04 15:17:45,094 - INFO - OK: Loaded synthetic data: 10000 rows x 20 columns
+2025-12-04 15:17:45,094 - INFO - 
+--- Ensuring Column Consistency ---
+2025-12-04 15:17:45,095 - INFO - OK: Column consistency verified
+2025-12-04 15:17:45,095 - INFO - 
+--- Building Metadata for MENTAL_HEALTH_TECH ---
+2025-12-04 15:17:45,095 - INFO - OK: Metadata built: 20 columns
+2025-12-04 15:17:45,095 - INFO -    Categorical: 19
+2025-12-04 15:17:45,095 - INFO -    Numerical: 1
+2025-12-04 15:17:45,095 - INFO - 
+--- Generating Correlation Heatmaps ---
+2025-12-04 15:17:46,365 - INFO - OK: Correlation plot saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\plots\correlation_comparison_MENTAL_HEALTH_TECH.png
+2025-12-04 15:17:46,395 - INFO - 
+--- Generating Distribution Plots (top 6 features) ---
+2025-12-04 15:17:46,923 - INFO - OK: Distribution plots saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\plots\distributions_MENTAL_HEALTH_TECH.png
+2025-12-04 15:17:46,925 - INFO - 
+--- Running Statistical Quality Validation (SDMetrics) ---
+2025-12-04 15:17:46,925 - INFO - Initializing QualityReport...
+2025-12-04 15:17:46,940 - INFO - Computing quality metrics (this may take a moment)...
+2025-12-04 15:17:47,732 - INFO - 
+OVERALL QUALITY SCORE: 87.49%
+2025-12-04 15:17:47,732 - INFO -    Rating: VERY GOOD - High quality
+2025-12-04 15:17:47,732 - INFO - 
+--- Detailed Quality Metrics ---
+2025-12-04 15:17:47,732 - INFO - 
+             Property     Score
+0       Column Shapes  0.900501
+1  Column Pair Trends  0.849227
+2025-12-04 15:17:47,732 - INFO - 
+OK: Full validation report saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\reports\validation_report_MENTAL_HEALTH_TECH.pkl
+2025-12-04 15:17:47,732 - INFO - 
+================================================================================
+2025-12-04 15:17:47,732 - INFO - VALIDATION SUMMARY REPORT
+2025-12-04 15:17:47,732 - INFO - ================================================================================
+2025-12-04 15:17:47,746 - INFO - 
+========================================================================
+SYNTHETIC DATA QUALITY VALIDATION REPORT
+========================================================================
+
+Dataset: MENTAL_HEALTH_TECH
+Generated: 2025-12-04 15:17:47
+
+DATA STATISTICS:
+Real Data Shape:       1259 rows x 20 columns
+Synthetic Data Shape:  10000 rows x 20 columns
+Missing Values (Real):       0
+Missing Values (Synthetic): 0
+
+QUALITY ASSESSMENT:
+Overall Quality Score: 87.49%
+Status: PASSED
+Threshold: 70% (Minimum)
+Recommendation: Ready for deployment
+
+NEXT STEPS:
+1. Deploy synthetic data to other components
+2. Begin Phase 2: Time-Series Data Generation (TimeGAN)
+3. Prepare for multi-modal expansion with fusion layer
+
+Generated by: production_validation.py
+Timestamp: 2025-12-04 15:17:47.745186
+
+2025-12-04 15:17:47,746 - INFO - 
+OK: Summary report saved: C:\SLIIT Academics\4th year\1st semester\Research\y4-research\y4-research-project\ml-services\privacy-preserving-gan\gan_logs\reports\validation_summary_MENTAL_HEALTH_TECH.txt
+2025-12-04 15:17:47,746 - INFO - 
+================================================================================
+2025-12-04 15:17:47,746 - INFO - VALIDATION COMPLETE
+2025-12-04 15:17:47,746 - INFO - ================================================================================
