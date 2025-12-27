@@ -1,0 +1,131 @@
+# Manō Component 4 Configuration
+# Community-Driven Resilience Clustering System
+
+# System Information
+system:
+  name: "Manō Component 4"
+  version: "1.0.0"
+  author: "Your Name"
+  student_id: "IT22317308"
+
+# Data Configuration
+data:
+  input_dir: "data/sample"
+  processed_dir: "data/processed"
+  default_file: "sample_users.csv"
+
+  # Feature columns (resilience indicators)
+  feature_columns:
+    - emotional_regulation_score
+    - social_connectivity_score
+    - behavioral_stability_score
+    - cognitive_flexibility_score
+    - stress_coping_mechanism
+
+# GMM Clustering Configuration
+clustering:
+  # Number of clusters (set to 0 to find optimal)
+  n_components: 5
+
+  # Covariance type: 'full', 'tied', 'diag', 'spherical'
+  covariance_type: 'full'
+
+  # Random state for reproducibility
+  random_state: 42
+
+  # Maximum EM iterations
+  max_iter: 100
+
+  # Number of initializations
+  n_init: 10
+
+  # Optimal k search range
+  optimal_k_range:
+    min: 3
+    max: 9
+
+# Community Formation Configuration
+community:
+  # Optimal community size range
+  min_size: 8
+  max_size: 12
+  target_size: 10
+
+  # Cluster type thresholds (based on average resilience)
+  thresholds:
+    low_max: 0.35
+    developing_max: 0.50
+    moderate_max: 0.65
+    above_average_max: 0.80
+
+# Peer Matching Configuration
+peer_matching:
+  # Number of recommended peers per user
+  n_recommendations: 5
+
+  # Similarity threshold (0-1)
+  min_similarity: 0.5
+
+# Real-Time Updates Configuration
+updates:
+  # Minimum change percentage to trigger cluster update
+  update_threshold: 0.10
+
+  # Minimum new samples before retraining
+  min_samples_for_update: 10
+
+  # Enable automatic updates
+  auto_update: false
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_dir: "logs"
+  max_log_files: 30  # Keep logs for 30 days
+
+# Output Configuration
+output:
+  models_dir: "models"
+  results_dir: "results"
+  visualizations_dir: "results/visualizations"
+
+  # Save formats
+  save_formats:
+    - csv
+    - json
+
+# Visualization Configuration
+visualization:
+  # Figure size (width, height in inches)
+  figure_size: [12, 8]
+
+  # DPI for saved images
+  dpi: 300
+
+  # Color palette
+  color_palette: "husl"
+
+  # Style
+  style: "whitegrid"
+
+# API Configuration (if enabled)
+api:
+  enabled: false
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+
+# Integration Configuration
+integration:
+  # Component 1 (GAN) data path
+  component1_data: "data/from_component1/synthetic_data.csv"
+
+  # Component 2 (LSTM) risk scores
+  component2_enabled: false
+  component2_features:
+    - lstm_stress_risk
+    - lstm_cognitive_risk
+
+  # Component 3 (Chatbot) feedback
+  component3_enabled: false
+  component3_feedback_path: "data/from_component3/interactions.csv"
