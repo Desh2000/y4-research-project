@@ -9,6 +9,7 @@ import com.research.mano.entity.InterventionOutcome.EffectivenessRating;
 import com.research.mano.entity.Intervention.InterventionType;
 import com.research.mano.entity.User;
 import com.research.mano.service.InterventionOutcomeService;
+import com.research.mano.service.InterventionService;
 import com.research.mano.service.UserService;
 import com.research.mano.service.Impl.CustomUserDetailsService;
 
@@ -41,6 +42,10 @@ public class InterventionOutcomeController {
 
     @Autowired
     private InterventionOutcomeService outcomeService;
+
+    @Autowired
+    private InterventionService interventionService;
+
 
     @Autowired
     private UserService userService;
@@ -483,7 +488,7 @@ public class InterventionOutcomeController {
     }
 
     private com.research.mano.entity.Intervention findInterventionById(Long id) {
-        // This would typically be injected, but for simplicity:
-        return null; // The service will handle the lookup
+        return interventionService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Intervention not found with id: " + id));
     }
 }
