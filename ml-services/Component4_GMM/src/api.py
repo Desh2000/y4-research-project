@@ -17,6 +17,10 @@ import os
 # Add src to path
 sys.path.append(os.path.dirname(__file__))
 
+# Get project root directory (Component4_GMM)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+
 from clustering.gmm_model import GMMClusterer
 from community.community_manager import CommunityManager
 from utils.config_loader import ConfigLoader
@@ -30,7 +34,7 @@ CORS(app)
 logger = ManoCommunityLogger(name="API")
 
 # Load configuration
-config = ConfigLoader()
+config = ConfigLoader(os.path.join(PROJECT_ROOT, "config", "config.yaml"))
 
 # Global variables for models (loaded on startup)
 clusterer = None
@@ -45,12 +49,12 @@ def load_models():
 
     try:
         # Load GMM model
-        clusterer = GMMClusterer.load_model("models/gmm_model_v1.pkl")
+        clusterer = GMMClusterer.load_model(os.path.join(PROJECT_ROOT, "models", "gmm_model_v1.pkl"))
         logger.info("✓ GMM model loaded")
 
         # Load community data
         import json
-        with open("results/communities/communities.json", 'r') as f:
+        with open(os.path.join(PROJECT_ROOT, "results", "communities", "communities.json"), 'r') as f:
             communities_data = json.load(f)
 
         logger.info(f"✓ Loaded {len(communities_data)} communities")
@@ -153,7 +157,7 @@ def get_all_communities():
     """Get list of all communities"""
     try:
         # Load community list
-        community_list = pd.read_csv("results/communities/community_list.csv")
+        community_list = pd.read_csv(os.path.join(PROJECT_ROOT, "results", "communities", "community_list.csv"))
 
         return jsonify({
             'communities': community_list.to_dict('records'),
@@ -170,7 +174,7 @@ def get_user_community(user_id):
     """Get community for specific user"""
     try:
         # Load assignments
-        assignments = pd.read_csv("results/clusters/cluster_assignments.csv")
+        assignments = pd.read_csv(os.path.join(PROJECT_ROOT, "results", "clusters", "cluster_assignments.csv"))
 
         # Find user
         user_row = assignments[assignments['user_id'] == user_id]
@@ -182,7 +186,7 @@ def get_user_community(user_id):
 
         # Load community info
         import json
-        with open("results/communities/communities.json", 'r') as f:
+        with open(os.path.join(PROJECT_ROOT, "results", "communities", "communities.json"), 'r') as f:
             communities_data = json.load(f)
 
         # Find user's community
@@ -210,10 +214,10 @@ def get_statistics():
     """Get system statistics"""
     try:
         # Load data
-        assignments = pd.read_csv("results/clusters/cluster_assignments.csv")
+        assignments = pd.read_csv(os.path.join(PROJECT_ROOT, "results", "clusters", "cluster_assignments.csv"))
 
         import json
-        with open("results/communities/communities.json", 'r') as f:
+        with open(os.path.join(PROJECT_ROOT, "results", "communities", "communities.json"), 'r') as f:
             communities_data = json.load(f)
 
         # Calculate stats
