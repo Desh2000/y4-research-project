@@ -214,4 +214,3 @@ public interface InterventionOutcomeRepository extends BaseRepository<Interventi
             "WHERE o.interventionEndDate < :cutoffDate AND o.status = 'COMPLETED'")
     int archiveOldOutcomes(@Param("cutoffDate") LocalDateTime cutoffDate);
 }
-
