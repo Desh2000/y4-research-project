@@ -128,7 +128,8 @@ public class MentalHealthPredictionServiceImpl implements MentalHealthPrediction
 
     @Override
     public List<MentalHealthPrediction> findHighRiskPredictions() {
-        return predictionRepository.findHighRiskPredictions();
+        Double threshold = 0.0;
+        return predictionRepository.findHighRiskPredictions(threshold);
     }
 
     @Override

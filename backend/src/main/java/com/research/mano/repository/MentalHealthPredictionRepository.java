@@ -1,7 +1,5 @@
 package com.research.mano.repository;
 
-
-
 import com.research.mano.entity.MentalHealthPrediction;
 import com.research.mano.entity.User;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.List;
 
@@ -67,7 +66,7 @@ public interface MentalHealthPredictionRepository extends BaseRepository<MentalH
      */
     @Query("SELECT p FROM MentalHealthPrediction p WHERE " +
             "p.stressScore >= 0.8 OR p.depressionScore >= 0.8 OR p.anxietyScore >= 0.8")
-    List<MentalHealthPrediction> findHighRiskPredictions();
+    List<MentalHealthPrediction> findHighRiskPredictions(Double threshold);
 
     /**
      * Find predictions by stress score range
@@ -169,4 +168,15 @@ public interface MentalHealthPredictionRepository extends BaseRepository<MentalH
     @Query("SELECT p FROM MentalHealthPrediction p WHERE p.clusterAssignmentDate IS NULL OR " +
             "p.clusterAssignmentDate < :cutoffDate")
     List<MentalHealthPrediction> findPredictionsNeedingClusterReassignment(@Param("cutoffDate") LocalDateTime cutoffDate);
+
+    List<Object[]> getAverageScoresByCluster(String clusterId);
+
+    @Query("SELECT p FROM MentalHealthPrediction p WHERE p.predictionDate >= :cutoff AND " +
+           "(p.stressScore >= :threshold OR p.depressionScore >= :threshold OR p.anxietyScore >= :threshold)")
+    List<MentalHealthPrediction> findRecentHighRiskPredictions(@Param("cutoff") LocalDateTime cutoff, 
+                                                               @Param("threshold") Double threshold);
+
+    List<MentalHealthPrediction> findByUserId(Long userId);
+
+
 }

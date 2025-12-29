@@ -264,4 +264,7 @@ public interface UserProfileService extends BaseService<UserProfile, Long> {
      * Archive inactive profiles
      */
     void archiveInactiveProfiles(int monthsInactive);
+
+    void updateClusterAssignment(Long userId, String clusterIdentifier);
+
 }
