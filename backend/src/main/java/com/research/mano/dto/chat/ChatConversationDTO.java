@@ -1,9 +1,11 @@
-package com.research.mano.controller.responce;
+package com.research.mano.dto.chat;
 
 import com.research.mano.entity.ChatConversation;
 import com.research.mano.entity.ChatConversation.ConversationStatus;
 import com.research.mano.entity.ChatConversation.SentimentTrend;
 import com.research.mano.entity.ChatMessage.CrisisLevel;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -133,5 +135,38 @@ public class ChatConversationDTO {
         }
 
         return builder.build();
+    }
+
+    public void setUsername(@NotBlank @Size(max = 50) String username) {
+    }
+
+    public void setMessageText(String messageText) {
+    }
+
+    public void setMessageType(String name) {
+    }
+
+    public void setSentimentScore(Double sentimentScore) {
+    }
+
+    public void setEmotionDetected(String emotionDetected) {
+    }
+
+    public void setCrisisKeywordsDetected(Boolean crisisKeywordsDetected) {
+    }
+
+    public void setInterventionTriggered(Boolean interventionTriggered) {
+    }
+
+    public void setResponseTimeMs(Long responseTimeMs) {
+    }
+
+    public void setModelVersion(String modelVersion) {
+    }
+
+    public void setContextData(String contextData) {
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
     }
 }

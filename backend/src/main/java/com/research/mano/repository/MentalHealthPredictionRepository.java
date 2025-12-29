@@ -169,7 +169,9 @@ public interface MentalHealthPredictionRepository extends BaseRepository<MentalH
             "p.clusterAssignmentDate < :cutoffDate")
     List<MentalHealthPrediction> findPredictionsNeedingClusterReassignment(@Param("cutoffDate") LocalDateTime cutoffDate);
 
-    List<Object[]> getAverageScoresByCluster(String clusterId);
+    @Query("SELECT AVG(p.stressScore), AVG(p.depressionScore), AVG(p.anxietyScore) " +
+           "FROM MentalHealthPrediction p WHERE p.primaryClusterCategory = :clusterId")
+    List<Object[]> getAverageScoresByCluster(@Param("clusterId") String clusterId);
 
     @Query("SELECT p FROM MentalHealthPrediction p WHERE p.predictionDate >= :cutoff AND " +
            "(p.stressScore >= :threshold OR p.depressionScore >= :threshold OR p.anxietyScore >= :threshold)")

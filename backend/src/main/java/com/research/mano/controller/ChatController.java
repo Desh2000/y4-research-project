@@ -3,6 +3,7 @@ package com.research.mano.controller;
 
 import com.research.mano.controller.request.*;
 import com.research.mano.controller.responce.*;
+import com.research.mano.dto.chat.ChatConversationDTO;
 import com.research.mano.entity.ChatConversation;
 import com.research.mano.entity.User;
 import com.research.mano.service.ChatConversationService;

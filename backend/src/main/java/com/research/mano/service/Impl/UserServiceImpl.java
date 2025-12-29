@@ -3,6 +3,8 @@ package com.research.mano.service.Impl;
 import com.research.mano.entity.User;
 import com.research.mano.entity.Role;
 import com.research.mano.entity.UserProfile;
+import com.research.mano.exception.ResourceNotFoundException;
+import com.research.mano.repository.UserProfileRepository;
 import com.research.mano.repository.UserRepository;
 import com.research.mano.repository.RoleRepository;
 import com.research.mano.service.UserService;

@@ -1,4 +1,4 @@
-package com.research.mano.controller.responce;
+package com.research.mano.dto.chat;
 
 import com.research.mano.entity.ChatMessage.CrisisLevel;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Response DTO for chat messages

@@ -188,4 +188,7 @@ public class UserProfile extends BaseEntity {
                 ", highRisk=" + highRiskAlert +
                 '}';
     }
+
+    public void setClusterAssignment(String clusterName) {
+    }
 }

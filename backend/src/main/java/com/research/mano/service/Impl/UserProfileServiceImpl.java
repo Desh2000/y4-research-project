@@ -510,4 +510,9 @@ public class UserProfileServiceImpl implements UserProfileService {
         inactiveProfiles.forEach(profile -> profile.getUser().setIsActive(false));
         userProfileRepository.saveAll(inactiveProfiles);
     }
+
+    @Override
+    public void updateClusterAssignment(Long userId, String clusterIdentifier) {
+
+    }
 }

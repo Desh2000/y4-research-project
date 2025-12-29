@@ -1,4 +1,4 @@
-package com.research.mano.controller.request;
+package com.research.mano.dto.chat;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

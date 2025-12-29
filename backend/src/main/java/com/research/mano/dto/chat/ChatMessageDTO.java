@@ -1,4 +1,4 @@
-package com.research.mano.controller.responce;
+package com.research.mano.dto.chat;
 
 import com.research.mano.entity.ChatMessage;
 import com.research.mano.entity.ChatMessage.SenderType;

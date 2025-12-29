@@ -176,6 +176,34 @@ public class ChatConversation extends BaseEntity {
     @Column(name = "follow_up_date")
     private LocalDateTime followUpDate;
 
+    // ==================== FIELDS FOR COMPATIBILITY WITH SERVICE ====================
+    // These fields were missing but referenced in ChatConversationServiceImpl
+
+    @Column(name = "message_text", columnDefinition = "TEXT")
+    private String messageText; // For single-message compatibility
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "message_type")
+    private MessageType messageType; // For single-message compatibility
+
+    @Column(name = "sentiment_score")
+    private Double sentimentScore; // For single-message compatibility
+
+    @Column(name = "emotion_detected")
+    private String emotionDetected; // For single-message compatibility
+
+    @Column(name = "response_time_ms")
+    private Long responseTimeMs; // For single-message compatibility
+
+    @Column(name = "crisis_keywords_detected")
+    private Boolean crisisKeywordsDetected; // For single-message compatibility
+
+    @Column(name = "intervention_triggered")
+    private Boolean interventionTriggered; // For single-message compatibility
+
+    @Column(name = "context_data", columnDefinition = "TEXT")
+    private String contextData; // For single-message compatibility
+
     // ==================== ENUMS ====================
 
     public enum ConversationStatus {
@@ -194,11 +222,28 @@ public class ChatConversation extends BaseEntity {
         FLUCTUATING
     }
 
+    public enum MessageType {
+        USER_MESSAGE,
+        BOT_RESPONSE,
+        SYSTEM_MESSAGE
+    }
+
     // ==================== CONSTRUCTORS ====================
 
     public ChatConversation(User user) {
         this.user = user;
         this.sessionId = generateSessionId();
+        this.status = ConversationStatus.ACTIVE;
+        this.startedAt = LocalDateTime.now();
+        this.lastMessageAt = LocalDateTime.now();
+    }
+
+    // Constructor for single-message compatibility
+    public ChatConversation(User user, String sessionId, String messageText, MessageType messageType) {
+        this.user = user;
+        this.sessionId = sessionId;
+        this.messageText = messageText;
+        this.messageType = messageType;
         this.status = ConversationStatus.ACTIVE;
         this.startedAt = LocalDateTime.now();
         this.lastMessageAt = LocalDateTime.now();
