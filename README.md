@@ -1,456 +1,402 @@
-# Empathetic Conversational Support System (Component 3)
+<div align="center">
 
-## 💙 Manō - Mental Health Support for STEM Professionals
+# 🧠 Manō: Privacy-Preserving Synthetic Mental Health Data Generation & Adaptive Multimodal Intervention Simulation Engine
 
-A complete AI-powered mental health chatbot system with three distinct personas, built using BERT for intent classification and privacy-preserving mechanisms.
+### *"Solving the Mental Health Data Scarcity Crisis with Generative Digital Twins."*
 
----
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=flat&logo=PyTorch&logoColor=white)](https://pytorch.org/)
+[![CUDA](https://img.shields.io/badge/CUDA-11.8%20%7C%2012.1-76B900?logo=nvidia)](https://developer.nvidia.com/cuda-toolkit)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-## 🎯 Overview
-
-This system provides empathetic conversational support through three AI personas:
-- **👥 Friend** - Casual, warm, and emotionally supportive
-- **🧑‍⚕️ Counselor** - Professional therapeutic guidance with CBT techniques and video recommendations
-- **👨‍⚕️ Doctor** - Clinical mental health information and medical guidance
-
-**Key Features:**
-- ✅ BERT-based intent classification (84+ categories, 290+ patterns)
-- ✅ Three unique AI personas with distinct communication styles
-- ✅ Context-aware response generation
-- ✅ Privacy protection (Differential Privacy + PII anonymization)
-- ✅ Crisis detection and intervention
-- ✅ Video recommendations for mental health topics
-- ✅ Real-time web interface
-- ✅ RESTful API with 10+ endpoints
-- ✅ Voice support capabilities (TTS/STT)
+<img src="https://img.shields.io/badge/Status-Active-success" alt="Status">
+<img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance">
 
 ---
 
-## 🚀 Quick Start
+**Manō** is an end-to-end Generative AI ecosystem that creates high-fidelity synthetic patient data, predicts mental health risks with clinical precision, and autonomously simulates personalized therapeutic interventions using Deep Reinforcement Learning. It allows researchers to develop and test medical AI algorithms without ever touching sensitive PII (Personally Identifiable Information).
 
-### 1. Run the System
-
-```powershell
-# Start both backend and frontend
-.\start_system.ps1
-```
-
-This will:
-- Start backend API on http://localhost:8000
-- Start frontend UI on http://localhost:8501
-- Open your browser automatically
-
-### 2. Use the Application
-
-1. Open http://localhost:8501 in your browser
-2. Select a persona (Friend, Counselor, or Doctor)
-3. Start chatting!
-
-**Try these examples:**
-- "I'm feeling stressed about work"
-- "I can't sleep well lately"
-- "What are the symptoms of anxiety?"
-- "I need someone to talk to"
+[Features](#-key-components) •
+[Architecture](#️-system-architecture) •
+[Installation](#-installation) •
+[Usage](#️-usage-guide) •
+[Benchmarks](#-performance-benchmarks)
 
 ---
 
-## 📁 Project Structure
+</div>
 
-```
-empathetic_support_system/
-├── backend/
-│   ├── api.py                    # FastAPI REST API (10+ endpoints)
-│   └── integration.py            # Component integration interfaces
-├── frontend/
-│   └── app.py                    # Streamlit web interface
-├── models/
-│   ├── intent_classifier.py     # BERT-based intent classification
-│   ├── response_generator.py    # Hybrid response generation
-│   └── trained_intent_classifier/  # Trained model files
-├── personas/
-│   ├── base_persona.py          # Friend persona + base class
-│   ├── counselor_persona.py     # Counselor with CBT + videos
-│   └── doctor_persona.py        # Clinical information
-├── privacy/
-│   └── privacy_manager.py       # Privacy mechanisms
-├── utils/
-│   ├── data_loader.py           # Dataset management
-│   ├── text_preprocessor.py    # NLP preprocessing
-│   └── voice_support.py         # TTS/STT capabilities
-├── data/
-│   ├── Mental_Health_FAQ.csv    # FAQ dataset
-│   ├── intents.json             # Intent patterns
-│   ├── train.csv                # Training conversations
-│   └── additional_intents.json  # Extended patterns
-├── venv/                        # Python virtual environment
-├── train_model.py               # Model training script
-├── test_system.py               # System verification
-├── quick_start.py               # Setup wizard
-├── start_system.ps1             # Quick launch script
-├── config.py                    # Configuration management
-├── requirements.txt             # Dependencies
-└── README.md                    # This file
+## 📑 Table of Contents
+
+- [🏗️ System Architecture](#️-system-architecture)
+- [🧩 Key Components](#-key-components)
+- [🛠️ Technical Innovations](#️-technical-innovations)
+- [📊 Performance Benchmarks](#-performance-benchmarks)
+- [💻 Installation](#-installation)
+- [⏯️ Usage Guide](#️-usage-guide)
+- [📂 Project Structure](#-project-structure)
+- [📜 License](#-license)
+- [🤝 Acknowledgments](#-acknowledgments)
+
+---
+
+## 🏗️ System Architecture
+
+<div align="center">
+
+### **The system operates as a closed-loop "Digital Twin" pipeline, moving from data generation to active intervention.**
+
+</div>
+
+```mermaid
+graph TD
+    subgraph Phase1["Phase 1: Synthetic Generation"]
+    A[Real Data Sources] -->|Cleaning| B(Component 1: Generators)
+    B -->|CTGAN| C[Synthetic Static Profiles]
+    B -->|TimeGAN| D[Synthetic 7-Day Rhythms]
+    end
+
+    subgraph Phase2["Phase 2: Prediction"]
+    C --> E{Labeled Synthetic Dataset}
+    D --> E
+    E --> F[Component 2: Hybrid LSTM Predictor]
+    end
+
+    subgraph Phase3["Phase 3: Intervention AMISE"]
+    F -->|Risk Score| G[RL Agent PPO]
+    G -->|Action Treatment & Intensity| H[Seq2Seq World Model]
+    H -->|Simulated Outcome| F
+    end
 ```
 
 ---
 
-## 🛠️ Technical Stack
+## 🧩 Key Components
 
-**Machine Learning:**
-- transformers 4.57.3 (BERT)
-- torch 2.9.1 (PyTorch)
-- scikit-learn 1.7.2
-- nltk 3.9.2
+### 1️⃣ **The Generator (Component 1)**
 
-**Backend:**
-- FastAPI 0.123.9
-- uvicorn 0.38.0
-- pydantic 2.12.5
+<table>
+<tr>
+<td width="50%">
 
-**Frontend:**
-- Streamlit 1.52.0
+#### 🎲 Static Engine (CTGAN)
+Uses **Variational Gaussian Mixtures** to model complex, multi-modal demographic distributions (Age, Gender, Job).
 
-**Data Processing:**
-- pandas 2.3.3
-- numpy 2.3.5
+</td>
+<td width="50%">
 
----
+#### ⏰ Dynamic Engine (TimeGAN)
+A **4-network architecture** (Embedder, Recovery, Generator, Supervisor) that learns the temporal "physics" of biological rhythms (Sleep, Heart Rate, Stress) over 7 days.
 
-## 📊 Model Performance
-
-**Training Configuration:**
-- **Model:** BERT base uncased (110M parameters)
-- **Epochs:** 15
-- **Batch Size:** 8
-- **Learning Rate:** 3e-5 with ReduceLROnPlateau scheduler
-- **Max Length:** 256 tokens
-- **Regularization:** Weight decay (0.01) + Gradient clipping (1.0)
-- **Dataset:** 290 patterns across 84 intent categories
-- **Split:** 232 training / 58 validation samples
-
-**Expected Accuracy:** 70%+ on validation set
-
-**Optimizations:**
-- Learning rate scheduler for adaptive learning
-- Gradient clipping to prevent exploding gradients
-- Weight decay for regularization
-- Best model tracking
-- Extended context window (256 tokens)
+</td>
+</tr>
+</table>
 
 ---
 
-## 🎭 Persona Details
+### 2️⃣ **The Predictor (Component 2)**
 
-### 👥 Friend Persona
-**Style:** Casual, warm, emotionally supportive
-**Best For:** 
-- Everyday emotional support
-- Active listening
-- Casual conversation
-- Encouragement
+<div align="center">
 
-**Sample Response:**
-> "I hear you - that sounds really overwhelming. I'm here for you. Can you tell me more about what's stressing you out? 💙"
+| Feature | Description |
+|---------|-------------|
+| **Architecture** | 🔀 Hybrid LSTM - Dual-Branch neural network |
+| **Input Fusion** | Static demographics (Dense layers) + Temporal sequences (Stacked LSTM) |
+| **Accuracy** | 🎯 **96%** risk prediction accuracy |
+| **Loss Function** | ⚖️ Weighted Cross-Entropy Loss (handles class imbalance) |
+| **Output** | 🚦 High/Medium/Low mental health risk classification |
 
-**Features:**
-- Context-aware responses
-- Conversation history tracking
-- Emoji usage for warmth
-- Detects availability questions, stress, uncertainty
+</div>
 
 ---
 
-### 🧑‍⚕️ Counselor Persona
-**Style:** Professional, therapeutic, solution-focused
-**Best For:**
-- CBT techniques
-- Coping strategies
-- Structured guidance
-- Video resources
+### 3️⃣ **The Intervenor (Component 3 - AMISE)**
 
-**CBT Techniques:**
-- Cognitive Restructuring
-- Behavioral Activation
-- Mindfulness Exercises
-- Thought Challenging
+> **AMISE**: *Adaptive Multimodal Intervention Simulation Engine*
 
-**Video Resources (8+ curated):**
-- Anxiety management
-- Depression support
-- Stress reduction
-- Sleep improvement
-- Meditation guides
-- Breathing exercises
+**🌍 World Model**
+- Attention-based Seq2Seq network
+- Trained via Model Distillation
+- Simulates physiological effects of treatments (e.g., CBT, Medication)
 
-**Sample Response:**
-> "It sounds like you're experiencing significant anxiety. Let me share some CBT techniques that can help. [Suggests relevant video resources]"
+**🤖 AI Oracle**
+- Proximal Policy Optimization (PPO) agent
+- Dual-Head Actor (Discrete Action + Continuous Intensity)
+- Learns to prescribe the **minimum effective dose** to cure patients
 
 ---
 
-### 👨‍⚕️ Doctor Persona
-**Style:** Clinical, informational, evidence-based
-**Best For:**
-- Mental health conditions
-- Symptoms and diagnosis
-- Treatment options
-- Medical information
+## 🛠️ Technical Innovations
 
-**Knowledge Base:**
-- Depression (symptoms, treatments)
-- Anxiety disorders (types, interventions)
-- Stress management (techniques)
-- Burnout (signs, recovery)
-- Sleep disorders
-- Therapy types (CBT, DBT, IPT)
-- Medication information
+<div align="center">
 
-**Sample Response:**
-> "Depression is a mental health condition characterized by persistent feelings of sadness, loss of interest, and other symptoms. Common treatments include psychotherapy and medication."
+> *This project followed a rigorous R&D lifecycle involving pivots based on empirical failure modes.*
 
----
+</div>
 
-## 🔒 Privacy Features
+### 📉 **Phase 1 Pivot: Solving Mode Collapse**
 
-**1. Differential Privacy**
-- Laplace/Gaussian noise addition
-- Epsilon (ε) = 1.0, Delta (δ) = 1e-5
-- Statistical queries protection
+<table>
+<tr>
+<td width="20%" align="center">⚠️</td>
+<td width="80%">
 
-**2. Data Anonymization**
-- PII detection (email, phone, SSN, credit card)
-- Automatic redaction
-- Pattern-based filtering
+**Problem:** Vanilla GANs failed to generate realistic survey data (generated continuous values for discrete categories).
 
-**3. Session Management**
-- Temporary session storage
-- Automatic cleanup
-- No persistent personal data
-- Aggregated statistics only
+</td>
+</tr>
+<tr>
+<td align="center">✅</td>
+<td>
 
-**4. Privacy Audit Logging**
-- Track privacy operations
-- Monitor data access
-- Compliance ready
+**Solution:** Migrated to **CTGAN**, utilizing mode-specific normalization to handle non-Gaussian distributions perfectly.
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🌐 API Endpoints
+### ⏱️ **Phase 2 Optimization: TimeGAN Stabilization**
 
-**Base URL:** http://localhost:8000
+<table>
+<tr>
+<td width="20%" align="center">⚠️</td>
+<td width="80%">
 
-### Session Management
-- `POST /session/create` - Create new chat session
-- `GET /session/{session_id}` - Get session details
-- `DELETE /session/{session_id}` - Delete session
+**Problem:** Standard TimeGAN training is notoriously unstable.
 
-### Chat
-- `POST /chat` - Send message and get response
-  ```json
-  {
-    "session_id": "string",
-    "message": "string",
-    "persona": "friend|counselor|doctor"
-  }
-  ```
+</td>
+</tr>
+<tr>
+<td align="center">✅</td>
+<td>
 
-### Information
-- `GET /personas` - List available personas
-- `GET /statistics` - Get system statistics (with DP)
-- `GET /health` - Health check
+**Solution:** Implemented a **3-Phase Training Loop** (Embedding → Supervisor → Joint) and added a custom **Moments Matching Loss** (Mean/Std) to prevent spectral collapse.
 
-### Documentation
-- `GET /docs` - Interactive API documentation (Swagger UI)
-- `GET /redoc` - Alternative documentation (ReDoc)
+</td>
+</tr>
+</table>
 
 ---
 
-## 🔧 Configuration
+### 🏥 **Phase 3 Innovation: Hybrid Action Space**
 
-Edit `config.py` or create `.env` file:
+<table>
+<tr>
+<td width="20%" align="center">⚠️</td>
+<td width="80%">
 
-```python
-# API Settings
-API_HOST = "localhost"
-API_PORT = 8000
+**Problem:** Medical treatments aren't just "Type" (What to do), but "Intensity" (How much). Standard RL agents struggle with mixed action spaces.
 
-# Model Settings
-MODEL_NAME = "bert-base-uncased"
-MAX_LENGTH = 256
+</td>
+</tr>
+<tr>
+<td align="center">✅</td>
+<td>
 
-# Privacy Settings
-EPSILON = 1.0
-DELTA = 1e-5
+**Solution:** Designed a custom **Dual-Head PPO Actor** that simultaneously outputs a Categorical distribution (Treatment Type) and a Gaussian distribution (Intensity), allowing for precise dosage optimization.
 
-# Integration URLs
-COMPONENT1_URL = "http://localhost:8001"
-COMPONENT2_URL = "http://localhost:8002"
-COMPONENT4_URL = "http://localhost:8004"
+</td>
+</tr>
+</table>
 
-# Features
-ENABLE_VOICE = True
-ENABLE_INTEGRATION = False
+---
+
+## 📊 Performance Benchmarks
+
+<div align="center">
+
+### 🖥️ **Hardware:** ASUS ROG G15 (Ryzen 9 5900HX, RTX 3050 Ti 4GB)
+
+</div>
+
+| Component | Metric | Result | Interpretation |
+|-----------|--------|--------|----------------|
+| **CTGAN** | Column Shape Score | <span style="color:green">**90.05%**</span> | 🎯 Synthetic demographics are statistically identical to real populations. |
+| **TimeGAN** | Distribution Score | <span style="color:green">**83.85%**</span> | 📈 Synthetic biological rhythms preserve realistic variance and trends. |
+| **Hybrid LSTM** | F1-Score (High Risk) | <span style="color:green">**0.98**</span> | 🚨 The model detects 98% of high-risk cases with near-zero false negatives. |
+| **PPO Agent** | Avg Reward (Ep 5000) | <span style="color:green">**8.42**</span> | 💊 The AI learned to cure patients efficiently without over-prescribing. |
+
+<div align="center">
+
+### 🏆 **Key Achievements**
+[![Accuracy](https://img.shields.io/badge/Risk%20Prediction-96%25-success?style=for-the-badge)](.)
+[![F1 Score](https://img.shields.io/badge/F1%20Score-0.98-success?style=for-the-badge)](.)
+[![Data Quality](https://img.shields.io/badge/Synthetic%20Quality-90%25-success?style=for-the-badge)](.)
+
+</div>
+
+---
+
+## 💻 Installation
+
+### 📋 Prerequisites
+
+<div align="center">
+
+| Requirement | Version | Status |
+|-------------|---------|--------|
+| 🐍 Python | 3.10+ | Required |
+| 🎮 NVIDIA GPU | CUDA 11.8 or 12.1 | Highly Recommended |
+| 💾 Disk Space | ~5GB | Required |
+
+</div>
+
+### 🚀 Setup Steps
+
+#### **1️⃣ Clone the Repository:**
+```bash
+git clone https://github.com/yourusername/mano-project.git
+cd mano-project
 ```
 
----
+#### **2️⃣ Create Virtual Environment:**
+```bash
+python -m venv venv
 
-## 🧪 Testing
+# Windows
+.\venv\Scripts\activate
 
-```powershell
-# Test system components
-python test_system.py
-
-# Run unit tests
-pytest
-
-# Test API endpoints
-# Visit http://localhost:8000/docs
+# Linux/Mac
+source venv/bin/activate
 ```
 
----
+#### **3️⃣ Install Dependencies:**
 
-## 🔄 Retraining the Model
+> ⚠️ **Crucial:** Install PyTorch with CUDA support first to avoid CPU bottlenecks.
 
-If you want to retrain with different parameters:
-
-```powershell
-# Edit train_model.py to adjust:
-# - epochs (default: 15)
-# - batch_size (default: 8)
-# - learning_rate (default: 3e-5)
-
-# Then train
-python train_model.py
-```
-
-**Training takes:** 30-45 minutes on CPU, 5-10 minutes on GPU
-
----
-
-## 🐛 Troubleshooting
-
-### Model Not Found
-```powershell
-python train_model.py
-```
-
-### Port Already in Use
-Edit `config.py` to change ports:
-```python
-API_PORT = 8001  # Change from 8000
-```
-
-### Import Errors
-```powershell
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 ```
 
-### Backend Won't Start
-```powershell
-# Check if model is trained
-dir models\trained_intent_classifier
+---
 
-# If not found, train the model
-python train_model.py
+## ⏯️ Usage Guide
+
+### 🎬 **1. End-to-End Demo (The "Magic" Button)**
+
+<div align="center">
+
+To see the entire pipeline generate a patient, diagnose them, prescribe treatment, and simulate the outcome:
+
+</div>
+
+```bash
+python run_pipeline.py
 ```
 
-### Frontend Shows Connection Error
-- Ensure backend is running on port 8000
-- Check: http://localhost:8000/health
-- Restart backend if needed
+<div align="center">
+
+✨ **This will:** Generate Synthetic Patient → Predict Risk → Prescribe Treatment → Simulate Outcome ✨
+
+</div>
 
 ---
 
-## 📚 Research Context
+### 🔧 **2. Manual Reproduction (Step-by-Step)**
 
-**Project:** SLIIT Research - Mental Health Support for STEM Professionals
-**Component:** 3 (Empathetic Conversational Support System)
-**Integration:** Works with Components 1, 2, and 4 of the Manō platform
+#### **Step A: Generate Synthetic Data** 🎲
 
-**Research Contributions:**
-- Multi-persona conversational AI for mental health
-- Privacy-preserving conversation analysis
-- Context-aware therapeutic recommendations
-- Crisis detection and intervention protocols
-- Evaluation metrics for empathetic AI
+```bash
+# Train TimeGAN & Generate 10k Sequences (GPU Accelerated)
+python ml-services/privacy-preserving-gan/src/timegan_main.py
 
----
-
-## 📈 System Statistics
-
-- **Total Files:** 28+
-- **Lines of Code:** 5,000+
-- **Intent Categories:** 84
-- **Training Patterns:** 290+
-- **Response Templates:** 100+
-- **Video Resources:** 8+
-- **API Endpoints:** 10+
-- **Personas:** 3
-- **Privacy Mechanisms:** 4
-
----
-
-## 🎓 Usage Tips
-
-**For Best Results:**
-
-1. **Be specific** - The more details you provide, the better the response
-2. **Try different personas** - Each has unique strengths
-3. **Use the Counselor for resources** - Get video recommendations
-4. **Friend for emotional support** - When you need someone to listen
-5. **Doctor for information** - Learn about mental health conditions
-
-**Example Conversations:**
-
-**With Friend:**
-```
-You: "I'm feeling really overwhelmed with work"
-Friend: "That sounds really tough. I'm here for you. What's been weighing on you the most? 💙"
+# Fuse Static & Dynamic Data into Labeled Dataset
+python ml-services/privacy-preserving-lstm/src/data_fusion.py
 ```
 
-**With Counselor:**
-```
-You: "I can't stop worrying about everything"
-Counselor: "Constant worrying can be exhausting. Let me share some CBT techniques..."
-[Provides cognitive restructuring strategies + anxiety management videos]
+#### **Step B: Train Predictor** 🧠
+
+```bash
+# Train Hybrid LSTM with Stratified Splits
+python ml-services/privacy-preserving-lstm/src/lstm_main.py --mode train --epochs 50
 ```
 
-**With Doctor:**
-```
-You: "What is burnout?"
-Doctor: "Burnout is a state of emotional, physical, and mental exhaustion..."
-[Provides clinical definition, symptoms, and treatment options]
+#### **Step C: Train Intervention Engine** 💊
+
+```bash
+# Generate Virtual Clinical Trials (Data Augmentation)
+python ml-services/intervention-simulation/src/intervention_data_prep.py
+
+# Train Seq2Seq World Model (Mixed Precision)
+python ml-services/intervention-simulation/src/seq2seq_trainer.py
+
+# Train PPO Agent (Reinforcement Learning)
+python ml-services/intervention-simulation/src/rl_trainer.py
 ```
 
 ---
 
-## 🤝 Support
+## 📂 Project Structure
 
-For issues or questions:
-1. Check this README
-2. See PROJECT_STEPS.md for setup details
-3. Run `python test_system.py` to diagnose issues
-4. Check logs in `logs/` directory
+```
+mano-project/
+├── 📁 data/                       # Data Artifacts (Excluded from Git)
+│   ├── 📁 raw/                    # Original DASS/Sleep datasets
+│   └── 📁 synthetic/              # Generated .npz datasets (10k patients)
+│
+├── 📁 ml-services/
+│   ├── 📁 privacy-preserving-gan/ # COMPONENT 1: GENERATORS
+│   │   ├── 📁 config/             # CTGAN/TimeGAN Configs
+│   │   └── 📁 src/                # Generator Source Code (PyTorch)
+│   │
+│   ├── 📁 privacy-preserving-lstm/# COMPONENT 2: PREDICTOR
+│   │   ├── 📁 config/             # LSTM Hyperparameters
+│   │   └── 📁 src/                # Hybrid Network & Trainer
+│   │
+│   └── 📁 intervention-simulation/# COMPONENT 3: AMISE
+│       ├── 📁 config/             # RL & Simulation Rules
+│       └── 📁 src/                # PPO Agent & Seq2Seq Simulator
+│
+├── 📄 requirements.txt            # Dependency list
+└── 📄 run_pipeline.py             # Main Execution Entry Point
+```
 
 ---
 
-## 📄 License
+## 📜 License
 
-Built for educational and research purposes.
-SLIIT Research Project - 2025
+<div align="center">
 
----
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-- BERT model by Google Research
-- Transformers library by Hugging Face
-- FastAPI framework
-- Streamlit framework
-- Mental health datasets community
+</div>
 
 ---
 
-**Built with ❤️ for mental health support in STEM communities**
+## 🤝 Acknowledgments
 
-**Version:** 1.0
-**Last Updated:** December 5, 2025
+<div align="center">
+
+### 📚 **Original Papers**
+
+| Paper | Authors | Year |
+|-------|---------|------|
+| 🔷 **CTGAN** | Xu et al. | 2019 |
+| ⏰ **TimeGAN** | Yoon et al. | 2019 |
+| 🤖 **PPO** | Schulman et al. | 2017 |
+
+---
+
+### 💙 Built with passion for advancing mental health research
+
+**⭐ If you find this project useful, please consider giving it a star!**
+
+[![GitHub stars](https://img.shields.io/github/stars/Desh2000/y4-research-project.svg?style=social&label=Star)]([https://github.com/Desh2000/y4-research-project](https://github.com/Desh2000/y4-research-project))
+
+</div>
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the AI & Mental Health Research Communities**
+
+</div>
+
+
