@@ -19,7 +19,7 @@ from pathlib import Path
 current_file = Path(__file__).resolve()
 src_dir = current_file.parent
 config_dir = src_dir.parent / "config"
-lstm_config_dir = src_dir.parent.parent / "privacy-preserving-lstm" / "config"
+lstm_config_dir = src_dir.parent.parent / "privacy-preserving-lstm" / "src"
 
 # Add paths to Python's search list
 sys.path.insert(0, str(src_dir))

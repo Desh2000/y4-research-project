@@ -148,7 +148,7 @@ def train():
             state_n, reward, done, _ = trainer.env.step(action[0], action[1])
 
             # Save data for training
-            memory.states.append(torch.FloatTensor(state))
+            memory.states.append(state)
             memory.actions_cat.append(torch.tensor(action[0]))
             memory.actions_cont.append(torch.tensor(action[1]))
             # Recalculate logprob inside update loop usually, but here we store for simplicity
