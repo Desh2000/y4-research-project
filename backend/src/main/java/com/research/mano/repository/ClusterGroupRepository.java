@@ -1,241 +1,145 @@
 package com.research.mano.repository;
 
-
-
 import com.research.mano.entity.ClusterGroup;
-import com.research.mano.entity.MentalHealthPrediction;
+import com.research.mano.entity.ClusterGroup.ClusterCategory;
+import com.research.mano.entity.ClusterGroup.SeverityLevel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Cluster Group Repository Interface
- * Handles CRUD operations for Component 4 (GMM Clustering) groups
+ * Cluster Group Repository for Component 4
  */
 @Repository
 public interface ClusterGroupRepository extends BaseRepository<ClusterGroup, Long> {
 
-    /**
-     * Find cluster group by identifier
-     */
+    // ==================== BASIC QUERIES ====================
+
     Optional<ClusterGroup> findByClusterIdentifier(String clusterIdentifier);
 
-    /**
-     * Find cluster groups by category
-     */
-    List<ClusterGroup> findByCategory(MentalHealthPrediction.ClusterCategory category);
-
-    /**
-     * Find cluster groups by level
-     */
-    List<ClusterGroup> findByLevel(MentalHealthPrediction.ClusterLevel level);
-
-    /**
-     * Find cluster group by category and level
-     */
-    Optional<ClusterGroup> findByCategoryAndLevel(MentalHealthPrediction.ClusterCategory category,
-                                                  MentalHealthPrediction.ClusterLevel level);
-
-    /**
-     * Find all active cluster groups
-     */
     List<ClusterGroup> findByIsActiveTrue();
 
-    /**
-     * Find non-empty cluster groups (with members)
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.memberCount > 0")
-    List<ClusterGroup> findNonEmptyClusterGroups();
+    List<ClusterGroup> findByPrimaryCategory(ClusterCategory category);
 
-    /**
-     * Find empty cluster groups (no members)
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.memberCount = 0 OR cg.memberCount IS NULL")
-    List<ClusterGroup> findEmptyClusterGroups();
+    List<ClusterGroup> findBySeverityLevel(SeverityLevel severityLevel);
 
-    /**
-     * Find cluster groups by professional support level
-     */
-    List<ClusterGroup> findByProfessionalSupportLevel(ClusterGroup.ProfessionalSupportLevel supportLevel);
+    List<ClusterGroup> findByPrimaryCategoryAndSeverityLevel(ClusterCategory category, SeverityLevel severityLevel);
 
-    /**
-     * Find high-intensity support clusters (HIGH level clusters)
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.level = 'HIGH'")
-    List<ClusterGroup> findHighIntensitySupportClusters();
+    // ==================== ACTIVE CLUSTER QUERIES ====================
 
-    /**
-     * Find low-intensity support clusters (LOW level clusters)
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.level = 'LOW'")
-    List<ClusterGroup> findLowIntensitySupportClusters();
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true ORDER BY c.primaryCategory, c.severityLevel")
+    List<ClusterGroup> findAllActiveOrdered();
 
-    /**
-     * Find cluster groups by model version
-     */
-    List<ClusterGroup> findByModelVersion(String modelVersion);
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.primaryCategory = :category ORDER BY c.severityLevel")
+    List<ClusterGroup> findActiveByCategoryOrdered(@Param("category") ClusterCategory category);
 
-    /**
-     * Find cluster groups needing updates (old model version or old timestamp)
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.lastUpdated < :cutoffDate OR cg.modelVersion != :currentVersion")
-    List<ClusterGroup> findClusterGroupsNeedingUpdate(@Param("cutoffDate") LocalDateTime cutoffDate,
-                                                      @Param("currentVersion") String currentVersion);
+    // ==================== MEMBER STATISTICS ====================
 
-    /**
-     * Get cluster distribution statistics
-     */
-    @Query("SELECT cg.clusterIdentifier, cg.memberCount, cg.averageResilienceScore " +
-            "FROM ClusterGroup cg ORDER BY cg.memberCount DESC")
-    List<Object[]> getClusterDistributionStats();
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.memberCount > 0 ORDER BY c.memberCount DESC")
+    List<ClusterGroup> findClustersWithMembers();
 
-    /**
-     * Get cluster statistics by category
-     */
-    @Query("SELECT cg.category, SUM(cg.memberCount), AVG(cg.averageResilienceScore) " +
-            "FROM ClusterGroup cg GROUP BY cg.category")
-    List<Object[]> getStatsByCategory();
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.activeMemberCount > :minMembers")
+    List<ClusterGroup> findClustersWithMinActiveMembers(@Param("minMembers") Integer minMembers);
 
-    /**
-     * Get cluster statistics by level
-     */
-    @Query("SELECT cg.level, SUM(cg.memberCount), AVG(cg.averageResilienceScore) " +
-            "FROM ClusterGroup cg GROUP BY cg.level")
-    List<Object[]> getStatsByLevel();
-
-    /**
-     * Find the most populated clusters
-     */
-    @Query("SELECT cg FROM ClusterGroup cg ORDER BY cg.memberCount DESC")
-    List<ClusterGroup> findMostPopulatedClusters();
-
-    /**
-     * Find clusters with the highest average resilience
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.averageResilienceScore IS NOT NULL " +
-            "ORDER BY cg.averageResilienceScore DESC")
-    List<ClusterGroup> findHighestResilienceClusters();
-
-    /**
-     * Find clusters with the lowest average resilience
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE cg.averageResilienceScore IS NOT NULL " +
-            "ORDER BY cg.averageResilienceScore ASC")
-    List<ClusterGroup> findLowestResilienceClusters();
-
-    /**
-     * Update cluster member count
-     */
-    @Modifying
-    @Query("UPDATE ClusterGroup cg SET cg.memberCount = :memberCount, cg.lastUpdated = :updateTime " +
-            "WHERE cg.id = :clusterId")
-    void updateMemberCount(@Param("clusterId") Long clusterId,
-                           @Param("memberCount") Integer memberCount,
-                           @Param("updateTime") LocalDateTime updateTime);
-
-    /**
-     * Update cluster centroid values (GMM model parameters)
-     */
-    @Modifying
-    @Query("UPDATE ClusterGroup cg SET " +
-            "cg.centroidStress = :stressCentroid, " +
-            "cg.centroidDepression = :depressionCentroid, " +
-            "cg.centroidAnxiety = :anxietyCentroid, " +
-            "cg.lastUpdated = :updateTime, " +
-            "cg.modelVersion = :modelVersion " +
-            "WHERE cg.id = :clusterId")
-    void updateCentroid(@Param("clusterId") Long clusterId,
-                        @Param("stressCentroid") Double stressCentroid,
-                        @Param("depressionCentroid") Double depressionCentroid,
-                        @Param("anxietyCentroid") Double anxietyCentroid,
-                        @Param("updateTime") LocalDateTime updateTime,
-                        @Param("modelVersion") String modelVersion);
-
-    /**
-     * Update cluster average resilience score
-     */
-    @Modifying
-    @Query("UPDATE ClusterGroup cg SET cg.averageResilienceScore = :avgScore, cg.lastUpdated = :updateTime " +
-            "WHERE cg.id = :clusterId")
-    void updateAverageResilienceScore(@Param("clusterId") Long clusterId,
-                                      @Param("avgScore") Double avgScore,
-                                      @Param("updateTime") LocalDateTime updateTime);
-
-    /**
-     * Increment member count for a cluster
-     */
-    @Modifying
-    @Query("UPDATE ClusterGroup cg SET " +
-            "cg.memberCount = COALESCE(cg.memberCount, 0) + 1, " +
-            "cg.lastUpdated = :updateTime " +
-            "WHERE cg.id = :clusterId")
-    void incrementMemberCount(@Param("clusterId") Long clusterId, @Param("updateTime") LocalDateTime updateTime);
-
-    /**
-     * Decrement member count for a cluster
-     */
-    @Modifying
-    @Query("UPDATE ClusterGroup cg SET " +
-            "cg.memberCount = CASE WHEN COALESCE(cg.memberCount, 0) > 0 THEN cg.memberCount - 1 ELSE 0 END, " +
-            "cg.lastUpdated = :updateTime " +
-            "WHERE cg.id = :clusterId")
-    void decrementMemberCount(@Param("clusterId") Long clusterId, @Param("updateTime") LocalDateTime updateTime);
-
-    /**
-     * Find clusters for specific score ranges (for Component 2 integration)
-     */
-    @Query("SELECT cg FROM ClusterGroup cg WHERE " +
-            "(cg.category = 'STRESS' AND :stressScore BETWEEN " +
-            "   (CASE cg.level WHEN 'LOW' THEN 0.1 WHEN 'MEDIUM' THEN 0.4 WHEN 'HIGH' THEN 0.8 END) AND " +
-            "   (CASE cg.level WHEN 'LOW' THEN 0.3 WHEN 'MEDIUM' THEN 0.7 WHEN 'HIGH' THEN 1.0 END)" +
-            ") OR " +
-            "(cg.category = 'DEPRESSION' AND :depressionScore BETWEEN " +
-            "   (CASE cg.level WHEN 'LOW' THEN 0.1 WHEN 'MEDIUM' THEN 0.4 WHEN 'HIGH' THEN 0.8 END) AND " +
-            "   (CASE cg.level WHEN 'LOW' THEN 0.3 WHEN 'MEDIUM' THEN 0.7 WHEN 'HIGH' THEN 1.0 END)" +
-            ") OR " +
-            "(cg.category = 'ANXIETY' AND :anxietyScore BETWEEN " +
-            "   (CASE cg.level WHEN 'LOW' THEN 0.1 WHEN 'MEDIUM' THEN 0.4 WHEN 'HIGH' THEN 0.8 END) AND " +
-            "   (CASE cg.level WHEN 'LOW' THEN 0.3 WHEN 'MEDIUM' THEN 0.7 WHEN 'HIGH' THEN 1.0 END)" +
-            ")")
-    List<ClusterGroup> findClustersForScores(@Param("stressScore") Double stressScore,
-                                             @Param("depressionScore") Double depressionScore,
-                                             @Param("anxietyScore") Double anxietyScore);
-
-    /**
-     * Get the total member count across all clusters
-     */
-    @Query("SELECT SUM(cg.memberCount) FROM ClusterGroup cg")
+    @Query("SELECT SUM(c.memberCount) FROM ClusterGroup c WHERE c.isActive = true")
     Long getTotalMemberCount();
 
-    /**
-     * Check if all 9 required clusters exist
-     */
-    @Query("SELECT COUNT(cg) FROM ClusterGroup cg WHERE cg.isActive = true")
-    Long countActiveClusters();
+    @Query("SELECT SUM(c.activeMemberCount) FROM ClusterGroup c WHERE c.isActive = true")
+    Long getTotalActiveMemberCount();
 
-    /**
-     * Find all existing cluster identifiers
-     */
-    @Query("SELECT cg.clusterIdentifier FROM ClusterGroup cg")
-    List<String> findAllClusterIdentifiers();
+    // ==================== SEVERITY QUERIES ====================
 
-    /**
-     * Find clusters that need initialization (missing required clusters)
-     */
-    default List<String> findMissingClusterIdentifiers() {
-        List<String> existingIdentifiers = findAllClusterIdentifiers();
-        List<String> allPossibleIdentifiers = new java.util.ArrayList<>();
-        for (MentalHealthPrediction.ClusterCategory category : MentalHealthPrediction.ClusterCategory.values()) {
-            for (MentalHealthPrediction.ClusterLevel level : MentalHealthPrediction.ClusterLevel.values()) {
-                allPossibleIdentifiers.add(category.name() + "_" + level.name());
-            }
-        }
-        allPossibleIdentifiers.removeAll(existingIdentifiers);
-        return allPossibleIdentifiers;
-    }
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.severityLevel IN ('HIGH', 'SEVERE') ORDER BY c.activeMemberCount DESC")
+    List<ClusterGroup> findHighSeverityClusters();
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.severityLevel = 'SEVERE' AND c.activeMemberCount > 0")
+    List<ClusterGroup> findCriticalClusters();
+
+    // ==================== PERFORMANCE QUERIES ====================
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.avgImprovementRate > :threshold ORDER BY c.avgImprovementRate DESC")
+    List<ClusterGroup> findHighPerformingClusters(@Param("threshold") Double threshold);
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.avgImprovementRate < :threshold ORDER BY c.avgImprovementRate ASC")
+    List<ClusterGroup> findLowPerformingClusters(@Param("threshold") Double threshold);
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true ORDER BY c.successfulTransitions DESC")
+    List<ClusterGroup> findBySuccessfulTransitionsDesc();
+
+    // ==================== MODEL QUERIES ====================
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.modelVersion = :version AND c.isActive = true")
+    List<ClusterGroup> findByModelVersion(@Param("version") String version);
+
+    @Query("SELECT DISTINCT c.modelVersion FROM ClusterGroup c WHERE c.modelVersion IS NOT NULL ORDER BY c.lastModelUpdate DESC")
+    List<String> findDistinctModelVersions();
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.lastModelUpdate < :date")
+    List<ClusterGroup> findClustersNeedingUpdate(@Param("date") LocalDateTime date);
+
+    // ==================== CENTROID QUERIES ====================
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.centroidStress IS NOT NULL ORDER BY c.centroidStress DESC")
+    List<ClusterGroup> findOrderedByStressCentroid();
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND " +
+            "ABS(c.centroidStress - :stress) + ABS(c.centroidDepression - :depression) + ABS(c.centroidAnxiety - :anxiety) = " +
+            "(SELECT MIN(ABS(c2.centroidStress - :stress) + ABS(c2.centroidDepression - :depression) + ABS(c2.centroidAnxiety - :anxiety)) " +
+            "FROM ClusterGroup c2 WHERE c2.isActive = true AND c2.centroidStress IS NOT NULL)")
+    Optional<ClusterGroup> findNearestCluster(@Param("stress") Double stress,
+                                              @Param("depression") Double depression,
+                                              @Param("anxiety") Double anxiety);
+
+    // ==================== COMMUNITY QUERIES ====================
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.hasPeerSupport = true")
+    List<ClusterGroup> findClustersWithPeerSupport();
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.isActive = true AND c.communityEngagementScore > :threshold")
+    List<ClusterGroup> findHighEngagementClusters(@Param("threshold") Double threshold);
+
+    // ==================== REVIEW QUERIES ====================
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.requiresReview = true")
+    List<ClusterGroup> findClustersRequiringReview();
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.lastReviewed < :date OR c.lastReviewed IS NULL")
+    List<ClusterGroup> findClustersNeedingReview(@Param("date") LocalDateTime date);
+
+    // ==================== STATISTICS QUERIES ====================
+
+    @Query("SELECT c.primaryCategory, COUNT(c), SUM(c.memberCount) FROM ClusterGroup c WHERE c.isActive = true GROUP BY c.primaryCategory")
+    List<Object[]> getStatisticsByCategory();
+
+    @Query("SELECT c.severityLevel, COUNT(c), SUM(c.memberCount) FROM ClusterGroup c WHERE c.isActive = true GROUP BY c.severityLevel")
+    List<Object[]> getStatisticsBySeverity();
+
+    @Query("SELECT AVG(c.avgImprovementRate), AVG(c.retentionRate), AVG(c.silhouetteScore) FROM ClusterGroup c WHERE c.isActive = true")
+    Object[] getOverallPerformanceMetrics();
+
+    @Query("SELECT c.primaryCategory, AVG(c.avgImprovementRate) FROM ClusterGroup c WHERE c.isActive = true GROUP BY c.primaryCategory")
+    List<Object[]> getImprovementRateByCategory();
+
+    // ==================== UPDATE QUERIES ====================
+
+    @Modifying
+    @Query("UPDATE ClusterGroup c SET c.memberCount = c.memberCount + 1, c.activeMemberCount = c.activeMemberCount + 1 WHERE c.id = :clusterId")
+    int incrementMemberCount(@Param("clusterId") Long clusterId);
+
+    @Modifying
+    @Query("UPDATE ClusterGroup c SET c.activeMemberCount = c.activeMemberCount - 1 WHERE c.id = :clusterId AND c.activeMemberCount > 0")
+    int decrementActiveMemberCount(@Param("clusterId") Long clusterId);
+
+    @Modifying
+    @Query("UPDATE ClusterGroup c SET c.successfulTransitions = c.successfulTransitions + 1 WHERE c.id = :clusterId")
+    int incrementSuccessfulTransitions(@Param("clusterId") Long clusterId);
+
+    @Modifying
+    @Query("UPDATE ClusterGroup c SET c.isActive = false WHERE c.memberCount = 0 AND c.lastModelUpdate < :date")
+    int deactivateEmptyClusters(@Param("date") LocalDateTime date);
 }
