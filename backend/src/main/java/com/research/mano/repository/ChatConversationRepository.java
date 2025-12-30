@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Chat Conversation Repository Interface
@@ -123,10 +125,22 @@ public interface ChatConversationRepository extends BaseRepository<ChatConversat
             "GROUP BY DATE(cc.createdAt) ORDER BY DATE(cc.createdAt)")
     List<Object[]> getSentimentTrendsByDate(@Param("startDate") LocalDateTime startDate);
 
+
     /**
      * Find high-interaction users (for engagement analysis)
      */
     @Query("SELECT cc.user, COUNT(cc) FROM ChatConversation cc " +
             "WHERE cc.createdAt >= :since GROUP BY cc.user HAVING COUNT(cc) > :threshold")
     List<Object[]> findHighInteractionUsers(@Param("since") LocalDateTime since, @Param("threshold") Long threshold);
+
+    List<ChatConversation> findByStatus(ChatConversation.ConversationStatus conversationStatus);
+
+    @Query("SELECT c FROM ChatConversation c WHERE c.user.id = :userId AND c.status = 'ACTIVE'")
+    Optional<ChatConversation> findActiveByUserId(@Param("userId") Long userId);
+
+    List<ChatConversation> findByUserOrderByStartedAtDesc(User user);
+
+    List<ChatConversation> findByUserAndStartedAtAfter(User user, LocalDateTime since);
+
+    long countByStatus(ChatConversation.ConversationStatus status);
 }

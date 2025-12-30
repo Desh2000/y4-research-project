@@ -169,4 +169,8 @@ public class ChatConversationDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
     }
+
+    public static Object fromEntity(Object o) {
+        return o;
+    }
 }
