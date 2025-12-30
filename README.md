@@ -113,7 +113,7 @@ A **4-network architecture** (Embedder, Recovery, Generator, Supervisor) that le
 
 ### 3️⃣ **The Intervenor (Component 3 - AMISE)**
 
-> **AMISE**: *Adaptive Mental Health Intervention Simulation Engine*
+> **AMISE**: *Adaptive Multimodal Intervention Simulation Engine*
 
 **🌍 World Model**
 - Attention-based Seq2Seq network
@@ -387,7 +387,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **⭐ If you find this project useful, please consider giving it a star!**
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/mano-project.svg?style=social&label=Star)]([https://github.com/yourusername/mano-project](https://github.com/Desh2000/y4-research-project))
+[![GitHub stars](https://img.shields.io/github/stars/Desh2000/y4-research-project.svg?style=social&label=Star)]([https://github.com/Desh2000/y4-research-project](https://github.com/Desh2000/y4-research-project))
 
 </div>
 
@@ -398,4 +398,5 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Made with ❤️ for the AI & Mental Health Research Communities**
 
 </div>
+
 
