@@ -120,7 +120,7 @@ A **4-network architecture** (Embedder, Recovery, Generator, Supervisor) that le
 - Trained via Model Distillation
 - Simulates physiological effects of treatments (e.g., CBT, Medication)
 
-**🤖 AI Doctor**
+**🤖 AI Oracle**
 - Proximal Policy Optimization (PPO) agent
 - Dual-Head Actor (Discrete Action + Continuous Intensity)
 - Learns to prescribe the **minimum effective dose** to cure patients
@@ -387,8 +387,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **⭐ If you find this project useful, please consider giving it a star!**
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/mano-project.svg?style=social&label=Star)](https://github.com/yourusername/mano-project)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/mano-project.svg?style=social&label=Fork)](https://github.com/yourusername/mano-project/fork)
+[![GitHub stars](https://img.shields.io/github/stars/yourusername/mano-project.svg?style=social&label=Star)]([https://github.com/yourusername/mano-project](https://github.com/Desh2000/y4-research-project))
 
 </div>
 
@@ -399,3 +398,4 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Made with ❤️ for the AI & Mental Health Research Communities**
 
 </div>
+
