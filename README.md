@@ -51,20 +51,21 @@
 
 ```mermaid
 graph TD
-    subgraph "Phase 1: Synthetic Generation"
+    subgraph Phase1["Phase 1: Synthetic Generation"]
     A[Real Data Sources] -->|Cleaning| B(Component 1: Generators)
     B -->|CTGAN| C[Synthetic Static Profiles]
     B -->|TimeGAN| D[Synthetic 7-Day Rhythms]
     end
 
-    subgraph "Phase 2: Prediction"
-    C & D -->|Data Fusion| E{Labeled Synthetic Dataset}
+    subgraph Phase2["Phase 2: Prediction"]
+    C --> E{Labeled Synthetic Dataset}
+    D --> E
     E --> F[Component 2: Hybrid LSTM Predictor]
     end
 
-    subgraph "Phase 3: Intervention (AMISE)"
-    F -->|Risk Score| G[RL Agent (PPO)]
-    G -->|Action: Treatment + Intensity| H[Seq2Seq World Model]
+    subgraph Phase3["Phase 3: Intervention AMISE"]
+    F -->|Risk Score| G[RL Agent PPO]
+    G -->|Action Treatment & Intensity| H[Seq2Seq World Model]
     H -->|Simulated Outcome| F
     end
 ```
@@ -395,6 +396,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-**Made with ❤️ for the AI and Mental Health Research Communities**
+**Made with ❤️ for the AI & Mental Health Research Communities**
 
 </div>
