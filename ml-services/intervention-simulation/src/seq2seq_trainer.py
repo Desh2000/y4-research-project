@@ -66,14 +66,23 @@ class SimulatorTrainer:
         
         # Scheduler (Squeeze out accuracy)
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            self.optimizer, mode='min', factor=0.5, patience=3, verbose=True
+            self.optimizer, mode='min', factor=0.5, patience=3
         )
         
         # Mixed Precision Scaler
-        self.scaler = GradScaler()
+        # Fix: Disable GradScaler if no CUDA to avoid warnings
+        use_scaler = (self.device == 'cuda')
+        self.scaler = GradScaler(enabled=use_scaler)
         
         logger.info(f"✅ Trainer Initialized on {self.device}")
         logger.info(f"   Model Parameters: {sum(p.numel() for p in self.model.parameters()):,}")
+
+        # Check for Data Availability immediately
+        if not os.path.exists(config.data.SIMULATION_DATA_PATH):
+            logger.error(f"❌ MISSING DATA: {config.data.SIMULATION_DATA_PATH}")
+            logger.error("   Please run 'intervention_data_prep.py' first to generate training data.")
+            logger.error("   Command: python ml-services/intervention-simulation/src/intervention_data_prep.py")
+            sys.exit(1)
 
     def get_loaders(self):
         dataset = SimulationDataset(self.config.data.SIMULATION_DATA_PATH)

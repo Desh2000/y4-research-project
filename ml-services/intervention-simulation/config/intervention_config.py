@@ -107,6 +107,13 @@ class ModelConfig:
     # Network Size
     HIDDEN_DIM = 64
     LAYERS = 2
+    
+    # Encoder/Decoder specific configs
+    ENC_HIDDEN_DIM = HIDDEN_DIM
+    DEC_HIDDEN_DIM = HIDDEN_DIM
+    ENC_LAYERS = LAYERS
+    DEC_LAYERS = LAYERS
+
     DROPOUT = 0.2
 
 
