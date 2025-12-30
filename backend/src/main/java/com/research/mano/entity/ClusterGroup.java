@@ -35,6 +35,9 @@ public class ClusterGroup extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "cluster_description", columnDefinition = "TEXT")
+    private String clusterDescription;
+
     // ==================== CLUSTER CLASSIFICATION ====================
 
     @Enumerated(EnumType.STRING)
@@ -74,10 +77,10 @@ public class ClusterGroup extends BaseEntity {
     // ==================== MEMBER STATISTICS ====================
 
     @Column(name = "member_count")
-    private Integer memberCount = 0;
+    private Long memberCount = 0L;
 
     @Column(name = "active_member_count")
-    private Integer activeMemberCount = 0;
+    private Long activeMemberCount = 0L;
 
     @Column(name = "max_capacity")
     private Integer maxCapacity;
@@ -93,6 +96,9 @@ public class ClusterGroup extends BaseEntity {
 
     @Column(name = "avg_member_resilience")
     private Double avgMemberResilience;
+
+    @Column(name = "average_resilience_score")
+    private Double averageResilienceScore;
 
     @Column(name = "std_dev_stress")
     private Double stdDevStress;
@@ -148,6 +154,13 @@ public class ClusterGroup extends BaseEntity {
     @Column(name = "coping_strategies", columnDefinition = "TEXT")
     private String copingStrategies; // JSON array of effective strategies
 
+    @Column(name = "peer_support_activities", columnDefinition = "TEXT")
+    private String peerSupportActivities;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "professional_support_level")
+    private ProfessionalSupportLevel professionalSupportLevel;
+
     // ==================== MODEL METADATA ====================
 
     @Column(name = "model_version")
@@ -178,6 +191,9 @@ public class ClusterGroup extends BaseEntity {
 
     @Column(name = "reviewed_by")
     private String reviewedBy;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 
     // ==================== RELATIONSHIPS ====================
 
@@ -237,6 +253,10 @@ public class ClusterGroup extends BaseEntity {
             if (score < 0.8) return HIGH;
             return SEVERE;
         }
+    }
+
+    public enum ProfessionalSupportLevel {
+        NONE, LOW, MEDIUM, HIGH, CRITICAL
     }
 
     // ==================== CONSTRUCTORS ====================
@@ -299,7 +319,7 @@ public class ClusterGroup extends BaseEntity {
             return;
         }
 
-        int count = memberScores.size();
+        long count = memberScores.size();
         this.memberCount = count;
 
         // Calculate averages
@@ -388,5 +408,22 @@ public class ClusterGroup extends BaseEntity {
         }
 
         return Math.min(1.0, Math.max(0.0, health));
+    }
+
+    // Getters and Setters for compatibility
+    public ClusterCategory getCategory() {
+        return primaryCategory;
+    }
+
+    public void setCategory(ClusterCategory category) {
+        this.primaryCategory = category;
+    }
+
+    public SeverityLevel getLevel() {
+        return severityLevel;
+    }
+
+    public void setLevel(SeverityLevel level) {
+        this.severityLevel = level;
     }
 }

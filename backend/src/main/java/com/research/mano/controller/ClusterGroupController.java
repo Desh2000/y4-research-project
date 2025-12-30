@@ -348,7 +348,7 @@ public class ClusterGroupController {
             dto.setLevel(cluster.getLevel().name());
         }
         dto.setDescription(cluster.getClusterDescription());
-        dto.setMemberCount(cluster.getMemberCount());
+        dto.setMemberCount(Math.toIntExact(cluster.getMemberCount()));
         dto.setAverageResilienceScore(cluster.getAverageResilienceScore());
         if (cluster.getProfessionalSupportLevel() != null) {
             dto.setProfessionalSupportLevel(cluster.getProfessionalSupportLevel().name());

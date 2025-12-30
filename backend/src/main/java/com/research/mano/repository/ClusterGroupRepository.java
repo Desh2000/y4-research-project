@@ -129,7 +129,7 @@ public interface ClusterGroupRepository extends BaseRepository<ClusterGroup, Lon
 
     @Modifying
     @Query("UPDATE ClusterGroup c SET c.memberCount = c.memberCount + 1, c.activeMemberCount = c.activeMemberCount + 1 WHERE c.id = :clusterId")
-    int incrementMemberCount(@Param("clusterId") Long clusterId);
+    int incrementMemberCount(@Param("clusterId") Long clusterId, LocalDateTime now);
 
     @Modifying
     @Query("UPDATE ClusterGroup c SET c.activeMemberCount = c.activeMemberCount - 1 WHERE c.id = :clusterId AND c.activeMemberCount > 0")
@@ -142,4 +142,37 @@ public interface ClusterGroupRepository extends BaseRepository<ClusterGroup, Lon
     @Modifying
     @Query("UPDATE ClusterGroup c SET c.isActive = false WHERE c.memberCount = 0 AND c.lastModelUpdate < :date")
     int deactivateEmptyClusters(@Param("date") LocalDateTime date);
+
+    @Modifying
+    @Query("UPDATE ClusterGroup c SET c.memberCount = c.memberCount - 1 WHERE c.id = :clusterId AND c.memberCount > 0")
+    void decrementMemberCount(@Param("clusterId") Long clusterId, @Param("now") LocalDateTime now);
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.primaryCategory = :category")
+    List<ClusterGroup> findByCategory(@Param("category") ClusterCategory category);
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.severityLevel = :level")
+    List<ClusterGroup> findByLevel(@Param("level") SeverityLevel level);
+
+    @Query("SELECT c FROM ClusterGroup c WHERE c.primaryCategory = :category AND c.severityLevel = :level")
+    Optional<ClusterGroup> findByCategoryAndLevel(@Param("category") ClusterCategory category, @Param("level") SeverityLevel level);
+
+    List<ClusterGroup> findTop5ByOrderByMemberCountDesc();
+
+    List<ClusterGroup> findTop5ByOrderByAverageResilienceScoreDesc();
+
+    List<ClusterGroup> findTop5ByOrderByAverageResilienceScoreAsc();
+
+    List<ClusterGroup> findByProfessionalSupportLevel(ClusterGroup.ProfessionalSupportLevel level);
+
+    @Query("SELECT c.primaryCategory, COUNT(c) FROM ClusterGroup c GROUP BY c.primaryCategory")
+    List<Object[]> getClusterDistributionStats();
+
+    @Query("SELECT c.primaryCategory, AVG(c.memberCount), MAX(c.memberCount), MIN(c.memberCount) FROM ClusterGroup c GROUP BY c.primaryCategory")
+    List<Object[]> getStatsByCategory();
+
+    @Query("SELECT c.severityLevel, AVG(c.memberCount), MAX(c.memberCount), MIN(c.memberCount) FROM ClusterGroup c GROUP BY c.severityLevel")
+    List<Object[]> getStatsByLevel();
+
+    @Query("SELECT SUM(c.memberCount) FROM ClusterGroup c")
+    Long sumMemberCount();
 }

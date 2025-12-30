@@ -25,9 +25,9 @@ public class ClusterGroupDTO {
     private String description;
 
     // Classification
-    private ClusterCategory primaryCategory;
+    private String category;
     private String primaryCategoryDisplayName;
-    private SeverityLevel severityLevel;
+    private String level;
     private String severityLevelDisplayName;
     private Integer clusterIndex;
 
@@ -38,13 +38,14 @@ public class ClusterGroupDTO {
     private Double centroidResilience;
 
     // Member Statistics
-    private Integer memberCount;
-    private Integer activeMemberCount;
+    private Long memberCount;
+    private Long activeMemberCount;
     private Integer maxCapacity;
     private Double avgMemberStress;
     private Double avgMemberDepression;
     private Double avgMemberAnxiety;
     private Double avgMemberResilience;
+    private Double averageResilienceScore;
 
     // Performance
     private Double avgImprovementRate;
@@ -62,6 +63,8 @@ public class ClusterGroupDTO {
     private Double communityEngagementScore;
     private String sharedExperiences;
     private String copingStrategies;
+    private String peerSupportActivities;
+    private String professionalSupportLevel;
 
     // Quality Metrics
     private Double silhouetteScore;
@@ -73,6 +76,7 @@ public class ClusterGroupDTO {
     private Boolean isActive;
     private String modelVersion;
     private LocalDateTime lastModelUpdate;
+    private LocalDateTime lastUpdated;
 
     // Flags
     private Boolean needsAttention;
@@ -89,12 +93,12 @@ public class ClusterGroupDTO {
                 .clusterIdentifier(entity.getClusterIdentifier())
                 .clusterName(entity.getClusterName())
                 .description(entity.getDescription())
-                .primaryCategory(entity.getPrimaryCategory())
-                .primaryCategoryDisplayName(entity.getPrimaryCategory() != null
-                        ? entity.getPrimaryCategory().getDisplayName() : null)
-                .severityLevel(entity.getSeverityLevel())
-                .severityLevelDisplayName(entity.getSeverityLevel() != null
-                        ? entity.getSeverityLevel().getDisplayName() : null)
+                .category(entity.getCategory() != null ? entity.getCategory().name() : null)
+                .primaryCategoryDisplayName(entity.getCategory() != null
+                        ? entity.getCategory().getDisplayName() : null)
+                .level(entity.getLevel() != null ? entity.getLevel().name() : null)
+                .severityLevelDisplayName(entity.getLevel() != null
+                        ? entity.getLevel().getDisplayName() : null)
                 .clusterIndex(entity.getClusterIndex())
                 .centroidStress(entity.getCentroidStress())
                 .centroidDepression(entity.getCentroidDepression())
@@ -107,6 +111,7 @@ public class ClusterGroupDTO {
                 .avgMemberDepression(entity.getAvgMemberDepression())
                 .avgMemberAnxiety(entity.getAvgMemberAnxiety())
                 .avgMemberResilience(entity.getAvgMemberResilience())
+                .averageResilienceScore(entity.getAverageResilienceScore())
                 .avgImprovementRate(entity.getAvgImprovementRate())
                 .successfulTransitions(entity.getSuccessfulTransitions())
                 .avgTimeInClusterDays(entity.getAvgTimeInClusterDays())
@@ -118,6 +123,8 @@ public class ClusterGroupDTO {
                 .communityEngagementScore(entity.getCommunityEngagementScore())
                 .sharedExperiences(entity.getSharedExperiences())
                 .copingStrategies(entity.getCopingStrategies())
+                .peerSupportActivities(entity.getPeerSupportActivities())
+                .professionalSupportLevel(entity.getProfessionalSupportLevel() != null ? entity.getProfessionalSupportLevel().name() : null)
                 .silhouetteScore(entity.getSilhouetteScore())
                 .cohesionScore(entity.getCohesionScore())
                 .separationScore(entity.getSeparationScore())
@@ -125,8 +132,23 @@ public class ClusterGroupDTO {
                 .isActive(entity.getIsActive())
                 .modelVersion(entity.getModelVersion())
                 .lastModelUpdate(entity.getLastModelUpdate())
+                .lastUpdated(entity.getLastUpdated())
                 .needsAttention(entity.needsAttention())
                 .isAtCapacity(entity.isAtCapacity())
                 .build();
+    }
+
+    public void setCovarianceMatrix(String covarianceMatrix) {
+    }
+
+    public void setClusterWeight(Double clusterWeight) {
+    }
+
+    public ClusterCategory getPrimaryCategory() {
+        return null;
+    }
+
+    public SeverityLevel getSeverityLevel() {
+        return null;
     }
 }

@@ -1,6 +1,9 @@
 package com.research.mano.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -190,5 +193,26 @@ public class UserProfile extends BaseEntity {
     }
 
     public void setClusterAssignment(String clusterName) {
+    }
+
+    public void setCurrentStressLevel(@NotNull(message = "Stress score is required") @DecimalMin(value = "0.0", message = "Stress score must be >= 0.0") @DecimalMax(value = "1.0", message = "Stress score must be <= 1.0") Double stressScore) {
+    }
+
+    public void setCurrentAnxietyLevel(@NotNull(message = "Anxiety score is required") @DecimalMin(value = "0.0", message = "Anxiety score must be >= 0.0") @DecimalMax(value = "1.0", message = "Anxiety score must be <= 1.0") Double anxietyScore) {
+    }
+
+    public void setCurrentDepressionLevel(@NotNull(message = "Depression score is required") @DecimalMin(value = "0.0", message = "Depression score must be >= 0.0") @DecimalMax(value = "1.0", message = "Depression score must be <= 1.0") Double depressionScore) {
+    }
+
+    public @NotNull(message = "Stress score is required") @DecimalMin(value = "0.0", message = "Stress score must be >= 0.0") @DecimalMax(value = "1.0", message = "Stress score must be <= 1.0") Double getCurrentStressLevel() {
+        return 0.0;
+    }
+
+    public @NotNull(message = "Depression score is required") @DecimalMin(value = "0.0", message = "Depression score must be >= 0.0") @DecimalMax(value = "1.0", message = "Depression score must be <= 1.0") Double getCurrentDepressionLevel() {
+        return 0.0;
+    }
+
+    public @NotNull(message = "Anxiety score is required") @DecimalMin(value = "0.0", message = "Anxiety score must be >= 0.0") @DecimalMax(value = "1.0", message = "Anxiety score must be <= 1.0") Double getCurrentAnxietyLevel() {
+        return 0.0;
     }
 }

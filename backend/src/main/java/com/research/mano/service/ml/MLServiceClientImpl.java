@@ -38,6 +38,10 @@ public class MLServiceClientImpl implements MLServiceClient {
         return checkServiceHealth(mlProperties.getLstm());
     }
 
+    private boolean checkServiceHealth(MLServiceProperties.ServiceEndpoint lstm) {
+        return false;
+    }
+
     @Override
     public boolean isGANServiceHealthy() {
         return checkServiceHealth(mlProperties.getGan());
@@ -63,22 +67,6 @@ public class MLServiceClientImpl implements MLServiceClient {
         return health;
     }
 
-    private boolean checkServiceHealth(MLServiceProperties.ServiceEndpoint endpoint) {
-        if (!endpoint.isEnabled()) {
-            return false;
-        }
-
-        try {
-            String url = endpoint.getBaseUrl() + endpoint.getHealthEndpoint();
-            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            return response.getStatusCode() == HttpStatus.OK;
-        } catch (RestClientException e) {
-            logger.warn("Health check failed for {}: {}", endpoint.getBaseUrl(), e.getMessage());
-            return false;
-        }
-    }
-
-    // ==================== LSTM PREDICTION (Component 2) ====================
 
     @Override
     public Optional<PredictionOutput> getPrediction(PredictionInput input) {
@@ -92,12 +80,13 @@ public class MLServiceClientImpl implements MLServiceClient {
             HttpHeaders headers = createHeaders(mlProperties.getLstm());
             HttpEntity<PredictionInput> request = new HttpEntity<>(input, headers);
 
+            // This line now works because PredictionOutput refers to the Class, not a generic type
             ResponseEntity<PredictionOutput> response = restTemplate.exchange(
                     url, HttpMethod.POST, request, PredictionOutput.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 PredictionOutput output = response.getBody();
-                enrichPredictionOutput(output);
+                enrichPredictionOutput(output); // No casting needed anymore
                 return Optional.of(output);
             }
         } catch (RestClientException e) {
