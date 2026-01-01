@@ -4,6 +4,11 @@
 """
 Schemas Module
 ==============
+What is this file?
+Defines the SHAPE of our data. Like templates/forms.
+Why we need it?
+To make sure data is in the correct format.
+
 Defines the structure of data used in the system.
 Using Pydantic for data validation.
 """
