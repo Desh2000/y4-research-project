@@ -101,6 +101,10 @@ public class PredictionInput {
      */
     private List<String> recentTextEntries;
 
+    public String getRequestId() {
+        return "";
+    }
+
     // ==================== NESTED CLASSES ====================
 
     @Data

@@ -52,6 +52,7 @@ public class Role extends BaseEntity {
     public enum RoleName {
         ROLE_USER("Standard user with access to basic features"),
         ROLE_THERAPIST("Mental health professional with extended access"),
+        ROLE_HEALTHCARE_PROFESSIONAL("Healthcare professional with clinical access"),
         ROLE_RESEARCHER("Researcher with access to anonymized data"),
         ROLE_ADMIN("System administrator with full access"),
         ROLE_MODERATOR("Content moderator for chat and community features");

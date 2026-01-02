@@ -43,6 +43,12 @@ public class ManoException extends RuntimeException {
         this.args = new Object[0];
     }
 
+    public ManoException(String errorCode, Object[] args) {
+
+        this.errorCode = errorCode;
+        this.args = args;
+    }
+
     public String getErrorCode() {
         return errorCode;
     }

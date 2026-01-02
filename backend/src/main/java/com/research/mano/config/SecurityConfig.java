@@ -77,10 +77,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/health/**").permitAll()
+                        .requestMatchers("/api/health/**").permitAll()
 
                         // Component-specific endpoints (will be secured later)
                         .requestMatchers("/api/synthetic-data/**").authenticated()
-                        .requestMatchers("/api/prediction/**").authenticated()
+                        .requestMatchers("/api/prediction/**").hasRole("HEALTHCARE_PROFESSIONAL")
                         .requestMatchers("/api/chatbot/**").authenticated()
                         .requestMatchers("/api/clustering/**").authenticated()
 

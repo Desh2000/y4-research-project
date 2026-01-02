@@ -1,13 +1,11 @@
 package com.research.mano.service.ml;
 
 import com.research.mano.config.MLServiceProperties;
-import com.research.mano.dto.ml.PredictionInput;
-import com.research.mano.dto.ml.PredictionOutput;
-
+import com.research.mano.dto.ml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -16,8 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 /**
- * Implementation of ML Service Client
- * Handles communication with Python ML microservices
+ * ML Service Client Implementation
+ * Handles HTTP communication with Python ML microservices
+ * Supports both legacy and new API patterns
  */
 @Service
 public class MLServiceClientImpl implements MLServiceClient {
@@ -25,568 +24,563 @@ public class MLServiceClientImpl implements MLServiceClient {
     private static final Logger logger = LoggerFactory.getLogger(MLServiceClientImpl.class);
 
     @Autowired
-    @Qualifier("mlRestTemplate")
     private RestTemplate restTemplate;
 
     @Autowired
-    private MLServiceProperties mlProperties;
+    private MLServiceProperties mlServiceProperties;
+
+    // Default model versions
+    private static final List<String> DEFAULT_MODEL_VERSIONS = Arrays.asList(
+            "lstm-v1.0", "lstm-v1.1", "lstm-v2.0"
+    );
 
     // ==================== HEALTH CHECKS ====================
 
     @Override
-    public boolean isLSTMServiceHealthy() {
-        return checkServiceHealth(mlProperties.getLstm());
+    public Map<String, Boolean> checkAllServicesHealth() {
+        Map<String, Boolean> healthStatus = new HashMap<>();
+        healthStatus.put("lstm", isLSTMServiceHealthy());
+        healthStatus.put("gan", isGANServiceHealthy());
+        healthStatus.put("chatbot", isChatbotServiceHealthy());
+        healthStatus.put("clustering", isClusteringServiceHealthy());
+        return healthStatus;
     }
 
-    private boolean checkServiceHealth(MLServiceProperties.ServiceEndpoint lstm) {
-        return false;
+    @Override
+    public boolean isLSTMServiceHealthy() {
+        return checkServiceHealth(mlServiceProperties.getLstm());
     }
 
     @Override
     public boolean isGANServiceHealthy() {
-        return checkServiceHealth(mlProperties.getGan());
+        return checkServiceHealth(mlServiceProperties.getGan());
     }
 
     @Override
     public boolean isChatbotServiceHealthy() {
-        return checkServiceHealth(mlProperties.getChatbot());
+        return checkServiceHealth(mlServiceProperties.getChatbot());
     }
 
     @Override
     public boolean isClusteringServiceHealthy() {
-        return checkServiceHealth(mlProperties.getClustering());
-    }
-
-    @Override
-    public Map<String, Boolean> getAllServicesHealth() {
-        Map<String, Boolean> health = new HashMap<>();
-        health.put("lstm", isLSTMServiceHealthy());
-        health.put("gan", isGANServiceHealthy());
-        health.put("chatbot", isChatbotServiceHealthy());
-        health.put("clustering", isClusteringServiceHealthy());
-        return health;
-    }
-
-
-    @Override
-    public Optional<PredictionOutput> getPrediction(PredictionInput input) {
-        if (!mlProperties.getLstm().isEnabled()) {
-            logger.warn("LSTM service is disabled");
-            return Optional.empty();
-        }
-
-        try {
-            String url = mlProperties.getLstm().getBaseUrl() + "/predict";
-            HttpHeaders headers = createHeaders(mlProperties.getLstm());
-            HttpEntity<PredictionInput> request = new HttpEntity<>(input, headers);
-
-            // This line now works because PredictionOutput refers to the Class, not a generic type
-            ResponseEntity<PredictionOutput> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, PredictionOutput.class);
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                PredictionOutput output = response.getBody();
-                enrichPredictionOutput(output); // No casting needed anymore
-                return Optional.of(output);
-            }
-        } catch (RestClientException e) {
-            logger.error("Error calling LSTM prediction service: {}", e.getMessage());
-        }
-
-        // Return fallback prediction if service unavailable
-        return Optional.of(createFallbackPrediction(input));
-    }
-
-    @Override
-    public List<PredictionOutput> getBatchPredictions(List<PredictionInput> inputs) {
-        List<PredictionOutput> outputs = new ArrayList<>();
-
-        if (!mlProperties.getLstm().isEnabled()) {
-            logger.warn("LSTM service is disabled, returning fallback predictions");
-            inputs.forEach(input -> outputs.add(createFallbackPrediction(input)));
-            return outputs;
-        }
-
-        try {
-            String url = mlProperties.getLstm().getBaseUrl() + "/predict/batch";
-            HttpHeaders headers = createHeaders(mlProperties.getLstm());
-            HttpEntity<List<PredictionInput>> request = new HttpEntity<>(inputs, headers);
-
-            ResponseEntity<List> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, List.class);
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                // Process response - in real implementation, map to PredictionOutput
-                return outputs;
-            }
-        } catch (RestClientException e) {
-            logger.error("Error calling batch prediction: {}", e.getMessage());
-            inputs.forEach(input -> outputs.add(createFallbackPrediction(input)));
-        }
-
-        return outputs;
-    }
-
-    @Override
-    public Optional<PredictionOutput> getPredictionWithModel(PredictionInput input, String modelVersion) {
-        input.setModelVersion(modelVersion);
-        return getPrediction(input);
-    }
-
-    @Override
-    public List<String> getAvailableModelVersions() {
-        try {
-            String url = mlProperties.getLstm().getBaseUrl() + "/models";
-            ResponseEntity<List> response = restTemplate.getForEntity(url, List.class);
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return response.getBody();
-            }
-        } catch (RestClientException e) {
-            logger.error("Error fetching model versions: {}", e.getMessage());
-        }
-        return List.of("default");
+        return checkServiceHealth(mlServiceProperties.getClustering());
     }
 
     /**
-     * Create a fallback prediction when ML service is unavailable
-     * Uses questionnaire-based heuristics
+     * Check if a service endpoint is healthy
      */
-    private PredictionOutput createFallbackPrediction(PredictionInput input) {
-        PredictionOutput output = new PredictionOutput();
-        output.setRequestId(UUID.randomUUID().toString());
-        output.setUserId(input.getUserId());
-        output.setTimestamp(new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date()));
-        output.setModelVersion("fallback-heuristic");
-
-        // Calculate scores from questionnaire data if available
-        Double stressScore = calculateStressFromQuestionnaire(input);
-        Double depressionScore = calculateDepressionFromQuestionnaire(input);
-        Double anxietyScore = calculateAnxietyFromQuestionnaire(input);
-
-        output.setStressScore(stressScore);
-        output.setDepressionScore(depressionScore);
-        output.setAnxietyScore(anxietyScore);
-        output.setOverallRiskScore((stressScore + depressionScore + anxietyScore) / 3.0);
-
-        // Set confidence (lower for fallback)
-        output.setStressConfidence(0.6);
-        output.setDepressionConfidence(0.6);
-        output.setAnxietyConfidence(0.6);
-        output.setOverallConfidence(0.6);
-
-        // Set risk levels
-        output.setStressRiskLevel(PredictionOutput.RiskLevel.fromScore(stressScore));
-        output.setDepressionRiskLevel(PredictionOutput.RiskLevel.fromScore(depressionScore));
-        output.setAnxietyRiskLevel(PredictionOutput.RiskLevel.fromScore(anxietyScore));
-        output.setOverallRiskLevel(PredictionOutput.RiskLevel.fromScore(output.getOverallRiskScore()));
-
-        // Add warning about fallback
-        output.setWarnings(List.of("Prediction generated using fallback heuristics - ML service unavailable"));
-        output.setIsSimulated(false);
-        output.setDataQualityScore(0.7);
-
-        enrichPredictionOutput(output);
-
-        return output;
-    }
-
-    private Double calculateStressFromQuestionnaire(PredictionInput input) {
-        // PSS score ranges from 0-40, normalize to 0-1
-        Integer pssScore = input.calculatePSSScore();
-        if (pssScore != null) {
-            return Math.min(1.0, pssScore / 40.0);
-        }
-        return 0.5; // Default moderate
-    }
-
-    private Double calculateDepressionFromQuestionnaire(PredictionInput input) {
-        // PHQ-9 score ranges from 0-27, normalize to 0-1
-        Integer phq9Score = input.calculatePHQ9Score();
-        if (phq9Score != null) {
-            return Math.min(1.0, phq9Score / 27.0);
-        }
-        return 0.5;
-    }
-
-    private Double calculateAnxietyFromQuestionnaire(PredictionInput input) {
-        // GAD-7 score ranges from 0-21, normalize to 0-1
-        Integer gad7Score = input.calculateGAD7Score();
-        if (gad7Score != null) {
-            return Math.min(1.0, gad7Score / 21.0);
-        }
-        return 0.5;
-    }
-
-    private void enrichPredictionOutput(PredictionOutput output) {
-        // Set cluster identifier
-        if (output.getPrimaryClusterCategory() == null) {
-            output.setPrimaryClusterCategory(output.getDominantCategory());
-        }
-
-        if (output.getPrimaryClusterLevel() == null && output.getOverallRiskScore() != null) {
-            if (output.getOverallRiskScore() >= 0.7) {
-                output.setPrimaryClusterLevel("HIGH");
-            } else if (output.getOverallRiskScore() >= 0.4) {
-                output.setPrimaryClusterLevel("MEDIUM");
-            } else {
-                output.setPrimaryClusterLevel("LOW");
-            }
-        }
-
-        if (output.getClusterIdentifier() == null &&
-                output.getPrimaryClusterCategory() != null &&
-                output.getPrimaryClusterLevel() != null) {
-            output.setClusterIdentifier(
-                    output.getPrimaryClusterCategory() + "_" + output.getPrimaryClusterLevel());
-        }
-
-        // Check for crisis
-        output.setRequiresImmediateAttention(output.hasHighRisk());
-    }
-
-    // ==================== GAN SERVICE (Component 1) ====================
-
-    @Override
-    public Optional<Map<String, Object>> generateSyntheticData(Map<String, Object> parameters) {
-        if (!mlProperties.getGan().isEnabled()) {
-            return Optional.empty();
-        }
-
-        try {
-            String url = mlProperties.getGan().getBaseUrl() + "/generate";
-            HttpHeaders headers = createHeaders(mlProperties.getGan());
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(parameters, headers);
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error calling GAN service: {}", e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Map<String, Object>> simulateInterventionOutcome(
-            Long interventionId,
-            Double preStress, Double preDepression, Double preAnxiety,
-            Map<String, Object> additionalParams) {
-
-        if (!mlProperties.getGan().isEnabled()) {
-            return createSimulatedOutcomeFallback(interventionId, preStress, preDepression, preAnxiety);
-        }
-
-        try {
-            String url = mlProperties.getGan().getBaseUrl() + "/simulate/intervention";
-
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("interventionId", interventionId);
-            requestBody.put("preStress", preStress);
-            requestBody.put("preDepression", preDepression);
-            requestBody.put("preAnxiety", preAnxiety);
-            if (additionalParams != null) {
-                requestBody.putAll(additionalParams);
-            }
-
-            HttpHeaders headers = createHeaders(mlProperties.getGan());
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error simulating intervention: {}", e.getMessage());
-        }
-
-        return createSimulatedOutcomeFallback(interventionId, preStress, preDepression, preAnxiety);
-    }
-
-    private Optional<Map<String, Object>> createSimulatedOutcomeFallback(
-            Long interventionId, Double preStress, Double preDepression, Double preAnxiety) {
-
-        // Simple simulation: assume 10-20% improvement
-        Random random = new Random();
-        double improvementFactor = 0.1 + random.nextDouble() * 0.1;
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("interventionId", interventionId);
-        result.put("preStress", preStress);
-        result.put("preDepression", preDepression);
-        result.put("preAnxiety", preAnxiety);
-        result.put("postStress", Math.max(0, preStress - improvementFactor));
-        result.put("postDepression", Math.max(0, preDepression - improvementFactor));
-        result.put("postAnxiety", Math.max(0, preAnxiety - improvementFactor));
-        result.put("confidence", 0.6);
-        result.put("isFallback", true);
-
-        return Optional.of(result);
-    }
-
-    @Override
-    public Optional<Map<String, Object>> getSyntheticDataQuality(String datasetId) {
-        if (!mlProperties.getGan().isEnabled()) {
-            return Optional.empty();
-        }
-
-        try {
-            String url = mlProperties.getGan().getBaseUrl() + "/quality/" + datasetId;
-            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error getting data quality: {}", e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
-    // ==================== CHATBOT SERVICE (Component 3) ====================
-
-    @Override
-    public Optional<String> getChatbotResponse(String userId, String message, Map<String, Object> context) {
-        if (!mlProperties.getChatbot().isEnabled()) {
-            return Optional.of("I'm currently unavailable. Please try again later or contact support if you need immediate help.");
-        }
-
-        try {
-            String url = mlProperties.getChatbot().getBaseUrl() + "/chat";
-
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("userId", userId);
-            requestBody.put("message", message);
-            requestBody.put("context", context);
-
-            HttpHeaders headers = createHeaders(mlProperties.getChatbot());
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return Optional.ofNullable((String) response.getBody().get("response"));
-            }
-        } catch (RestClientException e) {
-            logger.error("Error calling chatbot service: {}", e.getMessage());
-        }
-
-        return Optional.of("I'm having trouble responding right now. Please try again shortly.");
-    }
-
-    @Override
-    public Optional<Map<String, Object>> analyzeSentiment(String text) {
-        if (!mlProperties.getChatbot().isEnabled()) {
-            return Optional.empty();
-        }
-
-        try {
-            String url = mlProperties.getChatbot().getBaseUrl() + "/analyze/sentiment";
-
-            Map<String, String> requestBody = Map.of("text", text);
-            HttpHeaders headers = createHeaders(mlProperties.getChatbot());
-            HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error analyzing sentiment: {}", e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Map<String, Object>> detectCrisisIndicators(String text) {
-        if (!mlProperties.getChatbot().isEnabled()) {
-            return Optional.empty();
-        }
-
-        try {
-            String url = mlProperties.getChatbot().getBaseUrl() + "/analyze/crisis";
-
-            Map<String, String> requestBody = Map.of("text", text);
-            HttpHeaders headers = createHeaders(mlProperties.getChatbot());
-            HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error detecting crisis indicators: {}", e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
-    // ==================== CLUSTERING SERVICE (Component 4) ====================
-
-    @Override
-    public Optional<Map<String, Object>> getClusterAssignment(
-            Double stressScore, Double depressionScore, Double anxietyScore) {
-
-        if (!mlProperties.getClustering().isEnabled()) {
-            return createFallbackClusterAssignment(stressScore, depressionScore, anxietyScore);
-        }
-
-        try {
-            String url = mlProperties.getClustering().getBaseUrl() + "/assign";
-
-            Map<String, Double> requestBody = Map.of(
-                    "stressScore", stressScore,
-                    "depressionScore", depressionScore,
-                    "anxietyScore", anxietyScore
-            );
-
-            HttpHeaders headers = createHeaders(mlProperties.getClustering());
-            HttpEntity<Map<String, Double>> request = new HttpEntity<>(requestBody, headers);
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error getting cluster assignment: {}", e.getMessage());
-        }
-
-        return createFallbackClusterAssignment(stressScore, depressionScore, anxietyScore);
-    }
-
-    private Optional<Map<String, Object>> createFallbackClusterAssignment(
-            Double stress, Double depression, Double anxiety) {
-
-        // Determine primary category
-        String category;
-        double maxScore = Math.max(stress, Math.max(depression, anxiety));
-
-        if (maxScore == stress) category = "STRESS";
-        else if (maxScore == depression) category = "DEPRESSION";
-        else category = "ANXIETY";
-
-        // Determine level
-        String level;
-        if (maxScore >= 0.7) level = "HIGH";
-        else if (maxScore >= 0.4) level = "MEDIUM";
-        else level = "LOW";
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("clusterIdentifier", category + "_" + level);
-        result.put("primaryCategory", category);
-        result.put("primaryLevel", level);
-        result.put("confidence", 0.7);
-        result.put("isFallback", true);
-
-        return Optional.of(result);
-    }
-
-    @Override
-    public boolean updateClusterModel(List<Map<String, Object>> newData) {
-        if (!mlProperties.getClustering().isEnabled()) {
+    private boolean checkServiceHealth(MLServiceProperties.ServiceEndpoint endpoint) {
+        if (endpoint == null || !endpoint.isEnabled()) {
+            logger.warn("Service endpoint is null or disabled");
             return false;
         }
 
         try {
-            String url = mlProperties.getClustering().getBaseUrl() + "/model/update";
-            HttpHeaders headers = createHeaders(mlProperties.getClustering());
-            HttpEntity<List<Map<String, Object>>> request = new HttpEntity<>(newData, headers);
+            String healthUrl = endpoint.getBaseUrl() + endpoint.getHealthEndpoint();
+            logger.debug("Checking health at: {}", healthUrl);
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
 
             ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
+                    healthUrl,
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
 
-            return response.getStatusCode() == HttpStatus.OK;
+            boolean isHealthy = response.getStatusCode() == HttpStatus.OK;
+            logger.info("Health check for {} returned: {}", endpoint.getBaseUrl(), isHealthy);
+            return isHealthy;
+
         } catch (RestClientException e) {
-            logger.error("Error updating cluster model: {}", e.getMessage());
+            logger.warn("Health check failed for {}: {}", endpoint.getBaseUrl(), e.getMessage());
+            return false;
         }
-
-        return false;
     }
 
+    // ==================== MODEL VERSIONS ====================
+
     @Override
-    public Optional<Map<String, Object>> getClusterStatistics() {
-        if (!mlProperties.getClustering().isEnabled()) {
-            return Optional.empty();
+    public List<String> getAvailableModelVersions() {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getLstm();
+
+        if (!endpoint.isConfigured()) {
+            return DEFAULT_MODEL_VERSIONS;
         }
 
         try {
-            String url = mlProperties.getClustering().getBaseUrl() + "/statistics";
-            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
-        } catch (RestClientException e) {
-            logger.error("Error getting cluster statistics: {}", e.getMessage());
-        }
+            String url = endpoint.getBaseUrl() + "/api/v1/models";
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
 
-        return Optional.empty();
+            ResponseEntity<List<String>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<String>>() {}
+            );
+
+            return response.getBody() != null ? response.getBody() : DEFAULT_MODEL_VERSIONS;
+
+        } catch (RestClientException e) {
+            logger.warn("Failed to get model versions: {}", e.getMessage());
+            return DEFAULT_MODEL_VERSIONS;
+        }
+    }
+    /**
+     * Get chatbot response (legacy API with String userId)
+     */
+    /**
+     * Get chatbot response (legacy API with String userId)
+     */
+    public Optional<String> getChatbotResponse(String odataId, String message, Map<String, Object> context) {
+        try {
+            Long userId = odataId != null ? Long.parseLong(odataId) : null;
+            return getChatbotResponse(userId, message, context);
+        } catch (NumberFormatException e) {
+            return getChatbotResponse((Long) null, message, context);
+        }
     }
 
-    // ==================== MODEL MANAGEMENT ====================
+    // ==================== COMPONENT 2: LSTM PREDICTIONS ====================
+
+    @Override
+    public PredictionOutput predictRisk(PredictionInput input) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getLstm();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("LSTM service is not configured");
+            return createErrorPredictionOutput(input, "LSTM service not configured");
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getPredictEndpoint());
+            logger.info("Sending prediction request to: {}", url);
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<PredictionInput> request = new HttpEntity<>(input, headers);
+
+            ResponseEntity<PredictionOutput> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    PredictionOutput.class
+            );
+
+            logger.info("Prediction completed for user: {}", input.getUserId());
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Prediction request failed: {}", e.getMessage());
+            return createErrorPredictionOutput(input, e.getMessage());
+        }
+    }
+
+    @Override
+    public List<PredictionOutput> predictRiskBatch(List<PredictionInput> inputs) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getLstm();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("LSTM service is not configured");
+            return inputs.stream()
+                    .map(input -> createErrorPredictionOutput(input, "LSTM service not configured"))
+                    .toList();
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getBatchPredictEndpoint());
+            logger.info("Sending batch prediction request for {} users", inputs.size());
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<List<PredictionInput>> request = new HttpEntity<>(inputs, headers);
+
+            ResponseEntity<List<PredictionOutput>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    new ParameterizedTypeReference<List<PredictionOutput>>() {}
+            );
+
+            logger.info("Batch prediction completed for {} users", inputs.size());
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Batch prediction request failed: {}", e.getMessage());
+            return inputs.stream()
+                    .map(input -> createErrorPredictionOutput(input, e.getMessage()))
+                    .toList();
+        }
+    }
+
+    // ==================== COMPONENT 4: GMM CLUSTERING ====================
+
+    @Override
+    public ClusteringOutput assignCluster(ClusteringInput input) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getClustering();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("Clustering service is not configured");
+            return createErrorClusteringOutput(input, "Clustering service not configured");
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getClusterEndpoint());
+            logger.info("Sending clustering request to: {}", url);
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<ClusteringInput> request = new HttpEntity<>(input, headers);
+
+            ResponseEntity<ClusteringOutput> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    ClusteringOutput.class
+            );
+
+            logger.info("Clustering completed for user: {}", input.getOdataId());
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Clustering request failed: {}", e.getMessage());
+            return createErrorClusteringOutput(input, e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ClusteringOutput> assignClusterBatch(List<ClusteringInput> inputs) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getClustering();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("Clustering service is not configured");
+            return inputs.stream()
+                    .map(input -> createErrorClusteringOutput(input, "Clustering service not configured"))
+                    .toList();
+        }
+
+        try {
+            String url = endpoint.getFullUrl("/api/v1/cluster/batch");
+            logger.info("Sending batch clustering request for {} users", inputs.size());
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<List<ClusteringInput>> request = new HttpEntity<>(inputs, headers);
+
+            ResponseEntity<List<ClusteringOutput>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    new ParameterizedTypeReference<List<ClusteringOutput>>() {}
+            );
+
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Batch clustering request failed: {}", e.getMessage());
+            return inputs.stream()
+                    .map(input -> createErrorClusteringOutput(input, e.getMessage()))
+                    .toList();
+        }
+    }
+
+    @Override
+    public Map<String, Object> getClusterStatistics() {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getClustering();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("Clustering service is not configured");
+            return Collections.singletonMap("error", "Clustering service not configured");
+        }
+
+        try {
+            String url = endpoint.getFullUrl("/api/v1/clusters/statistics");
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<Map<String, Object>>() {}
+            );
+
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Get cluster statistics failed: {}", e.getMessage());
+            return Collections.singletonMap("error", e.getMessage());
+        }
+    }
+
+    // ==================== COMPONENT 3: CHATBOT ====================
+
+    @Override
+    public ChatbotOutput generateChatResponse(ChatbotInput input) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getChatbot();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("Chatbot service is not configured");
+            return createErrorChatbotOutput(input, "Chatbot service not configured");
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getChatEndpoint());
+            logger.info("Sending chat request to: {}", url);
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<ChatbotInput> request = new HttpEntity<>(input, headers);
+
+            ResponseEntity<ChatbotOutput> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    ChatbotOutput.class
+            );
+
+            ChatbotOutput output = response.getBody();
+
+            if (output != null && Boolean.TRUE.equals(output.getCrisisDetected())) {
+                logger.warn("CRISIS DETECTED for user {} - Level: {}",
+                        input.getUserId(), output.getCrisisLevel());
+            }
+
+            return output;
+
+        } catch (RestClientException e) {
+            logger.error("Chat request failed: {}", e.getMessage());
+            return createErrorChatbotOutput(input, e.getMessage());
+        }
+    }
+
+    @Override
+    public ChatbotOutput.SentimentResult analyzeSentimentNew(String message) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getChatbot();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("Chatbot service is not configured");
+            return ChatbotOutput.SentimentResult.builder()
+                    .sentiment("UNKNOWN")
+                    .sentimentScore(0.0)
+                    .confidence(0.0)
+                    .build();
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getSentimentEndpoint());
+
+            HttpHeaders headers = createHeaders(endpoint);
+            Map<String, String> body = Collections.singletonMap("message", message);
+            HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+
+            ResponseEntity<ChatbotOutput.SentimentResult> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    ChatbotOutput.SentimentResult.class
+            );
+
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Sentiment analysis failed: {}", e.getMessage());
+            return ChatbotOutput.SentimentResult.builder()
+                    .sentiment("UNKNOWN")
+                    .sentimentScore(0.0)
+                    .confidence(0.0)
+                    .build();
+        }
+    }
+
+    @Override
+    public CrisisDetectionResult detectCrisis(String message, Long userId) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getChatbot();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("Chatbot service is not configured");
+            return CrisisDetectionResult.builder()
+                    .crisisDetected(false)
+                    .crisisLevel("UNKNOWN")
+                    .build();
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getCrisisEndpoint());
+
+            HttpHeaders headers = createHeaders(endpoint);
+            Map<String, Object> body = new HashMap<>();
+            body.put("message", message);
+            body.put("user_id", userId);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+            ResponseEntity<CrisisDetectionResult> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    request,
+                    CrisisDetectionResult.class
+            );
+
+            CrisisDetectionResult result = response.getBody();
+
+            if (result != null && Boolean.TRUE.equals(result.getCrisisDetected())) {
+                logger.warn("CRISIS DETECTED via direct check for user {} - Level: {}",
+                        userId, result.getCrisisLevel());
+            }
+
+            return result;
+
+        } catch (RestClientException e) {
+            logger.error("Crisis detection failed: {}", e.getMessage());
+            return CrisisDetectionResult.builder()
+                    .crisisDetected(false)
+                    .crisisLevel("UNKNOWN")
+                    .build();
+        }
+    }
+
+    // ==================== COMPONENT 1: GAN SYNTHETIC DATA ====================
+
+    @Override
+    public SyntheticDataOutput generateSyntheticData(SyntheticDataRequest request) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getGan();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("GAN service is not configured");
+            return SyntheticDataOutput.builder()
+                    .requestId(request.getRequestId())
+                    .recordsGenerated(0)
+                    .build();
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getGenerateEndpoint());
+            logger.info("Sending synthetic data generation request to: {}", url);
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<SyntheticDataRequest> httpRequest = new HttpEntity<>(request, headers);
+
+            ResponseEntity<SyntheticDataOutput> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    httpRequest,
+                    SyntheticDataOutput.class
+            );
+
+            logger.info("Synthetic data generation completed: {} records",
+                    response.getBody() != null ? response.getBody().getRecordsGenerated() : 0);
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Synthetic data generation failed: {}", e.getMessage());
+            return SyntheticDataOutput.builder()
+                    .requestId(request.getRequestId())
+                    .recordsGenerated(0)
+                    .build();
+        }
+    }
+
+    @Override
+    public InterventionSimulationOutput simulateIntervention(InterventionSimulationRequest request) {
+        MLServiceProperties.ServiceEndpoint endpoint = mlServiceProperties.getGan();
+
+        if (!endpoint.isConfigured()) {
+            logger.error("GAN service is not configured");
+            return InterventionSimulationOutput.builder()
+                    .requestId(request.getRequestId())
+                    .confidenceScore(0.0)
+                    .build();
+        }
+
+        try {
+            String url = endpoint.getFullUrl(endpoint.getSimulateEndpoint());
+            logger.info("Sending intervention simulation request to: {}", url);
+
+            HttpHeaders headers = createHeaders(endpoint);
+            HttpEntity<InterventionSimulationRequest> httpRequest = new HttpEntity<>(request, headers);
+
+            ResponseEntity<InterventionSimulationOutput> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    httpRequest,
+                    InterventionSimulationOutput.class
+            );
+
+            logger.info("Intervention simulation completed for user: {}", request.getUserId());
+            return response.getBody();
+
+        } catch (RestClientException e) {
+            logger.error("Intervention simulation failed: {}", e.getMessage());
+            return InterventionSimulationOutput.builder()
+                    .requestId(request.getRequestId())
+                    .confidenceScore(0.0)
+                    .build();
+        }
+    }
 
     @Override
     public boolean triggerModelRetraining(String serviceType, Map<String, Object> parameters) {
-        MLServiceProperties.ServiceEndpoint endpoint = getEndpoint(serviceType);
-        if (endpoint == null || !endpoint.isEnabled()) {
-            return false;
-        }
+     MLServiceProperties.ServiceEndpoint endpoint = getEndpoint(serviceType);
+      if (endpoint == null || !endpoint.isEnabled()) {
+           return false;
+      }
 
-        try {
-            String url = endpoint.getBaseUrl() + "/model/retrain";
-            HttpHeaders headers = createHeaders(endpoint);
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(parameters, headers);
+      try {
+           String url = endpoint.getBaseUrl() + "/model/retrain";
+           HttpHeaders headers = createHeaders(endpoint);
+           HttpEntity<Map<String, Object>> request = new HttpEntity<>(parameters, headers);
 
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, Map.class);
+           ResponseEntity<Map> response = restTemplate.exchange(
+                   url, HttpMethod.POST, request, Map.class);
 
-            return response.getStatusCode() == HttpStatus.OK ||
+           return response.getStatusCode() == HttpStatus.OK ||
                     response.getStatusCode() == HttpStatus.ACCEPTED;
-        } catch (RestClientException e) {
-            logger.error("Error triggering model retraining: {}", e.getMessage());
-        }
+       } catch (RestClientException e) {
+          logger.error("Error triggering model retraining: {}", e.getMessage());
+       }
 
-        return false;
+       return false;
+
     }
 
     @Override
     public Optional<Map<String, Object>> getModelMetrics(String serviceType) {
         MLServiceProperties.ServiceEndpoint endpoint = getEndpoint(serviceType);
         if (endpoint == null || !endpoint.isEnabled()) {
-            return Optional.empty();
-        }
+           return Optional.empty();
+       }
 
-        try {
-            String url = endpoint.getBaseUrl() + "/model/metrics";
+       try {String url = endpoint.getBaseUrl() + "/model/metrics";
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.ofNullable(response.getBody());
-            }
+           if (response.getStatusCode() == HttpStatus.OK) {
+               return Optional.ofNullable(response.getBody());
+           }
         } catch (RestClientException e) {
             logger.error("Error getting model metrics: {}", e.getMessage());
-        }
-
+       }
         return Optional.empty();
+    }
+
+    private MLServiceProperties.ServiceEndpoint getEndpoint(String serviceType) {
+//        return switch (serviceType.toLowerCase()) {
+//            Object mlProperties = null;
+//            case "lstm", "prediction" -> mlProperties.getLstm();
+//           case "gan", "synthetic" -> mlProperties.getGan();
+//           case "chatbot", "nlp" -> mlProperties.getChatbot();
+//            case "clustering", "gmm" -> mlProperties.getClustering();
+//           default -> null;
+//       };
+//    }
+        return null;
     }
 
     // ==================== HELPER METHODS ====================
 
+    /**
+     * Create HTTP headers with authentication if required
+     */
     private HttpHeaders createHeaders(MLServiceProperties.ServiceEndpoint endpoint) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         if (endpoint.getApiKey() != null && !endpoint.getApiKey().isEmpty()) {
             headers.set("X-API-Key", endpoint.getApiKey());
@@ -595,13 +589,44 @@ public class MLServiceClientImpl implements MLServiceClient {
         return headers;
     }
 
-    private MLServiceProperties.ServiceEndpoint getEndpoint(String serviceType) {
-        return switch (serviceType.toLowerCase()) {
-            case "lstm", "prediction" -> mlProperties.getLstm();
-            case "gan", "synthetic" -> mlProperties.getGan();
-            case "chatbot", "nlp" -> mlProperties.getChatbot();
-            case "clustering", "gmm" -> mlProperties.getClustering();
-            default -> null;
-        };
+    /**
+     * Create error prediction output when service fails
+     */
+    private PredictionOutput createErrorPredictionOutput(PredictionInput input, String errorMessage) {
+        return PredictionOutput.builder()
+                .requestId(input != null ? input.getRequestId() : null)
+                .userId(input != null ? input.getUserId() : null)
+                .stressScore(0.0)
+                .depressionScore(0.0)
+                .anxietyScore(0.0)
+                .overallRiskScore(0.0)
+                .overallConfidence(0.0)
+                .warnings(Collections.singletonList("Service error: " + errorMessage))
+                .build();
+    }
+
+    /**
+     * Create error clustering output when service fails
+     */
+    private ClusteringOutput createErrorClusteringOutput(ClusteringInput input, String errorMessage) {
+        return ClusteringOutput.builder()
+                .requestId(input != null ? input.getRequestId() : null)
+                .userId(input != null ? input.getOdataId() : null)
+                .clusterIdentifier("UNKNOWN")
+                .membershipProbability(0.0)
+                .build();
+    }
+
+    /**
+     * Create error chatbot output when service fails
+     */
+    private ChatbotOutput createErrorChatbotOutput(ChatbotInput input, String errorMessage) {
+        return ChatbotOutput.builder()
+                .requestId(input != null ? input.getRequestId() : null)
+                .conversationId(input != null ? input.getConversationId() : null)
+                .response("I'm sorry, I'm having trouble responding right now. Please try again later or contact support if you need immediate help.")
+                .responseType("ERROR")
+                .crisisDetected(false)
+                .build();
     }
 }

@@ -1,11 +1,15 @@
 package com.research.mano.exception;
 
+/**
+ * Exception thrown when a business rule is violated
+ */
 public class BusinessLogicException extends ManoException {
+
     public BusinessLogicException(String message) {
         super("BUSINESS_LOGIC_ERROR", message);
     }
 
-    public BusinessLogicException(String operation, String reason) {
-        super("BUSINESS_LOGIC_ERROR", String.format("Cannot perform %s: %s", operation, reason));
+    public BusinessLogicException(String errorCode, String message) {
+        super(errorCode, message);
     }
 }
