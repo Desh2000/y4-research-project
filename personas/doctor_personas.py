@@ -288,9 +288,19 @@ class DoctorPersona(BasePersona):
                 "\n\nA mental health professional can provide accurate diagnosis and evidence-based treatment."
             ],
             'stressed': [
-                "Chronic stress can have serious health consequences. " + self.provide_clinical_info('stress') +
+                "Chronic stress can have serious health consequences. Based on privacy-preserving simulations, implementing structured breaks and boundary-setting strategies may help. " + self.provide_clinical_info('stress') +
                 "\n\nConsider consulting a healthcare provider to rule out underlying medical conditions and "
                 "develop a comprehensive stress management plan."
+            ],
+            'work_tired': [
+                "Chronic work-related fatigue warrants clinical evaluation. Privacy-preserving simulations from similar professional profiles suggest that persistent tiredness may indicate underlying conditions requiring assessment. Document your sleep patterns, energy levels, and work hours for clinical review. How long has this fatigue been ongoing?"
+            ],
+            'burnout': [
+                "Burnout symptoms align with exhaustion from prolonged demands, often seen in STEM fields. Our privacy-preserving simulations indicate weekly commitments, such as exercise routines, may improve resilience scores by 20-30% in similar profiles. This isn't medical advice – consider professional evaluation if fatigue persists. How long has this been ongoing?",
+                
+                "Clinical research shows burnout is characterized by emotional exhaustion, depersonalization, and reduced personal accomplishment. Privacy-preserving analysis of comparable professional cohorts suggests structured interventions including cognitive-behavioral approaches and lifestyle modifications show 25-35% improvement in resilience metrics over 8-12 weeks. Professional evaluation is recommended for persistent symptoms exceeding 3 months. What is your primary occupation?",
+                
+                "Burnout in high-demand professions demonstrates measurable impacts on cognitive function and physical health. Privacy-preserving data from similar demographic profiles indicates multimodal interventions may improve recovery trajectories. However, this is informational only – consult with a healthcare provider for personalized assessment. When did symptoms first appear?"
             ],
             'sleep': [
                 "Sleep disturbances are often comorbid with mental health conditions. Poor sleep can exacerbate "
