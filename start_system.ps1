@@ -5,7 +5,7 @@ Write-Host " Empathetic Support System - Quick Start" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$PROJECT_ROOT = "d:\Sliit Project\Research\CResearch\empathetic_support_system"
+$PROJECT_ROOT = "d:\Sliit Project\Research\research_c"
 Set-Location $PROJECT_ROOT
 
 # Check if model is trained
