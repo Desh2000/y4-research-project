@@ -1,51 +1,60 @@
 package com.research.mano.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * Configuration properties for ML microservices
- * Maps to application.properties ml.service.* prefix
+ * Configuration properties for ML Service endpoints
+ * Maps to ml.service.* properties in application.properties
  */
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "ml.service")
 public class MLServiceProperties {
 
-    /**
-     * Component 1: Privacy-Preserving GAN Service
-     */
-    private ServiceEndpoint gan = new ServiceEndpoint();
-
-    /**
-     * Component 2: LSTM Risk Prediction Service
-     */
     private ServiceEndpoint lstm = new ServiceEndpoint();
-
-    /**
-     * Component 3: Chatbot/NLP Service
-     */
+    private ServiceEndpoint gan = new ServiceEndpoint();
     private ServiceEndpoint chatbot = new ServiceEndpoint();
-
-    /**
-     * Component 4: GMM Clustering Service
-     */
     private ServiceEndpoint clustering = new ServiceEndpoint();
-
-    /**
-     * Connection settings
-     */
-    private int connectionTimeout = 5000;
-    private int readTimeout = 30000;
-    private int maxRetries = 3;
-    private int retryDelayMs = 1000;
 
     @Data
     public static class ServiceEndpoint {
-        private String baseUrl = "http://localhost:5000";
+        private boolean enabled = false;
+        private String baseUrl;
         private String healthEndpoint = "/health";
-        private boolean enabled = true;
         private String apiKey;
+        private int timeout = 30000;
+
+        // Component-specific endpoints
+        private String predictEndpoint;
+        private String batchPredictEndpoint;
+        private String generateEndpoint;
+        private String simulateEndpoint;
+        private String chatEndpoint;
+        private String sentimentEndpoint;
+        private String crisisEndpoint;
+        private String clusterEndpoint;
+        private String analyzeEndpoint;
+        private String recommendEndpoint;
+
+        /**
+         * Get full URL for a specific endpoint
+         */
+        public String getFullUrl(String endpoint) {
+            if (baseUrl == null || endpoint == null) {
+                return null;
+            }
+            String base = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+            String path = endpoint.startsWith("/") ? endpoint : "/" + endpoint;
+            return base + path;
+        }
+
+        /**
+         * Check if this service is configured and enabled
+         */
+        public boolean isConfigured() {
+            return enabled && baseUrl != null && !baseUrl.isEmpty();
+        }
     }
 }

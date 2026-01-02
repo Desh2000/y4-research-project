@@ -720,7 +720,7 @@ public class ChatServiceImpl implements ChatService {
                 }
 
                 Optional<String> mlResponse = mlServiceClient.getChatbotResponse(
-                        conversation.getUser().getId().toString(), userMessage, chatContext);
+                        Long.valueOf(conversation.getUser().getId().toString()), userMessage, chatContext);
 
                 if (mlResponse.isPresent()) {
                     return mlResponse.get();

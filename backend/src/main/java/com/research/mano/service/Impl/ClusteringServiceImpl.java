@@ -675,6 +675,7 @@ public class ClusteringServiceImpl implements ClusteringService {
         List<ClusterGroupDTO> updated = new ArrayList<>();
 
         if (mlResponse.containsKey("clusters")) {
+            @SuppressWarnings("unchecked")
             List<Map<String, Object>> clusters = (List<Map<String, Object>>) mlResponse.get("clusters");
             String modelVersion = (String) mlResponse.getOrDefault("modelVersion", "unknown");
 
@@ -931,8 +932,8 @@ public class ClusteringServiceImpl implements ClusteringService {
         if (dto.getClusterIdentifier() != null) cluster.setClusterIdentifier(dto.getClusterIdentifier());
         if (dto.getClusterName() != null) cluster.setClusterName(dto.getClusterName());
         if (dto.getDescription() != null) cluster.setDescription(dto.getDescription());
-        if (dto.getPrimaryCategory() != null) cluster.setPrimaryCategory(dto.getPrimaryCategory());
-        if (dto.getSeverityLevel() != null) cluster.setSeverityLevel(dto.getSeverityLevel());
+        if (dto.getCategory() != null) cluster.setPrimaryCategory(ClusterCategory.valueOf(dto.getCategory()));
+        if (dto.getLevel() != null) cluster.setSeverityLevel(SeverityLevel.valueOf(dto.getLevel()));
         if (dto.getCentroidStress() != null) cluster.setCentroidStress(dto.getCentroidStress());
         if (dto.getCentroidDepression() != null) cluster.setCentroidDepression(dto.getCentroidDepression());
         if (dto.getCentroidAnxiety() != null) cluster.setCentroidAnxiety(dto.getCentroidAnxiety());
