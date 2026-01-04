@@ -17,9 +17,9 @@
 > **Project ID:** 25-26J-163  
 > **Institution:** Sri Lanka Institute of Information Technology  
 > **Department:** Information Technology, Faculty of Computing  
-> **Developer:** SHALINDA D.G.M (IT22317308)  
+> **Developer:** Weerasinghe G.I.D (IT22890382)  
 > **Supervisor:** Dr. Sanvitha Kasthuriarachchi  
-> **Timeline:** August 2025 - December 2025
+> **Timeline:** June 2025 - June 2026
 
 ---
 
@@ -406,6 +406,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Made with ❤️ for the AI & Mental Health Research Communities**
 
 </div>
+
 
 
 
