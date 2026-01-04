@@ -1,4 +1,4 @@
-# 🧠 Manō: An End-to-End Generative AI Ecosystem for Personalized Mental Health Support
+#  Manō: An End-to-End Generative AI Ecosystem for Personalized Mental Health Support
 
 <div align="left">
 
