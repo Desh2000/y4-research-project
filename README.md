@@ -120,8 +120,7 @@ By combining **synthetic data generation**, **explainable prediction**, **conver
 
 ### Complete System Architecture (Mermaid)
 
-```mermaid
-graph TD
+```graph TD
     A["📊 REAL-WORLD DATA SOURCES<br/>Sleep Health & Lifestyle Dataset<br/>Mental Health FAQs<br/>Conversation Transcripts"] -->|Extract Distributions<br/>Mean, Std Dev, Correlations| B["🔧 Data Cleaning & EDA<br/>Outlier Detection<br/>Missing Value Imputation<br/>Feature Normalization"]
     
     B -->|Statistical Profiles| C1["🧠 Component 1:<br/>SYNTHETIC DATA GENERATION"]
@@ -140,7 +139,7 @@ graph TD
     G1 --> G3["🔗 Hybrid LSTM Fusion<br/>Concatenate Branches<br/>Dense(32) Non-Linear<br/>Softmax(3) Output"]
     G2 --> G3
     
-    G3 -->|Weighted Cross-Entropy Loss<br/>Accuracy: 96%<br/>F1-Score: 0.98<br/>ROC-AUC: 0.99| H["⚠️ Risk Stratification Output<br/>Class Probabilities [Low/Med/High]<br/>Attention Weights (Feature Importance)<br/>Trigger Features (Explainability)<br/>Confidence: 0-100%"]
+    G3 -->|Weighted Cross-Entropy Loss<br/>Accuracy: 96%<br/>F1-Score: 0.98<br/>ROC-AUC: 0.99| H["⚠️ Risk Stratification Output<br/>Class Probabilities (Low / Med / High)<br/>Attention Weights (Feature Importance)<br/>Trigger Features (Explainability)<br/>Confidence: 0–100%"]
     
     H -->|Risk Signal & Confidence| I1["💬 Component 3:<br/>CONVERSATIONAL SUPPORT<br/>EDCSP"]
     H -->|Risk Metrics & Scores| I2["👥 Component 4:<br/>COMMUNITY CLUSTERING<br/>& RECOMMENDATIONS"]
@@ -165,22 +164,22 @@ graph TD
     
     I2 -->|Physical Metrics| O1["📊 Scoring Engine<br/>Heart Rate, Sleep, Activity<br/>Mood, Stress, Anxiety<br/>Social Support Score"]
     
-    O1 -->|Body Score 0-100<br/>Behavior Score 0-100<br/>Emotional Score 0-100<br/>Social Score 0-100<br/>Weights: [0.20, 0.20, 0.35, 0.25]| O2["🎲 Clustering Engine<br/>Gaussian Mixture Model<br/>3 Components<br/>Soft Assignments<br/>Silhouette: 0.47"]
+    O1 -->|Body Score 0–100<br/>Behavior Score 0–100<br/>Emotional Score 0–100<br/>Social Score 0–100<br/>Weights: (0.20, 0.20, 0.35, 0.25)| O2["🎲 Clustering Engine<br/>Gaussian Mixture Model<br/>3 Components<br/>Soft Assignments<br/>Silhouette: 0.47"]
     
-    O2 -->|Cluster Assignment<br/>+ Probability Distribution<br/>Confidence Scores| P["👥 Peer Group Output<br/>Cluster: Low/Med/High Stress<br/>Similar Users: [User IDs]<br/>Group Size & Demographics<br/>Peer Support Messages"]
+    O2 -->|Cluster Assignment<br/>Probability Distribution<br/>Confidence Scores| P["👥 Peer Group Output<br/>Cluster: Low / Med / High Stress<br/>Similar Users (User IDs)<br/>Group Size & Demographics<br/>Peer Support Messages"]
     
     P -->|Problem Identification| Q["🎯 Activity Database<br/>21 Evidence-Based Activities<br/>CBT, Mindfulness, Social<br/>Physical, Meditation<br/>Duration & Difficulty Metadata"]
     
     Q -->|Content Filtering<br/>Evidence Ranking<br/>Personalization| R["🏆 Recommendation Engine<br/>Filter by Difficulty<br/>Rank by Evidence Base<br/>Match to User Needs"]
     
-    R -->|Professional Escalation Check| S["📋 Activity Recommendations<br/>Top Activities [Duration/Difficulty]<br/>Reasons & Evidence<br/>Peer Support Messaging<br/>Professional Support If Score < 40"]
+    R -->|Professional Escalation Check| S["📋 Activity Recommendations<br/>Top Activities (Duration / Difficulty)<br/>Reasons & Evidence<br/>Peer Support Messaging<br/>Professional Support If Score < 40"]
     
     O --> T["🎯 INTEGRATED PATIENT VIEW"]
     S --> T
     H --> T
     P --> T
     
-    T -->|Unified Response| U["📊 FINAL OUTPUT REPORT<br/>────────────────────────<br/>Risk Level: Low/Med/High<br/>Risk Confidence: 0-100%<br/>Attention-Weighted Triggers<br/>Peer Group Assignment<br/>Recommended Activities<br/>Conversational Support<br/>Crisis Escalation Status<br/>Next Steps & Resources"]
+    T -->|Unified Response| U["📊 FINAL OUTPUT REPORT<br/>────────────────────────<br/>Risk Level: Low / Med / High<br/>Risk Confidence: 0–100%<br/>Attention-Weighted Triggers<br/>Peer Group Assignment<br/>Recommended Activities<br/>Conversational Support<br/>Crisis Escalation Status<br/>Next Steps & Resources"]
     
     style A fill:#e1f5ff,stroke:#01579b,stroke-width:3px
     style E fill:#c8e6c9,stroke:#1b5e20,stroke-width:3px
@@ -191,6 +190,7 @@ graph TD
     style F fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
     style I1 fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
     style I2 fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
+
 ```
 
 ### Modular Design Rationale
@@ -1526,4 +1526,5 @@ This project is licensed under the **MIT License** – see LICENSE file for deta
 *Making mental health AI accessible, transparent, and ethical*
 
 </div>
+
 
