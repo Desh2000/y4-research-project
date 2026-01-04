@@ -14,6 +14,8 @@
 <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance">
 
 
+---
+
 > **Project ID:** 25-26J-163  
 > **Institution:** Sri Lanka Institute of Information Technology  
 > **Department:** Information Technology, Faculty of Computing  
@@ -406,6 +408,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Made with ❤️ for the AI & Mental Health Research Communities**
 
 </div>
+
 
 
 
