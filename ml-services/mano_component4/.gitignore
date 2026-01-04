@@ -1,0 +1,487 @@
+# ============================================================================
+# Manō Component 4: Community-Driven Resilience Clustering System
+# .gitignore File
+# ============================================================================
+
+# ============================================================================
+# Python
+# ============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+test-results/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ============================================================================
+# Machine Learning / Data Science
+# ============================================================================
+
+# Trained models
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.pb
+*.pth
+*.ckpt
+*.safetensors
+models/*.pkl
+models/*.h5
+models/**/*.pkl
+models/**/*.h5
+
+# Keep model directory structure
+!models/.gitkeep
+!models/README.md
+
+# Datasets (large files)
+*.csv
+*.tsv
+*.json
+*.jsonl
+*.parquet
+*.feather
+*.xlsx
+*.xls
+
+# Keep sample/template files
+!data/sample_*.csv
+!data/template_*.csv
+!data/README.md
+!data/*/.gitkeep
+
+# Processed data
+data/processed/**/*.csv
+data/processed/**/*.pkl
+data/synthetic/**/*.csv
+
+# Keep directory structure
+!data/processed/.gitkeep
+!data/synthetic/.gitkeep
+!data/raw/.gitkeep
+!data/activities/.gitkeep
+
+# Logs
+logs/
+*.log
+**/*.log
+gan_logs/
+training_logs/
+
+# Keep log directories
+!logs/.gitkeep
+!gan_logs/.gitkeep
+
+# Checkpoints
+checkpoints/
+*.ckpt
+
+# TensorBoard
+runs/
+events.out.tfevents.*
+
+# MLflow
+mlruns/
+
+# Weights & Biases
+wandb/
+
+# ============================================================================
+# Results & Outputs
+# ============================================================================
+
+# Generated results (images, CSVs, reports)
+results/visualizations/*.png
+results/visualizations/*.jpg
+results/visualizations/*.pdf
+results/clusters/*.csv
+results/communities/*.csv
+results/communities/*.json
+results/effectiveness/*.csv
+results/effectiveness/*.png
+results/activity_system/**/*.csv
+results/activity_system/**/*.png
+
+# Keep directory structure and README files
+!results/.gitkeep
+!results/README.md
+!results/visualizations/.gitkeep
+!results/clusters/.gitkeep
+!results/communities/.gitkeep
+!results/effectiveness/.gitkeep
+!results/activity_system/.gitkeep
+
+# Temporary results
+temp_results/
+tmp/
+*.tmp
+
+# ============================================================================
+# IDEs and Editors
+# ============================================================================
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Atom
+.atom/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ============================================================================
+# Operating System
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+
+# Sensitive configuration files
+config/secrets.yaml
+config/credentials.yaml
+config/api_keys.yaml
+.env.local
+.env.production
+
+# Keep template configs
+!config/config.yaml
+!config/config.example.yaml
+
+# Large synthetic datasets
+data/synthetic/large_*.csv
+data/synthetic/*_10k.csv
+data/synthetic/*_100k.csv
+
+# User uploaded files (if applicable)
+uploads/
+user_data/
+
+# Backup files
+*.bak
+*.backup
+backup/
+backups/
+
+# Compressed files (except distribution)
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache directories
+.cache/
+cache/
+__cache__/
+
+# Build artifacts
+build/
+dist/
+
+# Documentation builds
+docs/build/
+docs/_build/
+
+# API keys and secrets
+*.key
+*.pem
+secrets/
+
+# ============================================================================
+# Testing & Development
+# ============================================================================
+
+# Test outputs
+test_outputs/
+test_results/
+.pytest_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage/
+
+# Benchmarking results
+benchmarks/
+perf/
+
+# Profiling data
+*.prof
+*.lprof
+
+# ============================================================================
+# Dependencies
+# ============================================================================
+
+# Node modules (if using any JS tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# R (if using R integration)
+.Rhistory
+.RData
+.Rproj.user
+
+# ============================================================================
+# Miscellaneous
+# ============================================================================
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Archives
+*.tar.gz
+*.zip
+*.rar
+
+# System files
+.fuse_hidden*
+
+# Custom ignores
+scratch/
+experiments/
+drafts/
+OLD/
+deprecated/
+
+# Large media files (if any)
+*.mp4
+*.avi
+*.mov
+*.mp3
+*.wav
+
+# ============================================================================
+# Important: DO NOT IGNORE
+# ============================================================================
+
+# Make sure to track these important files
+!README.md
+!LICENSE
+!requirements.txt
+!setup.py
+!main.py
+!main_with_activities.py
+
+# Keep all source code
+!src/**/*.py
+
+# Keep all configuration templates
+!config/**/*.example.*
+!config/**/*.template.*
+
+# Keep documentation
+!docs/**/*.md
+!docs/**/*.rst
+
+# Keep test files
+!tests/**/*.py
+
+# Keep data structure
+!data/**/.gitkeep
+!data/**/README.md
+
+# Keep model structure
+!models/.gitkeep
+!models/README.md
+
+# Keep results structure
+!results/**/.gitkeep
+!results/**/README.md
+
+# ============================================================================
+# END OF .gitignore
+# ============================================================================
