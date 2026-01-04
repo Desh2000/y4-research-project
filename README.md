@@ -120,7 +120,8 @@ By combining **synthetic data generation**, **explainable prediction**, **conver
 
 ### Complete System Architecture (Mermaid)
 
-```graph TD
+```mermaid
+graph TD
     A["📊 REAL-WORLD DATA SOURCES<br/>Sleep Health & Lifestyle Dataset<br/>Mental Health FAQs<br/>Conversation Transcripts"] -->|Extract Distributions<br/>Mean, Std Dev, Correlations| B["🔧 Data Cleaning & EDA<br/>Outlier Detection<br/>Missing Value Imputation<br/>Feature Normalization"]
     
     B -->|Statistical Profiles| C1["🧠 Component 1:<br/>SYNTHETIC DATA GENERATION"]
@@ -1526,5 +1527,6 @@ This project is licensed under the **MIT License** – see LICENSE file for deta
 *Making mental health AI accessible, transparent, and ethical*
 
 </div>
+
 
 
