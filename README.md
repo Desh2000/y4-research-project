@@ -41,14 +41,13 @@ The system classifies users into three clinically actionable categories:
 This project did not start with its current architecture. Below is the transparent record of the engineering journey, including failures and pivots.
 
 ### Phase 1: The "Naive" Regression Approach (Day 1)
-* **Initial Vision:** A simple regression model to predict a "Stress Score" from 0.0 to 10.0 based on daily sleep duration.
+* **Initial Vision:** A simple regression model to predict a "Stress Score" from 0.0 to 10.0.
 * **The Implementation:** A Feed-Forward Neural Network (Dense Layers).
 * **The Failure:**
-    1.  **Ambiguity:** The downstream Chatbot (Component 3) struggled to interpret scores. Does a score of `6.2` require help? What about `6.8`?
-    2.  **Lack of Context:** The model treated every day as an isolated event. It failed to recognize that *accumulated* sleep debt (3 days of poor sleep) is worse than one bad night.
-* **The Pivot:** We moved away from regression to **Classification** (Low/Med/High) to provide deterministic signals to the Chatbot.
+    1.  **Ambiguity:** Struggled to interpret scores.
+* **The Pivot:** We moved away from regression to **Classification** (Low/Med/High) to provide deterministic signals.
 
-### Phase 2: The Standard LSTM (The "Black Box" Era)
+### Phase 2: The Standard LSTM
 * **The Idea:** Use a Long Short-Term Memory (LSTM) network to solve the "Context" problem. LSTMs have memory cells to track history.
 * **The Implementation:** A vanilla LSTM layer processing 3-day sequences.
 * **The Limitation:** While accuracy improved, the model was opaque. When it predicted "High Risk," we couldn't tell *why*. Was it the sleep drop on Monday? Or the Heart Rate spike on Tuesday?
@@ -56,8 +55,8 @@ This project did not start with its current architecture. Below is the transpare
 
 ### Phase 3: The Current Solution (Attention Mechanism)
 * **The Breakthrough:** We integrated a **Temporal Attention Layer** on top of the LSTM.
-* **How it works:** The Attention mechanism assigns a "weight" (0.0 to 1.0) to each time step in the user's history.
-* **Result:** The model not only predicts risk but inherently "points" to the specific day or feature that triggered the risk. This allows the system to say: *"High Risk detected due to sleep anomaly on Day T-1."*
+* **How it works:** The Attention mechanism assigns a "weight" (0.0 to 1.0) to each step.
+* **Result:** The model not only predicts risk but inherently "points" to the specific feature that triggered the risk."*
 
 ---
 
