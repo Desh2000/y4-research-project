@@ -118,7 +118,6 @@ By combining **synthetic data generation**, **explainable prediction**, **conver
 
 ## 🏗️ System Architecture
 
-Copy/paste into https://mermaid.live to view/edit. [file:11][file:13][file:12][file:9]
 
 ```mermaid
 flowchart TB
@@ -1523,6 +1522,7 @@ This project is licensed under the **MIT License** – see LICENSE file for deta
 *Making mental health AI accessible, transparent, and ethical*
 
 </div>
+
 
 
 
