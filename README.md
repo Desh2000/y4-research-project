@@ -13,6 +13,14 @@
 <img src="https://img.shields.io/badge/Status-Active-success" alt="Status">
 <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance">
 
+
+> **Project ID:** 25-26J-163  
+> **Institution:** Sri Lanka Institute of Information Technology  
+> **Department:** Information Technology, Faculty of Computing  
+> **Developer:** SHALINDA D.G.M (IT22317308)  
+> **Supervisor:** Dr. Sanvitha Kasthuriarachchi  
+> **Timeline:** August 2025 - December 2025
+
 ---
 
 **Manō** is an end-to-end Generative AI ecosystem that creates high-fidelity synthetic patient data, predicts mental health risks with clinical precision, and autonomously simulates personalized therapeutic interventions using Deep Reinforcement Learning. It allows researchers to develop and test medical AI algorithms without ever touching sensitive PII (Personally Identifiable Information).
@@ -398,5 +406,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Made with ❤️ for the AI & Mental Health Research Communities**
 
 </div>
+
 
 
