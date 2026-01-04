@@ -76,7 +76,7 @@ We engineered a **privacy-by-design, closed-loop system**:
 
 ### High-Level Data Flow
 
-```
+```mermaid
 graph TB
     subgraph Users["👥 User Interfaces"]
         WebUI["🖥️ Web Interface<br/>(React.js SPA)"]
