@@ -118,80 +118,76 @@ By combining **synthetic data generation**, **explainable prediction**, **conver
 
 ## 🏗️ System Architecture
 
-### Complete System Architecture (Mermaid)
+Copy/paste into https://mermaid.live to view/edit. [file:11][file:13][file:12][file:9]
 
 ```mermaid
-graph TD
-    A["📊 REAL-WORLD DATA SOURCES<br/>Sleep Health & Lifestyle Dataset<br/>Mental Health FAQs<br/>Conversation Transcripts"] -->|Extract Distributions<br/>Mean, Std Dev, Correlations| B["🔧 Data Cleaning & EDA<br/>Outlier Detection<br/>Missing Value Imputation<br/>Feature Normalization"]
-    
-    B -->|Statistical Profiles| C1["🧠 Component 1:<br/>SYNTHETIC DATA GENERATION"]
-    
-    C1 -->|Demographic Generation| D1["CTGAN Engine<br/>Variational Gaussian Mixtures<br/>Mode-Specific Normalization"]
-    C1 -->|Temporal Generation| D2["TimeGAN Engine<br/>4-Network Architecture<br/>3-Phase Training<br/>Moments Matching Loss"]
-    
-    D1 -->|Age, Gender, Occupation<br/>BMI, Health Conditions<br/>Column Shape Score: 90.05%| E["🔐 Synthetic Patient Dataset<br/>10,000 Privacy-Safe Patients<br/>100% Reproducible<br/>Zero PII Risk"]
-    D2 -->|7-Day Trajectories<br/>Sleep, Heart Rate, Stress<br/>Distribution Score: 83.85%| E
-    
-    E -->|Training Data 8000/2000 Split| F["🤖 Component 2:<br/>RISK PREDICTION SYSTEM"]
-    
-    F -->|Static Features| G1["Dense(128) Branch<br/>Demographics → Embeddings<br/>ReLU + Dropout 0.3"]
-    F -->|Temporal Features| G2["LSTM(64) + Attention Branch<br/>7-Day Sequences<br/>Self-Attention Weights<br/>Dropout 0.3"]
-    
-    G1 --> G3["🔗 Hybrid LSTM Fusion<br/>Concatenate Branches<br/>Dense(32) Non-Linear<br/>Softmax(3) Output"]
-    G2 --> G3
-    
-    G3 -->|Weighted Cross-Entropy Loss<br/>Accuracy: 96%<br/>F1-Score: 0.98<br/>ROC-AUC: 0.99| H["⚠️ Risk Stratification Output<br/>Class Probabilities (Low / Med / High)<br/>Attention Weights (Feature Importance)<br/>Trigger Features (Explainability)<br/>Confidence: 0–100%"]
-    
-    H -->|Risk Signal & Confidence| I1["💬 Component 3:<br/>CONVERSATIONAL SUPPORT<br/>EDCSP"]
-    H -->|Risk Metrics & Scores| I2["👥 Component 4:<br/>COMMUNITY CLUSTERING<br/>& RECOMMENDATIONS"]
-    
-    I1 -->|User Message Input| J1["🎯 Intent Classifier<br/>BERT-base-uncased<br/>84+ Intent Categories<br/>290 Training Patterns<br/>Accuracy: 70%+<br/>Max Length: 256 Tokens"]
-    
-    J1 -->|confidence > 0.6| K1["📋 Template-Based Response<br/>Pre-written Responses<br/>High Consistency<br/>Fast Execution"]
-    J1 -->|confidence ≤ 0.6| K2["🔄 Hybrid Fallback<br/>Keyword Matching +<br/>Semantic Similarity<br/>LLM-Style Generation"]
-    
-    K1 --> L1{"👤 Persona Selector<br/>User Choice"}
-    K2 --> L1
-    
-    L1 -->|Friend Mode| M1["😊 Casual & Empathetic<br/>Emoji Usage<br/>Active Listening<br/>Conversational Tone"]
-    L1 -->|Counselor Mode| M2["💼 Professional & Therapeutic<br/>CBT Techniques<br/>Video Resources<br/>Behavioral Activation"]
-    L1 -->|Doctor Mode| M3["👨‍⚕️ Clinical & Evidence-Based<br/>Medical Facts<br/>Symptom Descriptions<br/>Treatment Options"]
-    
-    M1 --> N["🛡️ Privacy & Safety Layer<br/>PII Anonymization<br/>Differential Privacy<br/>Crisis Detection<br/>Session Isolation"]
-    M2 --> N
-    M3 --> N
-    
-    N -->|Persona-Specific Response| O["💬 Personalized Response Output<br/>Context-Aware<br/>Tone-Matched<br/>Crisis Escalation If Needed"]
-    
-    I2 -->|Physical Metrics| O1["📊 Scoring Engine<br/>Heart Rate, Sleep, Activity<br/>Mood, Stress, Anxiety<br/>Social Support Score"]
-    
-    O1 -->|Body Score 0–100<br/>Behavior Score 0–100<br/>Emotional Score 0–100<br/>Social Score 0–100<br/>Weights: (0.20, 0.20, 0.35, 0.25)| O2["🎲 Clustering Engine<br/>Gaussian Mixture Model<br/>3 Components<br/>Soft Assignments<br/>Silhouette: 0.47"]
-    
-    O2 -->|Cluster Assignment<br/>Probability Distribution<br/>Confidence Scores| P["👥 Peer Group Output<br/>Cluster: Low / Med / High Stress<br/>Similar Users (User IDs)<br/>Group Size & Demographics<br/>Peer Support Messages"]
-    
-    P -->|Problem Identification| Q["🎯 Activity Database<br/>21 Evidence-Based Activities<br/>CBT, Mindfulness, Social<br/>Physical, Meditation<br/>Duration & Difficulty Metadata"]
-    
-    Q -->|Content Filtering<br/>Evidence Ranking<br/>Personalization| R["🏆 Recommendation Engine<br/>Filter by Difficulty<br/>Rank by Evidence Base<br/>Match to User Needs"]
-    
-    R -->|Professional Escalation Check| S["📋 Activity Recommendations<br/>Top Activities (Duration / Difficulty)<br/>Reasons & Evidence<br/>Peer Support Messaging<br/>Professional Support If Score < 40"]
-    
-    O --> T["🎯 INTEGRATED PATIENT VIEW"]
-    S --> T
-    H --> T
-    P --> T
-    
-    T -->|Unified Response| U["📊 FINAL OUTPUT REPORT<br/>────────────────────────<br/>Risk Level: Low / Med / High<br/>Risk Confidence: 0–100%<br/>Attention-Weighted Triggers<br/>Peer Group Assignment<br/>Recommended Activities<br/>Conversational Support<br/>Crisis Escalation Status<br/>Next Steps & Resources"]
-    
-    style A fill:#e1f5ff,stroke:#01579b,stroke-width:3px
-    style E fill:#c8e6c9,stroke:#1b5e20,stroke-width:3px
-    style H fill:#fff9c4,stroke:#f57f17,stroke-width:3px
-    style T fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
-    style U fill:#ffebee,stroke:#b71c1c,stroke-width:3px
-    style C1 fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
-    style F fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
-    style I1 fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
-    style I2 fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
+flowchart TB
+  %% =========================
+  %% High-level system
+  %% =========================
 
+  subgraph S0["Data sources (research inputs)"]
+    DS1["Mental Health in Tech Survey (tabular)"]:::data
+    DS2["Sleep Health & Lifestyle Dataset (cross-sectional)"]:::data
+    DS3["FAQ / intent patterns + training conversations"]:::data
+    DS4["User multimodal signals (wearables / app / surveys / chatbot signals)"]:::data
+  end
+
+  subgraph C1["Component 1 — Synthetic data generation + simulation artifacts"]
+    C1A["CTGAN (static tabular synthesizer)\nMode-specific normalization + conditional sampling"]:::comp
+    C1B["WearableSequenceGenerator\nGaussian noise injection to create 7-day seeds"]:::comp
+    C1C["TimeGAN (temporal synthesizer)\nEmbedder/Recovery/Generator/Supervisor + 3-phase training"]:::comp
+    C1D["Rule-based labeling engine\nDeterministic ground-truth mapping"]:::comp
+    C1E["(Research module) AMISE intervention simulation\nSeq2Seq world model + PPO agent"]:::comp
+  end
+
+  subgraph C2["Component 2 — Risk prediction microservice"]
+    C2A["LSTM + Temporal Attention\n3-class classifier: Low/Medium/High"]:::comp
+    C2B["FastAPI inference endpoint\nPOST /predict"]:::api
+  end
+
+  subgraph C3["Component 3 — Empathetic conversational support system"]
+    C3A["BERT intent classifier\n84+ intents, ~290+ patterns (reported)"]:::comp
+    C3B["Persona router\nFriend / Counselor / Doctor"]:::comp
+    C3C["Privacy layer\nPII redaction + Differential Privacy stats"]:::comp
+    C3D["FastAPI + Streamlit\nChat API + web UI"]:::api
+  end
+
+  subgraph C4["Component 4 — Community clustering + recommendations"]
+    C4A["Scoring service\nBody/Behavior/Emotional/Social weights"]:::comp
+    C4B["GMM clustering\nProbabilistic peer grouping"]:::comp
+    C4C["Activity recommender\n21 activities (reported)"]:::comp
+    C4D["FastAPI endpoints\n/api/analyze etc."]:::api
+  end
+
+  %% =========================
+  %% Flows
+  %% =========================
+
+  DS1 --> C1A
+  DS2 --> C1B --> C1C
+  C1A --> C1D
+  C1C --> C1D
+
+  C1D -->|"synthetic labeled dataset\n(used for training)"| C2A
+  C2A --> C2B
+
+  DS3 --> C3A --> C3B --> C3C --> C3D
+
+  DS4 --> C4A --> C4B --> C4C --> C4D
+
+  %% Integration: prediction informs chatbot + recommendations (conceptual + documented)
+  C2B -. "risk signal / triage input\n(integration intent)" .-> C3D
+  C2B -. "risk signal / weighting\n(integration intent)" .-> C4D
+  C4D -. "peer group + activities\n(integration intent)" .-> C3D
+
+  %% Research-only loop: intervention simulation (documented in Component 1 report)
+  C2A -. "risk for reward signal" .-> C1E
+  C1E -. "simulated next-state" .-> C2A
+
+  classDef comp fill:#E8F0FE,stroke:#1A73E8,stroke-width:1px;
+  classDef api fill:#E6F4EA,stroke:#137333,stroke-width:1px;
+  classDef data fill:#FEF7E0,stroke:#B06000,stroke-width:1px;
 ```
 
 ### Modular Design Rationale
@@ -1527,6 +1523,7 @@ This project is licensed under the **MIT License** – see LICENSE file for deta
 *Making mental health AI accessible, transparent, and ethical*
 
 </div>
+
 
 
 
