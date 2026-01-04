@@ -2,7 +2,7 @@
 
 <div align="left">
 
-# 🧠 Manō: Privacy-Preserving Mental Health AI Ecosystem
+
 ### *End-to-End Generative AI for Synthetic Patient Data, Risk Prediction, Conversational Support & Community Resilience*
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
