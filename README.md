@@ -120,73 +120,211 @@ By combining **synthetic data generation**, **explainable prediction**, **conver
 
 
 ```mermaid
-flowchart TB
-  %% =========================
-  %% High-level system
-  %% =========================
+graph TB
+    subgraph Users["👥 User Interfaces"]
+        WebUI["🖥️ Web Interface<br/>(React.js SPA)"]
+        MobileUI["📱 Mobile App<br/>(React Native)"]
+    end
 
-  subgraph S0["Data sources (research inputs)"]
-    DS1["Mental Health in Tech Survey (tabular)"]:::data
-    DS2["Sleep Health & Lifestyle Dataset (cross-sectional)"]:::data
-    DS3["FAQ / intent patterns + training conversations"]:::data
-    DS4["User multimodal signals (wearables / app / surveys / chatbot signals)"]:::data
-  end
+    subgraph API["🌐 API Gateway Layer"]
+        Gateway["API Gateway<br/>(Java Spring Boot)<br/>Authentication & Routing"]
+    end
 
-  subgraph C1["Component 1 — Synthetic data generation + simulation artifacts"]
-    C1A["CTGAN (static tabular synthesizer)\nMode-specific normalization + conditional sampling"]:::comp
-    C1B["WearableSequenceGenerator\nGaussian noise injection to create 7-day seeds"]:::comp
-    C1C["TimeGAN (temporal synthesizer)\nEmbedder/Recovery/Generator/Supervisor + 3-phase training"]:::comp
-    C1D["Rule-based labeling engine\nDeterministic ground-truth mapping"]:::comp
-    C1E["(Research module) AMISE intervention simulation\nSeq2Seq world model + PPO agent"]:::comp
-  end
+    subgraph Component1["🔒 Component 1: Privacy-Preserving Synthetic Data Generation"]
+        direction TB
+        C1_Input["📊 Real Data Sources<br/>- DASS Surveys<br/>- Mental Health in Tech<br/>- Sleep & Lifestyle<br/>- Wearables IoT<br/>- Reddit Posts"]
+        
+        subgraph C1_Preprocessing["Data Preprocessing Pipeline"]
+            C1_Clean["Data Cleaning<br/>& Normalization"]
+            C1_Feature["Feature<br/>Extraction"]
+        end
+        
+        subgraph C1_GAN["Hybrid Conditional GAN Architecture"]
+            CTGAN["CTGAN Module<br/>(Tabular Data)<br/>Survey Responses"]
+            TimeGAN["TimeGAN Module<br/>(Time-Series)<br/>Wearable Metrics"]
+            TextGAN["Text-GAN Module<br/>(Unstructured Text)<br/>Emotional Texts"]
+            Discriminator["Unified<br/>Discriminator"]
+        end
+        
+        C1_Privacy["🔐 Differential Privacy<br/>(DP-SGD)<br/>ε, δ guarantees"]
+        
+        subgraph C1_Intervention["Intervention Simulation Module"]
+            RL["Reinforcement<br/>Learning Agent"]
+            Causal["Causal<br/>Inference Models"]
+            ABM["Agent-Based<br/>Modeling"]
+        end
+        
+        C1_Validation["✅ Validation Framework<br/>- Statistical Similarity (MMD)<br/>- ML Utility Testing<br/>- Privacy Metrics (k-anonymity, MIA)"]
+        
+        C1_Output["📤 Synthetic Data Output<br/>(CSV, JSON)"]
+    end
 
-  subgraph C2["Component 2 — Risk prediction microservice"]
-    C2A["LSTM + Temporal Attention\n3-class classifier: Low/Medium/High"]:::comp
-    C2B["FastAPI inference endpoint\nPOST /predict"]:::api
-  end
+    subgraph Component2["📈 Component 2: Stress & Cognitive Risk Prediction (LSTM)"]
+        direction TB
+        C2_Input["📥 Multimodal Data Integration<br/>- Surveys<br/>- Wearables<br/>- Sleep Metrics<br/>- Synthetic Data<br/>- Behavioral Data"]
+        
+        C2_Preprocessing["Data Preprocessing<br/>- Normalization<br/>- Missing Value Handling<br/>- Feature Engineering"]
+        
+        subgraph C2_LSTM["Multi-Task LSTM Architecture"]
+            LSTM_Core["LSTM Neural<br/>Network Layers"]
+            Attention["⚡ Temporal Attention<br/>Mechanism<br/>(Dynamic Weighting)"]
+            MultiTask["Multi-Task<br/>Output Layer"]
+        end
+        
+        C2_Prediction["🎯 Prediction Outputs<br/>- Stress Levels (0-1)<br/>- Depression Scores<br/>- Anxiety Levels<br/>- Cognitive Risk Assessment"]
+        
+        C2_RiskScore["📊 Risk Score Generation<br/>- Confidence Intervals<br/>- 5-Level Categorization<br/>- Early Warning Indicators"]
+    end
 
-  subgraph C3["Component 3 — Empathetic conversational support system"]
-    C3A["BERT intent classifier\n84+ intents, ~290+ patterns (reported)"]:::comp
-    C3B["Persona router\nFriend / Counselor / Doctor"]:::comp
-    C3C["Privacy layer\nPII redaction + Differential Privacy stats"]:::comp
-    C3D["FastAPI + Streamlit\nChat API + web UI"]:::api
-  end
+    subgraph Component3["💬 Component 3: Empathetic Conversational Support (Chatbot)"]
+        direction TB
+        C3_Input["💭 User Conversation<br/>Input"]
+        
+        subgraph C3_NLP["NLP Processing Engine"]
+            Transformer["🤖 Transformer Model<br/>(Fine-tuned GPT/LLM)"]
+            Sentiment["Sentiment<br/>Analysis"]
+            Context["Context<br/>Understanding"]
+        end
+        
+        C3_Integration["🔗 Integration Layer<br/>- Risk Scores (C2)<br/>- Intervention Strategies (C1)<br/>- Community Insights (C4)"]
+        
+        subgraph C3_Response["Response Generation"]
+            Empathy["Empathetic<br/>Response Engine"]
+            Crisis["🚨 Suicide Prevention<br/>Module<br/>- Crisis Detection<br/>- Safety Planning<br/>- Emergency Redirection"]
+            Personalization["Personalized<br/>Recommendations"]
+        end
+        
+        C3_Privacy["🔐 DP Protocols<br/>Anonymous Sessions"]
+        
+        C3_Output["💬 Chatbot Response<br/>& Feedback Data"]
+    end
 
-  subgraph C4["Component 4 — Community clustering + recommendations"]
-    C4A["Scoring service\nBody/Behavior/Emotional/Social weights"]:::comp
-    C4B["GMM clustering\nProbabilistic peer grouping"]:::comp
-    C4C["Activity recommender\n21 activities (reported)"]:::comp
-    C4D["FastAPI endpoints\n/api/analyze etc."]:::api
-  end
+    subgraph Component4["👥 Component 4: Community-Driven Resilience Clustering (GMM)"]
+        direction TB
+        C4_Input["📥 Resilience Data Sources<br/>- Social Media<br/>- Behavioral Patterns<br/>- Chatbot Interactions<br/>- Wearable Data"]
+        
+        C4_Feature["Feature Engineering<br/>- Emotional Regulation<br/>- Social Connectivity<br/>- Behavioral Adaptation<br/>- Cognitive Resilience"]
+        
+        subgraph C4_GMM["Dynamic GMM Architecture"]
+            GMM_Core["Gaussian Mixture<br/>Model (5-15 clusters)"]
+            GMM_Update["Real-Time<br/>Update Mechanism<br/>(Incremental EM)"]
+            Stability["Cluster Stability<br/>Monitoring"]
+        end
+        
+        C4_Community["🤝 Community Formation<br/>- Peer Matching (8-12 members)<br/>- Similarity-Based Grouping<br/>- Diversity Balancing"]
+        
+        C4_Recommendation["🎯 Activity Recommendation<br/>- Collaborative Filtering<br/>- Content-Based Filtering<br/>- Temporal Optimization"]
+        
+        C4_Output["📊 Community Insights<br/>& Engagement Metrics"]
+    end
 
-  %% =========================
-  %% Flows
-  %% =========================
+    subgraph Storage["💾 Data Storage Layer"]
+        PostgreSQL["PostgreSQL<br/>User Profiles & Data"]
+        Redis["Redis Cache<br/>Real-Time Data"]
+        FileStorage["File Storage<br/>Synthetic Datasets"]
+    end
 
-  DS1 --> C1A
-  DS2 --> C1B --> C1C
-  C1A --> C1D
-  C1C --> C1D
+    subgraph Monitoring["📊 Monitoring & Analytics"]
+        Metrics["Performance<br/>Metrics"]
+        Logs["System Logs<br/>& Audit Trail"]
+        Dashboard["Admin<br/>Dashboard"]
+    end
 
-  C1D -->|"synthetic labeled dataset\n(used for training)"| C2A
-  C2A --> C2B
+    %% User to API connections
+    WebUI --> Gateway
+    MobileUI --> Gateway
+    
+    %% API Gateway to Components
+    Gateway --> Component1
+    Gateway --> Component2
+    Gateway --> Component3
+    Gateway --> Component4
+    
+    %% Component 1 Internal Flow
+    C1_Input --> C1_Preprocessing
+    C1_Clean --> C1_Feature
+    C1_Feature --> C1_GAN
+    CTGAN --> Discriminator
+    TimeGAN --> Discriminator
+    TextGAN --> Discriminator
+    Discriminator --> C1_Privacy
+    C1_Privacy --> C1_Intervention
+    RL --> C1_Output
+    Causal --> C1_Output
+    ABM --> C1_Output
+    C1_Output --> C1_Validation
+    
+    %% Component 2 Internal Flow
+    C2_Input --> C2_Preprocessing
+    C2_Preprocessing --> C2_LSTM
+    LSTM_Core --> Attention
+    Attention --> MultiTask
+    MultiTask --> C2_Prediction
+    C2_Prediction --> C2_RiskScore
+    
+    %% Component 3 Internal Flow
+    C3_Input --> C3_NLP
+    Transformer --> Sentiment
+    Sentiment --> Context
+    Context --> C3_Integration
+    C3_Integration --> C3_Response
+    Empathy --> C3_Output
+    Crisis --> C3_Output
+    Personalization --> C3_Output
+    C3_Privacy --> C3_Output
+    
+    %% Component 4 Internal Flow
+    C4_Input --> C4_Feature
+    C4_Feature --> C4_GMM
+    GMM_Core --> GMM_Update
+    GMM_Update --> Stability
+    Stability --> C4_Community
+    C4_Community --> C4_Recommendation
+    C4_Recommendation --> C4_Output
+    
+    %% Inter-Component Communication (Data Flow)
+    C1_Output -.->|"Synthetic Training Data"| Component2
+    C1_Output -.->|"Synthetic Conversation Scenarios"| Component3
+    C1_Output -.->|"Synthetic User Profiles"| Component4
+    
+    C2_RiskScore -.->|"Real-Time Risk Scores"| C3_Integration
+    C2_RiskScore -.->|"Risk Indicators"| C4_GMM
+    
+    C3_Output -.->|"Interaction Patterns"| C1_Intervention
+    C3_Output -.->|"Conversation Data"| C4_Input
+    C3_Output -.->|"Feedback Loop"| C2_Input
+    
+    C4_Output -.->|"Community Insights"| C3_Integration
+    C4_Output -.->|"Resilience Trends"| C1_Intervention
+    
+    %% Storage Connections
+    Component1 <--> FileStorage
+    Component2 <--> PostgreSQL
+    Component3 <--> PostgreSQL
+    Component3 <--> Redis
+    Component4 <--> PostgreSQL
+    
+    %% Monitoring Connections
+    Component1 --> Monitoring
+    Component2 --> Monitoring
+    Component3 --> Monitoring
+    Component4 --> Monitoring
+    Gateway --> Monitoring
 
-  DS3 --> C3A --> C3B --> C3C --> C3D
-
-  DS4 --> C4A --> C4B --> C4C --> C4D
-
-  %% Integration: prediction informs chatbot + recommendations (conceptual + documented)
-  C2B -. "risk signal / triage input\n(integration intent)" .-> C3D
-  C2B -. "risk signal / weighting\n(integration intent)" .-> C4D
-  C4D -. "peer group + activities\n(integration intent)" .-> C3D
-
-  %% Research-only loop: intervention simulation (documented in Component 1 report)
-  C2A -. "risk for reward signal" .-> C1E
-  C1E -. "simulated next-state" .-> C2A
-
-  classDef comp fill:#E8F0FE,stroke:#1A73E8,stroke-width:1px;
-  classDef api fill:#E6F4EA,stroke:#137333,stroke-width:1px;
-  classDef data fill:#FEF7E0,stroke:#B06000,stroke-width:1px;
+    %% Styling
+    classDef component1Style fill:#e1f5ff,stroke:#0288d1,stroke-width:3px
+    classDef component2Style fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef component3Style fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    classDef component4Style fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    classDef storageStyle fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef userStyle fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    
+    class Component1,C1_Input,C1_Preprocessing,C1_GAN,C1_Privacy,C1_Intervention,C1_Validation,C1_Output component1Style
+    class Component2,C2_Input,C2_Preprocessing,C2_LSTM,C2_Prediction,C2_RiskScore component2Style
+    class Component3,C3_Input,C3_NLP,C3_Integration,C3_Response,C3_Privacy,C3_Output component3Style
+    class Component4,C4_Input,C4_Feature,C4_GMM,C4_Community,C4_Recommendation,C4_Output component4Style
+    class Storage,PostgreSQL,Redis,FileStorage storageStyle
+    class Users,WebUI,MobileUI userStyle
 ```
 
 ### Modular Design Rationale
