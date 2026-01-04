@@ -284,8 +284,6 @@ graph TB
     class Users,WebUI,MobileUI userStyle
 ```
 
----
-
 ## 🧩 Component Breakdown
 
 ### **Component 1: Privacy-Preserving Synthetic Data Generation**
