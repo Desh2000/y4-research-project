@@ -882,7 +882,7 @@ action = (type_2, intensity_sample)
 
 ## 🧠 Models & Algorithms
 
-### Component 1: CTGAN Architecture (Static Generator)
+### Component 1.1: CTGAN Architecture (Static Generator)
 *A Conditional Tabular GAN designed to handle the complex, multi-modal distributions of demographic survey data.*
 
 **Generator Architecture**:
@@ -917,7 +917,7 @@ Dense(1) → Linear Output (Validity Score)
 
 ---
 
-### Component 1: TimeGAN Architecture (Dynamic Generator)
+### Component 1.2: TimeGAN Architecture (Dynamic Generator)
 *A 4-network system that synthesizes biologically realistic 7-day wearable sequences.*
 
 **Core Components (All GRU-based)**:
@@ -943,7 +943,7 @@ Dense(1) → Linear Output (Validity Score)
 
 ---
 
-### Component 1: Hybrid LSTM Risk Predictor
+### Component 1.3: Hybrid LSTM Risk Predictor
 *A dual-branch neural network designed to fuse static demographics with dynamic time-series data without information loss.*
 
 **Branch A: Temporal (Dynamic)**:
@@ -984,7 +984,7 @@ Dense(3) → Softmax (Low, Medium, High)
 
 ---
 
-### Component 1: Adaptive Multimodal Intervention Simulation Engine World Model (Seq2Seq Simulator)
+### Component 1.4: Adaptive Multimodal Intervention Simulation Engine World Model (Seq2Seq Simulator)
 *A differentiable simulator that predicts patient outcomes (7-day trajectories) for any given intervention, enabling "Virtual Clinical Trials".*
 
 **Architecture**:
@@ -999,7 +999,7 @@ Dense(3) → Softmax (Low, Medium, High)
 
 ---
 
-### Component 1: Adaptive Multimodal Intervention Simulation Engine Agent (PPO Agent)
+### Component 1.5: Adaptive Multimodal Intervention Simulation Engine Agent (PPO Agent)
 *A Reinforcement Learning agent that prescribes personalized interventions by interacting with the Seq2Seq World Model.*
 
 **Policy Network (Dual-Head)**:
@@ -1181,34 +1181,106 @@ Train both heads jointly; sample action as `(discrete_action, continuous_sample)
 
 ### Hardware & Environment
 
-| Component | Spec |
-|-----------|------|
-| **Device** | ASUS ROG G15: Ryzen 9 5900HX, RTX 3050 Ti (4GB VRAM) |
-| **Framework** | PyTorch 2.0+ (CPU fallback supported) |
-| **Python** | 3.10+ |
+| Item | Spec |
+|------|------|
+| Target device | Laptop-class GPU: NVIDIA RTX 3050 Ti (4GB VRAM) |
+| Core framework | PyTorch (standardized to avoid mixed-framework CUDA conflicts) |
+| Key runtime optimizations | AMP mixed precision, gradient checkpointing, gradient accumulation (effective batch 256 with batch 32 × 8 steps), and reduced GRU hidden size (256→128) to fit 4GB VRAM |
 
-### Component 1: CTGAN
+---
 
-| Metric | Score | Interpretation |
-|--------|-------|-----------------|
-| Column Shape Score | **90.05%** | Synthetic demographics statistically identical to real |
-| Coverage Score | **87.49%** | Synthetic data spans realistic range of values |
-| Training Time | 15 minutes (GPU) | Efficient; portable to laptop |
-| Synthetic Samples | 10,000 | Sufficient for supervised learning |
+### Training Cost (One-time)
 
-**Validation**: Compared synthetic vs. real distributions (KL divergence < 0.15 for all features).
+| Component | Time | Peak GPU memory | GPU-hours |
+|-----------|------|-----------------|-----------|
+| CTGAN (Static) | 3 hours | 2.1 GB | 3 GPU-hrs |
+| TimeGAN (Temporal) | 8 hours | 3.9 GB | 8 GPU-hrs |
+| Hybrid LSTM (Risk Predictor) | 2 hours | 1.8 GB | 2 GPU-hrs |
+| Seq2Seq + Attention (World Model) | 6 hours | 3.2 GB | 6 GPU-hrs |
+| PPO Agent (RL Optimizer) | 4 hours | 2.5 GB | 4 GPU-hrs |
+| **Total** | **23 hours** | **≤ 4 GB** (fits target GPU) | **23 GPU-hrs** |
 
-### Component 1: TimeGAN
+---
 
-| Metric | Score | Interpretation |
-|--------|-------|-----------------|
-| Distribution Score | **83.85%** | Synthetic sequences match real statistical properties |
-| Validation Loss | **0.0001** | Stable convergence; no mode collapse |
-| Discriminability | <50% | Synthetic indistinguishable from real (good!) |
-| Training Time | 45 min (GPU) | Stable 3-phase training |
-| Generated Sequences | Infinite | Can create unlimited longitudinal data |
+### Component 1.1: CTGAN (Static Demographics)
 
-**Realism Checks**: Physiologically valid ranges (HR 40-200, Sleep 0-12, Stress 0-100).
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Synthetic cohort size | 10,000 profiles | Sufficient scale for downstream supervised learning + simulation |
+| Overall similarity (reported) | 87.49 | Aggregate similarity between real and synthetic across key statistics |
+| Correlation preservation (examples) | Match ~93–96 (e.g., Age↔WorkExp, Remote↔Tech) | Key relationships remain close to real data, improving downstream validity |
+| Training setup | 600 epochs; model selection around epoch ~450 | Long training to stabilize mixed-type multimodal tabular generation |
+
+> **Note**: Metrics like "Column Shape Score 90.05%" / "KL divergence < 0.15" are not stated in the Component-1 document and should only be included if measured elsewhere.
+
+---
+
+### Component 1.2: TimeGAN (7-Day Wearables)
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Convergence (epoch 300) | Embedder loss 0.0408; Supervisor loss 0.025; Gen/Disc ≈ 0.5 equilibrium | Stable training and balanced adversarial learning |
+| Reconstruction fidelity (MAE examples) | HR 0.8 bpm; Sleep 0.06 h; Stress 0.015; Quality 0.013 | Autoencoder preserves signal structure with low error |
+| Temporal consistency (example) | HR autocorr real 0.68 vs synthetic 0.65 (~96% match) | Short-horizon temporal dependencies are retained |
+| Diversity proxy | Inception score real 8.34 vs synthetic 8.21 (~98% of real) | High diversity and realism relative to the seed distribution |
+
+---
+
+### Component 1.3: Hybrid LSTM (Risk Prediction)
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Dataset split | Train 9,000 / Val 500 / Test 500 (stratified) | Balanced evaluation with a held-out test set |
+| Overall test performance | Accuracy 91.2%; weighted Precision 0.913; weighted Recall 0.912; weighted F1 0.911 | Strong multiclass performance on labeled synthetic cohort |
+| Discrimination | AUC-ROC (one-vs-rest) 0.979 | High separability across Low/Medium/High classes |
+| Per-class F1 | Low 0.941; Medium 0.842; High 0.822 | High-risk detection remains strong despite minority class size |
+| Confusion matrix highlight | High-risk recall: 40/50 correct (80%) | High-risk is hardest but still reliably identified |
+
+---
+
+### Component 1.4: Seq2Seq + Attention (World Model)
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Training data | 50,000 virtual clinical trials; shape (50000, 8, 4) | Large synthetic supervision signal for learning intervention dynamics |
+| Final loss | Train loss 0.000141; Val loss 0.000139 (epoch 100) | ~1000× reduction with no reported overfitting (train≈val) |
+| Interpretability | Attention weights peak on recent days (e.g., Day 6 weight 0.38; Day 5 weight 0.25) | Model focuses on recent trends, matching clinical intuition for short-term forecasts |
+
+---
+
+### Component 1.5: PPO (Intervention Optimization)
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Training length | 5,000 episodes | Sufficient horizon for learning stable policies in the simulated environment |
+| Reward convergence | Final avg reward ~7.1 ± 0.3 (episodes 3000–5000 stable) | Indicates converged, low-variance policy behavior |
+| Milestone progression | Avg reward: -1.2 (ep 100) → 2.3 (ep 500) → 5.8 (ep 2000) → 7.1 (ep 5000) | Clear learning phases: exploration → refinement → exploitation |
+| Stability fix (documented) | PPO collapse near episode ~1500 resolved via LR 1e-3→3e-4, grad clipping 0.5, PPO clip ε=0.2 | Shows engineered stability for hybrid discrete+continuous control |
+| Policy quality (behavioral) | Learns minimum effective dose + personalization across patient profiles | Medically sensible behavior shaped by reward constraints |
+
+---
+
+### End-to-End Inference Performance
+
+| Pipeline stage | Latency |
+|----------------|---------|
+| Risk assessment (Hybrid LSTM) | 10 ms (data loading 1 ms + inference 4 ms inside the step) |
+| Recommendation generation (PPO) | 5 ms (forward 3 ms + sampling 2 ms) |
+| Outcome simulation (Seq2Seq) | 28 ms (encoder 8 ms + decoder 7 steps 20 ms) |
+| **Total end-to-end** | **43 ms** (clinical threshold cited as 1000 ms) |
+
+**Batch throughput**: 100 requests in ~85 ms → ~1,176 requests/sec
+
+---
+
+### Deployment Footprint
+
+| Item | Size / Memory |
+|------|---------------|
+| Model sizes (disk) | CTGAN 45 MB; TimeGAN 38 MB; LSTM 12 MB; Seq2Seq 15 MB; PPO 8 MB → **118 MB total** |
+| Dataset sizes (disk) | Synthetic patients 52 MB; training data 380 MB → **432 MB total** |
+| Full package | **~550 MB** (models + datasets) |
+| Runtime GPU memory | Models in GPU 120 MB + batch processing 200 MB ≈ **320 MB active** (~3.68 GB headroom on 4GB) |
 
 ### Component 2: Risk Prediction
 
