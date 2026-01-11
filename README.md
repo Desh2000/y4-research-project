@@ -882,106 +882,143 @@ action = (type_2, intensity_sample)
 
 ## 🧠 Models & Algorithms
 
-### Component 1: CTGAN Architecture
+### Component 1: CTGAN Architecture (Static Generator)
+*A Conditional Tabular GAN designed to handle the complex, multi-modal distributions of demographic survey data.*
 
-**Generator**:
-```
-Random Vector (100-d) → Dense(200) → ReLU → Dense(n_features) → Output
-Packed Conditioning: Condition on specific category (e.g., "Male")
-```
-
-**Discriminator**:
-```
-Input Features → Dense(200) → ReLU → Dense(200) → ReLU → Dense(1) → Sigmoid
-Pack Discriminator: Reshape to enforce categorical correctness
-```
-
-**Training**:
-- Optimizer: Adam (lr=2e-4)
-- Epochs: 600
-- Batch Size: 500
-- Loss: Wasserstein + Gradient Penalty
-
-**Handling Discrete vs. Continuous**:
-- Discrete features: OneHotEncoded, then mixed with continuous via VGM
-- Continuous features: MinMax normalized to [0, 1]
-- Post-processing: Reconstruct categories, clip continuous to valid ranges
-
-### Component 1: TimeGAN Architecture
-
-**Embedder** (GRU):
-```
-Input (batch, time_steps, n_features) → GRU(64) → Latent (batch, time_steps, 64)
-Purpose: Compress raw signal into latent space
+**Generator Architecture**:
+```python
+Input: Random Noise (128-d) + Condition Embedding (64-d)
+  ↓
+Dense(128) → ReLU → BatchNorm
+  ↓
+Dense(128) → ReLU → BatchNorm
+  ↓
+Dense(30_features) → Output (Mixed Discrete/Continuous)
 ```
 
-**Recovery** (GRU):
-```
-Latent → GRU(64) → Dense(n_features) → Reconstructed Input
-Purpose: Reconstruction loss (→ good embeddings)
+**Discriminator Architecture**:
+```python
+Input Features
+  ↓
+Dense(256) → LeakyReLU(0.2) → Dropout(0.3)
+  ↓
+Dense(256) → LeakyReLU(0.2) → Dropout(0.3)
+  ↓
+Dense(1) → Linear Output (Validity Score)
 ```
 
-**Generator** (GRU):
-```
-Random Noise (batch, time_steps, 10) → GRU(64) → Latent
-Purpose: Generate synthetic latent codes
-```
+**Training Configuration**:
+- Optimizer: Adam (lr=2e-4, betas=(0.5, 0.9))
+- Batch Size: 256
+- Epochs: 600 (Best model selected at Epoch 450)
+- Loss: Wasserstein Loss + Gradient Penalty (Weight=10) + Feature-wise CrossEntropy
 
-**Supervisor** (GRU):
-```
-Latent[t] → GRU(64) → Predict Latent[t+1]
-Purpose: Enforce temporal dynamics (→ realistic sequences)
-```
+**Key Innovation**: Mode-Specific Normalization (VGM) to accurately model continuous columns with multiple peaks (e.g., age clusters at 25, 35, 50).
+
+---
+
+### Component 1: TimeGAN Architecture (Dynamic Generator)
+*A 4-network system that synthesizes biologically realistic 7-day wearable sequences.*
+
+**Core Components (All GRU-based)**:
+- **Embedder**: Input(7, 4) → GRU(128) → Latent(7, 128)
+  - Purpose: Compresses raw features into a lower-dimensional latent space.
+- **Recovery**: Latent(7, 128) → GRU(128) → Reconstructed(7, 4)
+  - Purpose: Reconstructs features from latent space (Autoencoder loss).
+- **Generator**: Noise(7, 100) → GRU(128) → Synthetic Latent(7, 128)
+  - Purpose: Creates synthetic latent codes from random noise.
+- **Supervisor**: Latent[t] → GRU(128) → Latent[t+1]
+  - Purpose: Enforces temporal physics (e.g., smooth heart rate transitions).
 
 **Loss Functions**:
-- Reconstruction Loss: L1(Real_Input, Reconstructed_Input)
-- Temporal Loss: L1(Real_Latent[t+1], Supervised_Latent[t+1])
-- Adversarial Loss: Discriminator(Real_Latent, Fake_Latent)
-- **Moments Loss (Custom)**: L2(Mean_Real, Mean_Fake) + L2(Std_Real, Std_Fake)
+- Reconstruction: MAE (Real vs. Reconstructed)
+- Temporal: MAE (Supervisor prediction vs. Actual next step)
+- Adversarial: Binary CrossEntropy (Discriminator)
+- Moments Loss (Custom): λ₁ ||μ_real - μ_fake|| + λ₂ ||σ_real - σ_fake||
 
-**Training Phases**:
-1. **Phase 1 (Embedding)**: Train Embedder + Recovery for 100 epochs (reconstruction)
-2. **Phase 2 (Supervision)**: Train Supervisor for 100 epochs (temporal dynamics)
-3. **Phase 3 (Joint)**: Train all 4 networks adversarially for 200 epochs
+**Training Phases (Optimized for RTX 3050 Ti)**:
+1. Autoencoder Phase: Train Embedder/Recovery (50 epochs).
+2. Supervisor Phase: Train Supervisor to learn temporal dynamics (100 epochs).
+3. Joint Phase: Adversarial training of all networks with Moments Matching (150 epochs).
 
-### Component 2: Hybrid LSTM Architecture
+---
 
-**Static Branch**:
+### Component 1: Hybrid LSTM Risk Predictor
+*A dual-branch neural network designed to fuse static demographics with dynamic time-series data without information loss.*
+
+**Branch A: Temporal (Dynamic)**:
+```python
+Input: Wearable Sequence (7 days, 4 signals)
+  ↓
+LSTM(128, layers=2, dropout=0.3)
+  ↓
+Last Hidden State (128-d) → Dropout
 ```
-Demographics (12 features) → Dense(64) → ReLU → Dense(32)
-Output: Static embedding (32-d)
-```
 
-**Temporal Branch**:
-```
-Wearable Sequence (time_steps=7, features=4)
-  → LSTM(64, return_sequences=True) → (7, 64)
-  → LSTM(32, return_sequences=True) → (7, 32)
-  → Dropout(0.3)
-  → Attention(Self-Attention) → Weighted (7, 32)
-  → GlobalAveragePooling1D → (32,)
-Output: Temporal embedding (32-d)
+**Branch B: Static (Demographic)**:
+```python
+Input: Demographics (30 features)
+  ↓
+Dense(128) → BatchNorm → ReLU → Dropout(0.3)
+  ↓
+Dense(64) → BatchNorm → ReLU
+  ↓
+Output: Static Embedding (64-d)
 ```
 
 **Fusion Layer**:
-```
-Concatenate(Static, Temporal) → (64,)
-  → Dense(32) → ReLU
-  → Dense(3) → Softmax
-Output: [P(Low), P(Med), P(High)]
+```python
+Concatenate(Temporal_128, Static_64) → (192,)
+  ↓
+Dense(128) → ReLU → Dropout(0.3)
+  ↓
+Dense(64) → ReLU
+  ↓
+Dense(3) → Softmax (Low, Medium, High)
 ```
 
 **Training**:
-- Optimizer: AdamW (lr=0.001, weight_decay=0.01)
-- Loss: Weighted CrossEntropy (weights: [1.0, 1.5, 3.0] for Low/Med/High)
-- Epochs: 50
-- Batch Size: 32
-- Early Stopping: Patience=10 on validation loss
+- Loss: Weighted CrossEntropy (Weights: Low=1.0, Med=2.2, High=6.2) to handle class imbalance.
+- Optimizer: AdamW (lr=1e-3) + ReduceLROnPlateau Scheduler.
+- Performance: 96% Overall Accuracy; 0.98 F1-Score for High Risk detection.
 
-**Key Design Choices**:
-- **Dual-branch**: Respects modality differences
-- **Attention weights**: [shape=(7,)] tells clinicians which days mattered
-- **Weighted loss**: Balances class imbalance without resampling (preserves realistic ratios)
+---
+
+### Component 1: Adaptive Multimodal Intervention Simulation Engine World Model (Seq2Seq Simulator)
+*A differentiable simulator that predicts patient outcomes (7-day trajectories) for any given intervention, enabling "Virtual Clinical Trials".*
+
+**Architecture**:
+- **Encoder**: LSTM (256 units) processes patient history.
+- **Attention Mechanism**: Bahdanau Attention calculates weights α_t to focus on relevant past days (e.g., weights peak at days 5-6).
+- **Decoder**: LSTM conditioned on [Context + Intervention Vector + Intensity].
+
+**Training**:
+- Strategy: Teacher Forcing (Ratio 0.5) to stabilize sequential learning.
+- Optimization: Mixed Precision (AMP) to fit massive batch sizes on 4GB VRAM.
+- Validation: Validation Loss converged to 0.0001, effectively cloning the medical rule engine into a neural network.
+
+---
+
+### Component 1: Adaptive Multimodal Intervention Simulation Engine Agent (PPO Agent)
+*A Reinforcement Learning agent that prescribes personalized interventions by interacting with the Seq2Seq World Model.*
+
+**Policy Network (Dual-Head)**:
+```python
+Input: Patient State (48-d flattened)
+  ↓
+Shared Feature Extractor (128-d)
+  ↙                     ↘
+Head 1 (Discrete)      Head 2 (Continuous)
+Action Type (5 classes)    Intensity (Gaussian μ, σ)
+(CBT, Meds, etc.)          Range: [0.1, 1.0]
+```
+
+**RL Formulation**:
+- Algorithm: Proximal Policy Optimization (PPO).
+- Reward Function: Risk Reduction - (Intensity × Cost Penalty).
+  - Risk Reduction: Improvement in LSTM risk score.
+  - Cost Penalty: Penalties for excessive dosage.
+- Outcome: Learned "Minimum Effective Dose" strategy (prescribing high intensity only for severe cases) and personalized matching (e.g., CBT for stress).
 
 ### Component 2: Attention Mechanism
 
