@@ -288,75 +288,75 @@ graph TB
 
 ### **Component 1: Privacy-Preserving Synthetic Data Generation & Adaptive Intervention**
 
-[cite_start]**Purpose**: Solve the mental health data scarcity crisis by generating realistic synthetic patient cohorts and training adaptive intervention agents without risking real patient privacy[cite: 7, 10].
+**Purpose**: Solve the mental health data scarcity crisis by generating realistic synthetic patient cohorts and training adaptive intervention agents without risking real patient privacy.
 
 #### 1. Static Generator (CTGAN)
 *Generates the "Who": Patient Demographics*
 
 | Aspect | Details |
 |--------|---------|
-| **Algorithm** | [cite_start]Conditional Tabular GAN (Xu et al., NeurIPS 2019) [cite: 22] |
-| **Input** | [cite_start]Mental Health in Tech Survey (~1,259 real profiles) [cite: 170] |
-| **Outputs** | [cite_start]10,000 synthetic demographic profiles [cite: 30] |
-| **Key Innovation** | [cite_start]**Mode-Specific Normalization** (VGM) to handle multi-modal distributions [cite: 24] |
-| **Performance** | Statistical Similarity: **87.49%**; [cite_start]Correlation Preservation: **93-98%** [cite: 30, 223] |
+| **Algorithm** | Conditional Tabular GAN (Xu et al., NeurIPS 2019) |
+| **Input** | Mental Health in Tech Survey (~1,259 real profiles)  |
+| **Outputs** | 10,000 synthetic demographic profiles  |
+| **Key Innovation** | **Mode-Specific Normalization** (VGM) to handle multi-modal distributions |
+| **Performance** | Statistical Similarity: **87.49%**; Correlation Preservation: **93-98%**  |
 
 **What It Solves:**
-- [cite_start]**Mode Collapse:** Vanilla GANs failed to capture multi-modal data (e.g., Age peaks at 25, 35, 50)[cite: 18, 191].
-- [cite_start]**Discrete/Continuous Mix:** Successfully models mixed types like binary gender vs. continuous age[cite: 195].
-- [cite_start]**Privacy:** Generates new profiles statistically similar to reality but linked to no real individual[cite: 114].
+- **Mode Collapse:** Vanilla GANs failed to capture multi-modal data (e.g., Age peaks at 25, 35, 50).
+- **Discrete/Continuous Mix:** Successfully models mixed types like binary gender vs. continuous age.
+- **Privacy:** Generates new profiles statistically similar to reality but linked to no real individual.
 
 #### 2. Dynamic Generator (TimeGAN)
 *Generates the "When": Longitudinal Biometrics*
 
 | Aspect | Details |
 |--------|---------|
-| **Algorithm** | [cite_start]Time-series GAN (Yoon et al., 2019) with 4-Network Architecture [cite: 44] |
-| **Inputs** | [cite_start]Seeded with 374 wearable baselines (Sleep Health Dataset) [cite: 35, 40] |
-| **Outputs** | [cite_start]Infinite biologically realistic 7-day timelines (HR, Sleep, Stress, Quality) [cite: 58] |
-| **Key Innovation** | **Moments Matching Loss** to prevent spectral collapse; [cite_start]**Gradient Checkpointing** for 4GB VRAM constraint [cite: 57, 310] |
-| **Performance** | Reconstruction Loss: **0.0408**; [cite_start]Temporal Autocorrelation Match: **96%** [cite: 611] |
+| **Algorithm** | Time-series GAN (Yoon et al., 2019) with 4-Network Architecture  |
+| **Inputs** | Seeded with 374 wearable baselines (Sleep Health Dataset)  |
+| **Outputs** | Infinite biologically realistic 7-day timelines (HR, Sleep, Stress, Quality)  |
+| **Key Innovation** | **Moments Matching Loss** to prevent spectral collapse; **Gradient Checkpointing** for 4GB VRAM constraint  |
+| **Performance** | Reconstruction Loss: **0.0408**; Temporal Autocorrelation Match: **96%**  |
 
 **What It Solves:**
-- [cite_start]**Temporal Physics:** Enforces biological realism (e.g., heart rate stability) via a Supervisor network[cite: 48].
-- [cite_start]**Data Scarcity:** Bridges the gap between static surveys and dynamic wearable data[cite: 34].
+- **Temporal Physics:** Enforces biological realism (e.g., heart rate stability) via a Supervisor network.
+- **Data Scarcity:** Bridges the gap between static surveys and dynamic wearable data.
 
 #### 3. Integration & Labeling (Medical Rule Engine)
-[cite_start]To bridge static and dynamic data, we used **Gaussian Noise Injection** ($\mu=0, \sigma=0.08$) to synthesize initial temporal patterns[cite: 39]. A deterministic medical logic engine then assigns ground-truth risk labels:
-- [cite_start]**High Risk (2)**: Stress > 0.7 AND Sleep < 0.4, OR HR Stability < 0.25 [cite: 66]
-- [cite_start]**Medium Risk (1)**: Stress > 0.6 OR Sleep Quality < 0.35 [cite: 67]
-- [cite_start]**Low Risk (0)**: Otherwise [cite: 68]
+To bridge static and dynamic data, we used **Gaussian Noise Injection** ($\mu=0, \sigma=0.08$) to synthesize initial temporal patterns. A deterministic medical logic engine then assigns ground-truth risk labels:
+- **High Risk (2)**: Stress > 0.7 AND Sleep < 0.4, OR HR Stability < 0.25 
+- **Medium Risk (1)**: Stress > 0.6 OR Sleep Quality < 0.35 
+- **Low Risk (0)**: Otherwise 
 
-[cite_start]**Output**: `synthetic_labeled_dataset.npz` (10,000 labeled samples)[cite: 69].
+**Output**: `synthetic_labeled_dataset.npz` (10,000 labeled samples).
 
 #### 4. Risk Predictor (Hybrid LSTM)
 *The Diagnostic Engine*
 
 | Aspect | Details |
 |--------|---------|
-| **Architecture** | [cite_start]**Dual-Branch Network**: LSTM (Temporal) + Dense (Static) [cite: 71] |
-| **Input** | [cite_start]Fused synthetic demographics (30 features) + 7-day wearable sequences [cite: 379] |
-| **Strategy** | [cite_start]Weighted CrossEntropy Loss to handle class imbalance (10% High Risk vs 62% Low) [cite: 77] |
-| **Performance** | **96%** Overall Accuracy; [cite_start]**0.98** F1-Score for High Risk detection [cite: 79] |
+| **Architecture** | **Dual-Branch Network**: LSTM (Temporal) + Dense (Static)  |
+| **Input** | Fused synthetic demographics (30 features) + 7-day wearable sequences  |
+| **Strategy** | Weighted CrossEntropy Loss to handle class imbalance (10% High Risk vs 62% Low)  |
+| **Performance** | **96%** Overall Accuracy; [cite_start]**0.98** F1-Score for High Risk detection  |
 
 **What It Solves:**
-- [cite_start]**Multimodal Fusion:** Prevents static demographic signals from being washed out by temporal recurrent updates[cite: 396].
-- [cite_start]**Early Detection:** accurately identifies high-risk patients based on 7-day trends[cite: 463].
+- **Multimodal Fusion:** Prevents static demographic signals from being washed out by temporal recurrent updates.
+- **Early Detection:** accurately identifies high-risk patients based on 7-day trends.
 
 #### 5. AMISE: Adaptive Multimodal Intervention Simulation Engine
-[cite_start]*The "Crown Jewel": From Prediction to Prescription [cite: 81]*
+*The "Crown Jewel": From Prediction to Prescription *
 
 **Part A: The World Model (Seq2Seq Simulator)**
-* [cite_start]**Role:** Simulates "Virtual Clinical Trials" to predict patient outcomes[cite: 84].
-* [cite_start]**Architecture:** Seq2Seq LSTM with **Bahdanau Attention** to focus on relevant history[cite: 85].
-* [cite_start]**Performance:** Validation Loss **0.0001** (effectively cloning medical logic)[cite: 90].
-* [cite_start]**Interpretation:** Attention weights confirm the model focuses on recent days (Day 5-6) to predict future states[cite: 562].
+* **Role:** Simulates "Virtual Clinical Trials" to predict patient outcomes.
+* **Architecture:** Seq2Seq LSTM with **Bahdanau Attention** to focus on relevant history.
+* **Performance:** Validation Loss **0.0001** (effectively cloning medical logic).
+* **Interpretation:** Attention weights confirm the model focuses on recent days (Day 5-6) to predict future states.
 
 **Part B: The AI Doctor (PPO Agent)**
-* [cite_start]**Role:** Autonomous Reinforcement Learning agent optimizing treatment plans[cite: 92].
-* [cite_start]**Algorithm:** **Proximal Policy Optimization (PPO)** with a Dual-Head Actor (Discrete Type + Continuous Intensity)[cite: 93, 94].
-* [cite_start]**Reward Function:** Maximize (Risk Reduction) - Minimize (Treatment Cost/Intensity)[cite: 102].
-* [cite_start]**Outcome:** Converged to **Minimum Effective Dose** policy (e.g., prescribing CBT for stress, sparing high-intensity meds for severe cases)[cite: 105].
+* **Role:** Autonomous Reinforcement Learning agent optimizing treatment plans.
+* **Algorithm:** **Proximal Policy Optimization (PPO)** with a Dual-Head Actor (Discrete Type + Continuous Intensity).
+* **Reward Function:** Maximize (Risk Reduction) - Minimize (Treatment Cost/Intensity).
+* **Outcome:** Converged to **Minimum Effective Dose** policy (e.g., prescribing CBT for stress, sparing high-intensity meds for severe cases).
 
 ---
 
