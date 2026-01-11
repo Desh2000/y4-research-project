@@ -1417,6 +1417,102 @@ python test_integration.py
 
 ## 🌐 API Reference
 
+### Component 1: Intervention Simulation Engine (AMISE)
+
+#### POST `/api/v1/intervene`
+Use the Reinforcement Learning agent to prescribe an optimal intervention and simulate its future impact on the patient's health metrics.
+
+**Content-Type**: `application/json`
+
+**Request Body**:
+```json
+{
+  "user_id": "user_87",
+  "static_profile": {
+    "age": 34,
+    "gender": "Female",
+    "occupation": "DevOps Engineer",
+    "family_history": "Yes",
+    "treatment": "No"
+  },
+  "current_state": {
+    "sleep_duration": 5.2,
+    "sleep_quality": 4,
+    "heart_rate": 82,
+    "stress_level": 8
+  },
+  "request_type": "optimize"  // or "simulate_specific"
+}
+```
+
+**Response**:
+```json
+{
+  "diagnosis": {
+    "current_risk_level": "HIGH",
+    "risk_score": 0.92
+  },
+  "prescription": {
+    "intervention": "CBT_Therapy",
+    "intensity": 0.85,
+    "reason": "High stress volatility detected alongside poor sleep quality."
+  },
+  "simulation": {
+    "predicted_outcome": {
+      "risk_level": "MEDIUM",
+      "risk_score": 0.55,
+      "risk_reduction": 0.37
+    },
+    "future_metrics": {
+      "sleep_duration": 6.1,  // Predicted increase
+      "stress_level": 5       // Predicted decrease
+    },
+    "timeline": [
+      {"day": 1, "stress": 7.8},
+      {"day": 2, "stress": 7.5},
+      {"day": 3, "stress": 6.9},
+      {"day": 7, "stress": 5.0}
+    ]
+  }
+}
+```
+
+---
+
+#### POST `/api/v1/generate-synthetic-user`
+Generate a completely new, synthetic user profile with realistic 7-day historical data for cold-start scenarios or system testing.
+
+**Content-Type**: `application/json`
+
+**Request Body**:
+```json
+{
+  "condition": "High Risk",  // Optional: Force a specific risk profile
+  "count": 1
+}
+```
+
+**Response**:
+```json
+{
+  "user_id": "syn_9921",
+  "profile": {
+    "age": 29,
+    "gender": "Non-binary",
+    "occupation": "Data Scientist"
+  },
+  "history": [
+    {
+      "day": 1,
+      "sleep": 4.5,
+      "heart_rate": 90,
+      "stress": 9
+    }
+    // ... 7 days of data
+  ]
+}
+```
+
 ### Component 2: Risk Prediction API
 
 ```bash
