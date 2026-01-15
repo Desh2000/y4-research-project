@@ -1,0 +1,551 @@
+================================================================================
+ FINE-TUNED MODEL OUTPUT REPORT
+================================================================================
+
+Model: models/finetuned_intent_classifier_v2
+Generated: 2026-01-14 13:14:01
+Test Cases: 20
+Average Confidence: 9.01%
+
+--------------------------------------------------------------------------------
+ DETAILED RESULTS
+--------------------------------------------------------------------------------
+
+[1] Work Stress
+User Input: "Work is making me so tired all the time. Help?"
+Predicted Intent: work_stress
+Confidence: 10.94%
+
+  Friend Response:
+  "Work exhaustion is the worst. I totally get it. Have you had a chance to take a breather lately? What helps you recharge?"
+
+  Counselor Response:
+  "I hear the work pressure is really affecting you. Based on privacy-protected case studies, time management and stress-reduction techniques can make a significant difference. Would you like to explore some specific strategies?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "I can provide clinical information. What aspect of mental health would you like to understand better?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[2] Work Stress
+User Input: "Hey, I'm super stressed from work. Any ideas?"
+Predicted Intent: work_stress
+Confidence: 8.47%
+
+  Friend Response:
+  "Ugh, work can really drain your energy. I hear you. Do you have any little rituals that help you unwind?"
+
+  Counselor Response:
+  "Many professionals experience this. Privacy-protected data suggests that work-life balance and self-care practices are crucial. What does relaxation look like for you?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "I can provide clinical information. What aspect of mental health would you like to understand better?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[3] Burnout
+User Input: "I'm burned out and don't know how to relax."
+Predicted Intent: work_stress
+Confidence: 9.12%
+
+  Friend Response:
+  "Man, burnout hits hard. Sometimes we forget how to relax when we're in it. What's something simple you enjoyed before things got this hectic?"
+
+  Counselor Response:
+  "Many professionals experience this. Privacy-protected data suggests that work-life balance and self-care practices are crucial. What does relaxation look like for you?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Could you describe your symptoms in more detail? How long have you been experiencing them?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[4] Work-Mental Health
+User Input: "Work is constantly interfering with my mental health"
+Predicted Intent: work_stress
+Confidence: 11.89%
+
+  Friend Response:
+  "Thanks for opening up. What would help you feel better right now?"
+
+  Counselor Response:
+  "Work-related stress is very common, especially in demanding professions. Privacy-protected research suggests that setting boundaries and taking micro-breaks can help. What does your typical workday look like?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Could you describe your symptoms in more detail? How long have you been experiencing them?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[5] Remote Work
+User Input: "Working remotely is affecting my mental wellbeing"
+Predicted Intent: work_stress
+Confidence: 10.29%
+
+  Friend Response:
+  "Thanks for opening up. What would help you feel better right now?"
+
+  Counselor Response:
+  "Work stress can accumulate over time. Let's break this down - what specific aspects of work are most stressful? We can develop targeted coping strategies for each.
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Have you consulted with a healthcare provider about these symptoms?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[6] Workplace Support
+User Input: "My workplace doesn't provide mental health support"
+Predicted Intent: work_stress
+Confidence: 10.5%
+
+  Friend Response:
+  "Thanks for opening up. What would help you feel better right now?"
+
+  Counselor Response:
+  "Work stress can accumulate over time. Let's break this down - what specific aspects of work are most stressful? We can develop targeted coping strategies for each.
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "For accurate diagnosis and treatment, I recommend consulting a licensed mental health professional. What questions can I answer about mental health conditions?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[7] Workplace Stigma
+User Input: "I'm afraid to seek help at work"
+Predicted Intent: work_stress
+Confidence: 9.65%
+
+  Friend Response:
+  "I appreciate you sharing this with me. How has this been affecting you?"
+
+  Counselor Response:
+  "Many professionals experience this. Privacy-protected data suggests that work-life balance and self-care practices are crucial. What does relaxation look like for you?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Have you consulted with a healthcare provider about these symptoms?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[8] Workplace Stigma
+User Input: "I'm worried about consequences of discussing mental health at work"
+Predicted Intent: work_stress
+Confidence: 8.39%
+
+  Friend Response:
+  "You've been through a lot. How are you holding up with everything?"
+
+  Counselor Response:
+  "It's understandable to feel stressed in a demanding work environment. Based on privacy-protected simulations, quick daily practices like mindfulness can help. What parts of your day feel most overwhelming?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "For accurate diagnosis and treatment, I recommend consulting a licensed mental health professional. What questions can I answer about mental health conditions?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[9] Social Support
+User Input: "I can't talk to coworkers about mental health"
+Predicted Intent: work_stress
+Confidence: 10.97%
+
+  Friend Response:
+  "You've been through a lot. How are you holding up with everything?"
+
+  Counselor Response:
+  "I hear the work pressure is really affecting you. Based on privacy-protected case studies, time management and stress-reduction techniques can make a significant difference. Would you like to explore some specific strategies?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Have you consulted with a healthcare provider about these symptoms?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[10] Anxiety
+User Input: "I'm feeling really anxious lately"
+Predicted Intent: work_stress
+Confidence: 9.82%
+
+  Friend Response:
+  "That's a lot to process. How are you taking care of yourself through this?"
+
+  Counselor Response:
+  "It's understandable to feel stressed in a demanding work environment. Based on privacy-protected simulations, quick daily practices like mindfulness can help. What parts of your day feel most overwhelming?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "What specific mental health information are you seeking?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[11] Treatment Seeking
+User Input: "I think I need therapy"
+Predicted Intent: burnout
+Confidence: 6.7%
+
+  Friend Response:
+  "That's a lot to process. How are you taking care of yourself through this?"
+
+  Counselor Response:
+  "Burnout requires intentional recovery. Let's explore what sustainable changes you can make to your routine. What does a typical day look like for you right now?"
+
+  Doctor Response:
+  "Burnout symptoms align with exhaustion from prolonged demands, often seen in STEM fields. Our privacy-preserving simulations indicate weekly commitments, such as exercise routines, may improve resilience scores by 20-30% in similar profiles. This isn't medical advice – consider professional evaluation if fatigue persists. How long has this been ongoing?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[12] Depression
+User Input: "I'm depressed and nothing helps"
+Predicted Intent: work_stress
+Confidence: 10.27%
+
+  Friend Response:
+  "You've been through a lot. How are you holding up with everything?"
+
+  Counselor Response:
+  "Work stress can accumulate over time. Let's break this down - what specific aspects of work are most stressful? We can develop targeted coping strategies for each.
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Have you consulted with a healthcare provider about these symptoms?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[13] Sleep Problems
+User Input: "Can't sleep at night"
+Predicted Intent: work_stress
+Confidence: 7.84%
+
+  Friend Response:
+  "That's a lot to process. How are you taking care of yourself through this?"
+
+  Counselor Response:
+  "Work-related stress is very common, especially in demanding professions. Privacy-protected research suggests that setting boundaries and taking micro-breaks can help. What does your typical workday look like?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "I can provide clinical information. What aspect of mental health would you like to understand better?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[14] Loneliness
+User Input: "Feeling lonely and isolated"
+Predicted Intent: work_stress
+Confidence: 8.89%
+
+  Friend Response:
+  "You've been through a lot. How are you holding up with everything?"
+
+  Counselor Response:
+  "Work stress can accumulate over time. Let's break this down - what specific aspects of work are most stressful? We can develop targeted coping strategies for each.
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "What specific mental health information are you seeking?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[15] Career Stress
+User Input: "I'm stressed about my career"
+Predicted Intent: work_stress
+Confidence: 9.33%
+
+  Friend Response:
+  "That must feel exhausting. Want to tell me more about what's making you feel this way?"
+
+  Counselor Response:
+  "Work-related stress is very common, especially in demanding professions. Privacy-protected research suggests that setting boundaries and taking micro-breaks can help. What does your typical workday look like?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "What specific mental health information are you seeking?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[16] Crisis
+User Input: "I don't want to live anymore"
+Predicted Intent: work_stress
+Confidence: 8.08%
+
+  Friend Response:
+  "I appreciate you sharing this with me. How has this been affecting you?"
+
+  Counselor Response:
+  "Many professionals experience this. Privacy-protected data suggests that work-life balance and self-care practices are crucial. What does relaxation look like for you?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "Have you consulted with a healthcare provider about these symptoms?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[17] Positive
+User Input: "I'm feeling much better now"
+Predicted Intent: work_stress
+Confidence: 6.56%
+
+  Friend Response:
+  "I appreciate you sharing this with me. How has this been affecting you?"
+
+  Counselor Response:
+  "Work-related stress is very common, especially in demanding professions. Privacy-protected research suggests that setting boundaries and taking micro-breaks can help. What does your typical workday look like?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "What specific mental health information are you seeking?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[18] Gratitude
+User Input: "Thank you for your help"
+Predicted Intent: coping_strategies
+Confidence: 8.57%
+
+  Friend Response:
+  "I want to make sure I understand - what's the hardest part about this for you?"
+
+  Counselor Response:
+  "Let's develop a personalized toolkit of coping strategies. What has worked for you in the past? What would you like to try?"
+
+  Doctor Response:
+  "What specific mental health information are you seeking?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[19] Greeting
+User Input: "Hello, how are you?"
+Predicted Intent: work_stress
+Confidence: 6.86%
+
+  Friend Response:
+  "That's a lot to process. How are you taking care of yourself through this?"
+
+  Counselor Response:
+  "It's understandable to feel stressed in a demanding work environment. Based on privacy-protected simulations, quick daily practices like mindfulness can help. What parts of your day feel most overwhelming?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "I can provide clinical information. What aspect of mental health would you like to understand better?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+[20] Information Seeking
+User Input: "What is depression?"
+Predicted Intent: work_stress
+Confidence: 7.1%
+
+  Friend Response:
+  "I appreciate you sharing this with me. How has this been affecting you?"
+
+  Counselor Response:
+  "I hear the work pressure is really affecting you. Based on privacy-protected case studies, time management and stress-reduction techniques can make a significant difference. Would you like to explore some specific strategies?
+
+I'd like to recommend some helpful resources:
+
+1. Stress Management Techniques (18 min)
+   Evidence-based stress reduction strategies
+2. Mindfulness for Stress Relief (15 min)
+   Mindfulness practices to manage stress
+
+Would you like to explore any of these resources?"
+
+  Doctor Response:
+  "I can provide clinical information. What aspect of mental health would you like to understand better?
+
+**Disclaimer:** This information is for educational purposes only and not a substitute for professional medical advice, diagnosis, or treatment."
+
+--------------------------------------------------------------------------------
+
+
+================================================================================
+ SUMMARY STATISTICS
+================================================================================
+
+Intent Distribution:
+  work_stress: 18 cases
+  burnout: 1 cases
+  coping_strategies: 1 cases
+
+Average Confidence: 9.01%
+
+Confidence Distribution:
+  High (≥70%): 0 cases
+  Medium (40-70%): 0 cases
+  Low (<40%): 20 cases
