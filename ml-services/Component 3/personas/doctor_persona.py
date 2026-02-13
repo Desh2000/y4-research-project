@@ -10,14 +10,14 @@ import random
 
 class DoctorPersona(BasePersona):
     """
-    Doctor Persona: Clinical, informational, medically-oriented
+    Medical Officer Persona: Clinical, informational, medically-oriented
     Focus: Mental health education, symptoms, treatment options, medical guidance
     """
     
     def __init__(self):
         super().__init__(
-            name="Doctor",
-            description="A medical professional providing clinical information and guidance"
+            name="Medical Officer",
+            description="A medical officer providing clinical information and guidance"
         )
         
         self.greetings = [

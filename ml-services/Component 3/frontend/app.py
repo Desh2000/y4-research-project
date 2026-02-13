@@ -152,6 +152,10 @@ def initialize_session():
         st.session_state.current_persona = 'friend'
     if 'input_counter' not in st.session_state:
         st.session_state.input_counter = 0
+    if 'questionnaire_completed' not in st.session_state:
+        st.session_state.questionnaire_completed = False
+    if 'behavior_score' not in st.session_state:
+        st.session_state.behavior_score = None
 
 
 def create_session():
@@ -185,8 +189,157 @@ def send_message(session_id, message, persona):
     return None
 
 
+def submit_questionnaire(session_id, answers):
+    """Submit questionnaire answers to the backend"""
+    try:
+        response = requests.post(
+            f"{API_URL}/questionnaire/submit",
+            json={
+                "session_id": session_id,
+                "answers": answers
+            }
+        )
+        if response.status_code == 200:
+            return response.json()
+        else:
+            st.error(f"Error: {response.status_code}")
+    except Exception as e:
+        st.error(f"Error submitting questionnaire: {e}")
+    return None
+
+
+def display_questionnaire():
+    """Display behavioral assessment questionnaire"""
+    st.sidebar.markdown("---")
+    st.sidebar.title("📋 Behavioral Assessment")
+    
+    with st.sidebar.expander("📊 Questionnaire", expanded=False):
+        st.markdown("""
+        <div style='background-color: #E3F2FD; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;'>
+            <p style='color: #1565C0; font-weight: 600; margin: 0;'>
+                Complete this brief assessment to help us better understand your well-being and provide personalized support.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Question 1: Work Environment
+        q1 = st.selectbox(
+            "1. Which best describes your typical work environment?",
+            options=[
+                "High-pressure deadlines",
+                "Collaborative team",
+                "Independent focus",
+                "Balanced routine"
+            ],
+            key="q1_work_env"
+        )
+        
+        # Question 2: Stress Management (Slider)
+        st.markdown("**2. How manageable do you find your daily stress?**")
+        q2 = st.slider(
+            "Stress level",
+            min_value=1,
+            max_value=10,
+            value=5,
+            help="1 = Frequently overwhelming, 10 = Generally easy to handle",
+            key="q2_stress",
+            label_visibility="collapsed"
+        )
+        st.caption("1 = Frequently overwhelming | 10 = Generally easy to handle")
+        
+        # Question 3: Self-care Frequency
+        q3 = st.selectbox(
+            "3. How often do you engage in self-care activities like exercise or relaxation?",
+            options=[
+                "Daily",
+                "A few times a week",
+                "Rarely",
+                "Never"
+            ],
+            key="q3_selfcare"
+        )
+        
+        # Question 4: Support Type Interest
+        q4 = st.selectbox(
+            "4. What type of support are you most interested in exploring?",
+            options=[
+                "Quick tips",
+                "Long-term strategies",
+                "Professional advice",
+                "None right now"
+            ],
+            key="q4_support"
+        )
+        
+        # Question 5: Energy Level (Slider)
+        st.markdown("**5. Rate your energy level at the end of a typical day:**")
+        q5 = st.slider(
+            "",
+            min_value=1,
+            max_value=10,
+            value=5,
+            help="1 = Completely drained, 10 = Energized and ready for more",
+            key="q5_energy"
+        )
+        st.caption("1 = Completely drained | 10 = Energized and ready for more")
+        
+        # Submit Button
+        if st.button("📊 Submit Assessment", key="submit_questionnaire", type="primary"):
+            # Ensure session exists
+            if st.session_state.session_id is None:
+                st.session_state.session_id = create_session()
+                if st.session_state.session_id is None:
+                    st.error("❌ Failed to create session. Please check backend connection.")
+                    return
+            
+            # Prepare answers
+            answers = {
+                "work_environment": q1,
+                "stress_management": q2,
+                "selfcare_frequency": q3,
+                "support_interest": q4,
+                "energy_level": q5
+            }
+            
+            # Submit to backend
+            result = submit_questionnaire(st.session_state.session_id, answers)
+            
+            if result:
+                st.session_state.questionnaire_completed = True
+                st.session_state.behavior_score = result
+                st.success("✅ Assessment completed!")
+                st.markdown(f"""
+                <div style='background-color: #E8F5E9; padding: 1rem; border-radius: 8px; margin-top: 1rem;'>
+                    <h4 style='color: #2E7D32; margin-top: 0;'>Your Behavioral Score</h4>
+                    <p style='font-size: 2rem; font-weight: bold; color: #1B5E20; margin: 0.5rem 0;'>
+                        {result['total_score']:.1f}/31
+                    </p>
+                    <p style='color: #424242; margin: 0;'><strong>Category:</strong> {result['category']}</p>
+                    <p style='color: #424242; font-size: 0.9rem; margin-top: 0.5rem;'>{result['interpretation']}</p>
+                    <hr style='margin: 1rem 0;'>
+                    <p style='font-size: 0.85rem; color: #616161; margin: 0;'>
+                        📄 Results saved to: <code>{result['file_path']}</code>
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
+                st.rerun()
+        
+        # Show previous score if completed
+        if st.session_state.questionnaire_completed and st.session_state.behavior_score:
+            st.markdown("---")
+            st.markdown(f"""
+            <div style='background-color: #FFF3E0; padding: 0.75rem; border-radius: 8px;'>
+                <p style='color: #E65100; font-weight: 600; margin: 0; font-size: 0.9rem;'>
+                    ✓ Last Score: {st.session_state.behavior_score['total_score']:.1f}/31 
+                    ({st.session_state.behavior_score['category']})
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+
+
 def display_persona_selector():
     """Display persona selection"""
+    st.sidebar.markdown("---")
     st.sidebar.title("🎭 Choose Your Support Persona")
     
     # Friend Persona
@@ -225,8 +378,8 @@ def display_persona_selector():
             st.session_state.current_persona = 'counselor'
             st.rerun()
     
-    # Doctor Persona
-    with st.sidebar.expander("👨‍⚕️ Doctor", expanded=(st.session_state.current_persona == 'doctor')):
+    # Medical Officer Persona
+    with st.sidebar.expander("👨‍⚕️ Medical Officer", expanded=(st.session_state.current_persona == 'medical_officer')):
         st.markdown("""
         <div class='persona-card doctor-card'>
             <h4>Clinical & Informational</h4>
@@ -239,8 +392,8 @@ def display_persona_selector():
             </ul>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Select Doctor", key="select_doctor"):
-            st.session_state.current_persona = 'doctor'
+        if st.button("Select Medical Officer", key="select_medical_officer"):
+            st.session_state.current_persona = 'medical_officer'
             st.rerun()
 
 
@@ -253,7 +406,7 @@ def display_chat():
     persona_names = {
         'friend': '👥 Friend',
         'counselor': '🧑‍⚕️ Counselor',
-        'doctor': '👨‍⚕️ Doctor'
+        'medical_officer': '👨‍⚕️ Medical Officer'
     }
     st.info(f"**Currently chatting with:** {persona_names[st.session_state.current_persona]}")
     
@@ -272,7 +425,7 @@ def display_chat():
                 persona_icon = {
                     'friend': '👥',
                     'counselor': '🧑‍⚕️',
-                    'doctor': '👨‍⚕️'
+                    'medical_officer': '👨‍⚕️'
                 }.get(msg.get('persona', 'friend'), '🤖')
                 
                 st.markdown(f"""
@@ -377,7 +530,7 @@ def display_info():
         
         **Key Features:**
         - 🔒 Privacy-preserving (differential privacy)
-        - 🎭 Three personas (Friend, Counselor, Doctor)
+        - 🎭 Three personas (Friend, Counselor, Medical Officer)
         - 💡 Evidence-based support
         - 📚 Resource recommendations
         """)
@@ -426,6 +579,9 @@ def main():
         st.error(f"⚠️ Cannot connect to backend API at {API_URL}")
         st.info("Please start the backend server: `python backend/api.py`")
         return
+    
+    # Display questionnaire
+    display_questionnaire()
     
     # Display persona selector
     display_persona_selector()
