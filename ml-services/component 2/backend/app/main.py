@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
+from app.routers import mental_health
 
 app = FastAPI(title="Manō API", version="1.0")
 
@@ -13,6 +14,8 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api/v1")
+
+app.include_router(mental_health.router)
 
 @app.get("/")
 def root():
