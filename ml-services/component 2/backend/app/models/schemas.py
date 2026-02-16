@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
 class PatientData(BaseModel):
     gender: str = Field(..., example="Male")
@@ -19,3 +19,18 @@ class PredictionResponse(BaseModel):
     risk_label: str
     confidence: float
     probabilities: dict
+
+class ForecastRequest(BaseModel):
+    history: List[PatientData] = Field(
+        ..., 
+        min_items=3, 
+        max_items=3, 
+        description="Exact 3-day history: [Day T-2, Day T-1, Today]"
+    )
+
+class ForecastResponse(BaseModel):
+    forecast_target: str = Field(..., example="Tomorrow (Day T+1)")
+    predicted_risk_class: int
+    predicted_risk_label: str
+    trend_analysis: str = Field(..., example="Sleep is dropping rapidly (-1.5h/day)")
+    confidence: float
