@@ -15,13 +15,28 @@ _project_root = str(Path(__file__).resolve().parent.parent.parent)
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
+# Also add backend/app/ so that "from models_repo.xxx" resolves correctly
+# when uvicorn runs from the project root (not from backend/app/).
+_app_dir = str(Path(__file__).resolve().parent)
+if _app_dir not in sys.path:
+    sys.path.insert(0, _app_dir)
+
+# --- CORE UTILITIES ---
+from backend.app.core.logging import setup_logging, get_logger
+from backend.app.core.middleware import RequestLoggingMiddleware, ErrorHandlerMiddleware
+from backend.app.core.health import router as health_router
+
 # --- IMPORT ROUTERS ---
-# We import the router we just created. Think of this as plugging a module into the main board.
 from backend.app.routers import simulation_router
 
 # --- IMPORT SERVICES ---
 from backend.app.services.risk_service import RiskPredictionService
 from backend.app.services.intervention_service import InterventionService
+
+# Initialize structured logging BEFORE anything else
+setup_logging()
+logger = get_logger("main")
+
 
 # --- LIFESPAN MANAGER (STARTUP/SHUTDOWN LOGIC) ---
 @asynccontextmanager
@@ -30,46 +45,64 @@ async def lifespan(app: FastAPI):
     This function runs ONCE before the server starts accepting requests.
     It is the perfect place to load heavy ML models into memory (RAM/VRAM).
     """
-    print("\n" + "█"*60)
-    print("🚀 MANO AI ENGINE: STARTING UP (FORTRESS MODE)")
-    print("█"*60)
-    
+    logger.info("startup_begin", message="MANO AI ENGINE: STARTING UP")
+
+    # Track which models loaded successfully (used by /health endpoint)
+    models_status = {"lstm": False, "simulator": False, "agent": False}
+
     # 1. Hardware Detection
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    app.state.device = device
+    app.state.gpu_enabled = device == "cuda"
+
     if device == "cuda":
-        print(f"   ✅ GPU DETECTED: {torch.cuda.get_device_name(0)}")
+        logger.info("gpu_detected", gpu_name=torch.cuda.get_device_name(0))
     else:
-        print("   ⚠️  WARNING: Running on CPU. Inference will be slower.")
+        logger.warning("no_gpu", message="Running on CPU. Inference will be slower.")
 
     # 2. Locate the Models Repository
-    # We resolve the absolute path to ensure no "file not found" errors regardless of where you run uvicorn
     base_dir = Path(__file__).resolve().parent
     repo_path = base_dir / "models_repo"
-    
+
     # 3. Load the Brains into the Singleton Services
     try:
         # Load the Hybrid LSTM
+        logger.info("loading_model", model="risk_lstm", path=str(repo_path / "risk_lstm.pth"))
         risk_svc = RiskPredictionService()
         risk_svc.load_model(str(repo_path / "risk_lstm.pth"), device)
-        
+        models_status["lstm"] = True
+        logger.info("model_loaded", model="risk_lstm", status="success")
+    except Exception as e:
+        logger.error("model_load_failed", model="risk_lstm", error=str(e))
+
+    try:
         # Load the AMISE Simulator & Agent
+        logger.info("loading_model", model="amise_engines")
         int_svc = InterventionService()
         int_svc.load_models(
             sim_path=str(repo_path / "seq2seq_simulator.pth"),
             agent_path=str(repo_path / "ppo_agent.pth"),
             device=device
         )
+        models_status["simulator"] = True
+        models_status["agent"] = True
+        logger.info("model_loaded", model="amise_engines", status="success")
     except Exception as e:
-        print(f"\n❌ CRITICAL ERROR: Failed to load models.\nDetails: {str(e)}")
-        print("Did you run `python scripts/setup_backend.py` to copy the models?")
-        # We don't strictly exit here so the /health endpoint can still report failure if needed in K8s
-        
-    print("   ✅ System Ready. Awaiting requests...")
-    
-    yield # --- THE SERVER RUNS HERE ---
-    
-    print("\n🛑 MANO AI ENGINE: SHUTTING DOWN")
-    # Resources are automatically cleaned up when the script exits.
+        logger.error("model_load_failed", model="amise_engines", error=str(e))
+
+    # Store status on app.state for the /health endpoint
+    app.state.models_loaded = models_status
+
+    if all(models_status.values()):
+        logger.info("startup_complete", message="All models loaded. System ready.")
+    else:
+        logger.warning("startup_degraded", models_status=models_status,
+                       message="Some models failed to load. Check logs above.")
+
+    yield  # --- THE SERVER RUNS HERE ---
+
+    logger.info("shutdown", message="MANO AI ENGINE: SHUTTING DOWN")
+
 
 # --- INITIALIZE APP ---
 app = FastAPI(
@@ -79,28 +112,34 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# --- MIDDLEWARE STACK ---
+# Order matters! Error handler wraps everything, then request logging runs inside it.
+# Think of it like layers of an onion:
+#   ErrorHandler → RequestLogging → CORS → Your Route Handler
+app.add_middleware(ErrorHandlerMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
+
 # --- CORS CONFIGURATION ---
-# Security rule: Specifies which external websites are allowed to talk to this API.
-# We whitelist typical React/Next.js local development ports.
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:5173", # Standard Vite port, just in case
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"], # Allow GET, POST, PUT, DELETE
-    allow_headers=["*"], # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # --- BASE ENDPOINTS ---
 @app.get("/")
-async def root_health_check():
+async def root_liveness():
     """
-    Root health check. Used by Docker/Kubernetes to verify the container is alive.
+    Liveness probe. Just confirms the process is alive.
+    For model readiness, use /health instead.
     """
     return {
         "status": "online",
@@ -109,21 +148,19 @@ async def root_health_check():
     }
 
 # --- REGISTER ROUTERS ---
-# We attach our simulation endpoints under the /api/v1/simulation prefix.
+app.include_router(health_router)
 app.include_router(
-    simulation_router.router, 
-    prefix="/api/v1/simulation", 
+    simulation_router.router,
+    prefix="/api/v1/simulation",
     tags=["Simulation & Optimization"]
 )
 
 # --- DIRECT EXECUTION ---
-# This allows you to run the file directly: python main.py
-# It starts uvicorn which properly loads the app as a package.
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
         "backend.app.main:app",
         host="0.0.0.0",
         port=8000,
-        reload=True
+        reload=False  # IMPORTANT: reload=True crashes CUDA DLL on Windows subprocess fork
     )

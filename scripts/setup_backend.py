@@ -14,9 +14,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ML_SRC = PROJECT_ROOT / "ml-services"
 BACKEND_REPO = PROJECT_ROOT / "backend/app/models_repo"
 
-# Ensure destination exists
-if BACKEND_REPO.exists():
-    shutil.rmtree(BACKEND_REPO) # Clean slate
+# Ensure destination exists (do NOT rmtree — that would delete config files and other manually-added files)
 BACKEND_REPO.mkdir(parents=True, exist_ok=True)
 
 # --- FILE MAPPING ---

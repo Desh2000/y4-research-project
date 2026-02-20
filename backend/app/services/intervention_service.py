@@ -3,12 +3,12 @@ import numpy as np
 import sys
 from pathlib import Path
 
-# Add models_repo to the path so we can import the architecture definitions
-sys.path.append(str(Path(__file__).resolve().parent.parent / "models_repo"))
+# Add backend/app/ to sys.path so "from models_repo.xxx" resolves as a package import
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 # Import Architecture Definitions
 from models_repo.seq2seq_model_Def import InterventionSimulator
-from models_repo.seq2seq_model_Def import Config as SimConfig
+from models_repo.sim_config import SimConfig
 from models_repo.rl_agent_Def import ActorCritic
 
 # Minimal config matching Component 1 training parameters

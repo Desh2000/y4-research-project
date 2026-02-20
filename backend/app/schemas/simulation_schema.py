@@ -20,15 +20,15 @@ class RiskLevel(str, Enum):
 
 class StaticFeatures(BaseModel):
     """
-    User Demographics (Must match the 30 features expected by your models)
+    User Demographics (Must match the 20 features expected by the LSTM model)
     For simplicity in this phase, we accept the raw vector, 
     but in a real app, this would be fields like 'age', 'gender', etc.
     """
     features: List[float] = Field(
         ..., 
         min_length=20, 
-        max_length=30, 
-        description="Normalized demographic vector"
+        max_length=20, 
+        description="Normalized demographic vector (exactly 20 features)"
     )
 
 class DayVitals(BaseModel):

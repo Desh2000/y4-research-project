@@ -200,3 +200,84 @@ async def prescribe_ai(
         recommended_intensity=result['intensity'],
         reasoning="Prescription optimized to minimize long-term risk probability."
     )
+
+
+# --- ENDPOINT 4: BATCH SIMULATION (COMPARE ALL INTERVENTIONS) ---
+from backend.app.schemas.batch_schema import (
+    BatchSimulationRequest,
+    BatchSimulationResponse,
+    InterventionComparison,
+)
+
+INTERVENTION_NAMES = ["Control", "Wellness App", "CBT", "Exercise", "Medication"]
+
+@router.post("/simulate_batch", response_model=BatchSimulationResponse)
+async def simulate_batch(
+    request: BatchSimulationRequest,
+    int_service: InterventionService = Depends(get_intervention_service),
+    risk_service: RiskPredictionService = Depends(get_risk_service),
+):
+    """
+    Run ALL 5 interventions on a patient and compare results.
+    Returns them ranked by risk reduction score (best first).
+    """
+    dyn_np, stat_np = parse_patient_state(request.patient_state)
+    
+    # Get baseline risk
+    base_risk = risk_service.predict(dyn_np, stat_np)
+    risk_map = {0: RiskLevel.LOW, 1: RiskLevel.MEDIUM, 2: RiskLevel.HIGH}
+    
+    baseline_response = RiskPredictionResponse(
+        current_risk_class=risk_map[base_risk['risk_class']],
+        confidence=base_risk['confidence'],
+        probabilities=base_risk['probabilities'],
+    )
+    
+    # Run each intervention
+    comparisons = []
+    for intervention_id in range(5):
+        try:
+            future_dyn_np = int_service.simulate_outcome(
+                dyn_np, intervention_id, request.intensity
+            )
+            future_risk = risk_service.predict(future_dyn_np, stat_np)
+            
+            # Convert future vitals
+            future_vitals = []
+            for i in range(7):
+                row = future_dyn_np[0, i]
+                future_vitals.append(DayVitals(
+                    sleep_hours=float(row[0]),
+                    sleep_quality=float(row[1]),
+                    heart_rate=float(row[2]),
+                    stress_level=float(row[3]),
+                ))
+            
+            comparisons.append(InterventionComparison(
+                intervention_name=INTERVENTION_NAMES[intervention_id],
+                intervention_id=intervention_id,
+                intensity=request.intensity,
+                original_risk=baseline_response,
+                projected_risk=RiskPredictionResponse(
+                    current_risk_class=risk_map[future_risk['risk_class']],
+                    confidence=future_risk['confidence'],
+                    probabilities=future_risk['probabilities'],
+                ),
+                future_vitals=future_vitals,
+                risk_reduction_score=base_risk['probabilities'][2] - future_risk['probabilities'][2],
+            ))
+        except Exception:
+            # If one intervention fails, skip it but continue with the rest
+            continue
+    
+    # Sort by risk reduction (highest reduction first = best intervention)
+    comparisons.sort(key=lambda c: c.risk_reduction_score, reverse=True)
+    
+    best = comparisons[0] if comparisons else None
+    
+    return BatchSimulationResponse(
+        patient_baseline_risk=baseline_response,
+        comparisons=comparisons,
+        best_intervention=best.intervention_name if best else "None",
+        best_risk_reduction=best.risk_reduction_score if best else 0.0,
+    )

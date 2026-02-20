@@ -3,12 +3,12 @@ import numpy as np
 import sys
 from pathlib import Path
 
-# Add models_repo to the path so we can import the architecture definitions
-sys.path.append(str(Path(__file__).resolve().parent.parent / "models_repo"))
+# Add backend/app/ to sys.path so "from models_repo.xxx" resolves as a package import
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 # Import the architecture definition we migrated
 from models_repo.lstm_model_Def import RiskPredictionModel
-from models_repo.lstm_model_Def import Config as LSTMConfig
+from models_repo.lstm_config import LSTMConfig
 
 class RiskPredictionService:
     """Singleton service to hold the LSTM model in VRAM."""
