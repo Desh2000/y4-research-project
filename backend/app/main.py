@@ -26,8 +26,12 @@ from backend.app.core.logging import setup_logging, get_logger
 from backend.app.core.middleware import RequestLoggingMiddleware, ErrorHandlerMiddleware
 from backend.app.core.health import router as health_router
 
+# --- DATABASE ---
+from backend.app.core.database import create_tables
+
 # --- IMPORT ROUTERS ---
 from backend.app.routers import simulation_router
+from backend.app.routers import patient_router
 
 # --- IMPORT SERVICES ---
 from backend.app.services.risk_service import RiskPredictionService
@@ -93,6 +97,11 @@ async def lifespan(app: FastAPI):
     # Store status on app.state for the /health endpoint
     app.state.models_loaded = models_status
 
+    # 4. Create database tables
+    logger.info("creating_db_tables", message="Initializing database...")
+    await create_tables()
+    logger.info("db_ready", message="Database tables created.")
+
     if all(models_status.values()):
         logger.info("startup_complete", message="All models loaded. System ready.")
     else:
@@ -153,6 +162,11 @@ app.include_router(
     simulation_router.router,
     prefix="/api/v1/simulation",
     tags=["Simulation & Optimization"]
+)
+app.include_router(
+    patient_router.router,
+    prefix="/api/v1/patients",
+    tags=["Patient Management"]
 )
 
 # --- DIRECT EXECUTION ---

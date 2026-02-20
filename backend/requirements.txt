@@ -29,3 +29,8 @@ scikit-learn==1.4.0
 #Structured logging is mentioned in your Architecture Report (Page 25)
 
 structlog==24.1.0
+
+# Database
+
+sqlalchemy>=2.0
+aiosqlite>=0.20

@@ -68,6 +68,28 @@ def parse_patient_state(state: PatientState):
     
     return dynamic_np, static_np
 
+def clamp_simulated_vitals(future_dyn_np: np.ndarray) -> list:
+    """
+    Converts raw Seq2Seq output (numpy array) into clamped DayVitals objects.
+    
+    WHY?
+    Neural networks produce raw floating-point outputs. The Seq2Seq Simulator can
+    output values like sleep_quality=-0.02 or stress_level=1.03. These violate the
+    Pydantic DayVitals schema constraints (ge=0, le=1, etc.) and cause 500 errors.
+    
+    This function clamps every value to its valid range before conversion.
+    """
+    vitals_list = []
+    for i in range(future_dyn_np.shape[1]):  # Iterate over days (7)
+        row = future_dyn_np[0, i]
+        vitals_list.append(DayVitals(
+            sleep_hours=float(np.clip(row[0], 0, 24)),
+            sleep_quality=float(np.clip(row[1], 0, 1)),
+            heart_rate=float(np.clip(row[2], 40, 200)),
+            stress_level=float(np.clip(row[3], 0, 1)),
+        ))
+    return vitals_list
+
 # --- ENDPOINT 1: DIAGNOSIS ---
 @router.post("/predict_risk", response_model=RiskPredictionResponse)
 async def predict_risk(
@@ -132,18 +154,8 @@ async def simulate_intervention(
     # We feed the *simulated* future data into the diagnostic model.
     future_risk = risk_service.predict(future_dyn_np, stat_np)
     
-    # Step 5: Convert Simulated Data back to Pydantic objects
-    # The frontend expects a list of objects, not a numpy array.
-    future_vitals_list = []
-    for i in range(7):
-        # Extract row [Sleep, Quality, HR, Stress]
-        row = future_dyn_np[0, i]
-        future_vitals_list.append(DayVitals(
-            sleep_hours=float(row[0]),
-            sleep_quality=float(row[1]),
-            heart_rate=float(row[2]),
-            stress_level=float(row[3])
-        ))
+    # Step 5: Convert Simulated Data back to Pydantic objects (with clamping)
+    future_vitals_list = clamp_simulated_vitals(future_dyn_np)
         
     risk_map = {0: RiskLevel.LOW, 1: RiskLevel.MEDIUM, 2: RiskLevel.HIGH}
     
@@ -242,16 +254,8 @@ async def simulate_batch(
             )
             future_risk = risk_service.predict(future_dyn_np, stat_np)
             
-            # Convert future vitals
-            future_vitals = []
-            for i in range(7):
-                row = future_dyn_np[0, i]
-                future_vitals.append(DayVitals(
-                    sleep_hours=float(row[0]),
-                    sleep_quality=float(row[1]),
-                    heart_rate=float(row[2]),
-                    stress_level=float(row[3]),
-                ))
+            # Convert future vitals (clamped to valid ranges)
+            future_vitals = clamp_simulated_vitals(future_dyn_np)
             
             comparisons.append(InterventionComparison(
                 intervention_name=INTERVENTION_NAMES[intervention_id],
@@ -266,8 +270,12 @@ async def simulate_batch(
                 future_vitals=future_vitals,
                 risk_reduction_score=base_risk['probabilities'][2] - future_risk['probabilities'][2],
             ))
-        except Exception:
-            # If one intervention fails, skip it but continue with the rest
+        except Exception as e:
+            # Log the failure but continue with remaining interventions
+            from backend.app.core.logging import get_logger
+            get_logger("batch_sim").warning(
+                "intervention_skipped", intervention_id=intervention_id, error=str(e)
+            )
             continue
     
     # Sort by risk reduction (highest reduction first = best intervention)
