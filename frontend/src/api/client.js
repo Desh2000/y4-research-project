@@ -77,3 +77,10 @@ export const prescribeAI = (patientState) =>
         method: 'POST',
         body: JSON.stringify(patientState),
     });
+
+// ─── What-If Simulator ──────────────────────────────
+export const simulateWhatIf = (payload) =>
+    request('/whatif/what_if', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });

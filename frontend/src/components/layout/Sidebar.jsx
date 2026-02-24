@@ -5,7 +5,8 @@ import {
     FlaskConical,
     BarChart3,
     Stethoscope,
-    Waypoints
+    Waypoints,
+    SlidersHorizontal
 } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
 import { getHealth } from '../../api/client';
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
     { path: '/simulate', icon: FlaskConical, label: 'Simulation Lab' },
     { path: '/compare', icon: BarChart3, label: 'Intervention Compare' },
     { path: '/prescribe', icon: Stethoscope, label: 'AI Prescription' },
+    { path: '/what-if', icon: SlidersHorizontal, label: 'What-If Simulator' },
 ];
 
 export default function Sidebar() {

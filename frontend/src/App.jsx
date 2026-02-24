@@ -6,6 +6,7 @@ import PatientProfile from './pages/PatientProfile';
 import SimulationLab from './pages/SimulationLab';
 import InterventionCompare from './pages/InterventionCompare';
 import Prescription from './pages/Prescription';
+import WhatIfSimulator from './pages/WhatIfSimulator';
 import './index.css';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/simulate" element={<SimulationLab />} />
           <Route path="/compare" element={<InterventionCompare />} />
           <Route path="/prescribe" element={<Prescription />} />
+          <Route path="/what-if" element={<WhatIfSimulator />} />
         </Route>
       </Routes>
     </BrowserRouter>
