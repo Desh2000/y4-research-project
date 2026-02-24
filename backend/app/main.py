@@ -33,6 +33,7 @@ from backend.app.core.database import create_tables
 from backend.app.routers import simulation_router
 from backend.app.routers import patient_router
 from backend.app.routers import whatif_router
+from backend.app.routers import xai_router
 
 # --- IMPORT SERVICES ---
 from backend.app.services.risk_service import RiskPredictionService
@@ -173,6 +174,11 @@ app.include_router(
     whatif_router.router,
     prefix="/api/v1/whatif",
     tags=["What-If Lifestyle Simulator"]
+)
+app.include_router(
+    xai_router.router,
+    prefix="/api/v1/xai",
+    tags=["Explainable AI"]
 )
 
 # --- DIRECT EXECUTION ---

@@ -7,6 +7,7 @@ import SimulationLab from './pages/SimulationLab';
 import InterventionCompare from './pages/InterventionCompare';
 import Prescription from './pages/Prescription';
 import WhatIfSimulator from './pages/WhatIfSimulator';
+import XAIExplainer from './pages/XAIExplainer';
 import './index.css';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/compare" element={<InterventionCompare />} />
           <Route path="/prescribe" element={<Prescription />} />
           <Route path="/what-if" element={<WhatIfSimulator />} />
+          <Route path="/explain" element={<XAIExplainer />} />
         </Route>
       </Routes>
     </BrowserRouter>

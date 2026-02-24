@@ -84,3 +84,10 @@ export const simulateWhatIf = (payload) =>
         method: 'POST',
         body: JSON.stringify(payload),
     });
+
+// ─── XAI (Explainable AI) ───────────────────────────
+export const explainRisk = (patientState) =>
+    request('/xai/explain_risk', {
+        method: 'POST',
+        body: JSON.stringify(patientState),
+    });

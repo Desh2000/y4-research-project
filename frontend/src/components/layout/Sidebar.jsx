@@ -6,7 +6,8 @@ import {
     BarChart3,
     Stethoscope,
     Waypoints,
-    SlidersHorizontal
+    SlidersHorizontal,
+    ScanSearch
 } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
 import { getHealth } from '../../api/client';
@@ -18,6 +19,7 @@ const NAV_ITEMS = [
     { path: '/compare', icon: BarChart3, label: 'Intervention Compare' },
     { path: '/prescribe', icon: Stethoscope, label: 'AI Prescription' },
     { path: '/what-if', icon: SlidersHorizontal, label: 'What-If Simulator' },
+    { path: '/explain', icon: ScanSearch, label: 'XAI Explainer' },
 ];
 
 export default function Sidebar() {
