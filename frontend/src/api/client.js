@@ -98,3 +98,10 @@ export const getNextBestAction = (patientState) =>
         method: 'POST',
         body: JSON.stringify(patientState),
     });
+
+// ─── Intervention Sequencing ────────────────────────
+export const runSequence = (payload) =>
+    request('/sequence/run_sequence', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });

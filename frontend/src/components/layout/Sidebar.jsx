@@ -8,7 +8,8 @@ import {
     Waypoints,
     SlidersHorizontal,
     ScanSearch,
-    Zap
+    Zap,
+    ListOrdered
 } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
 import { getHealth } from '../../api/client';
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
     { path: '/what-if', icon: SlidersHorizontal, label: 'What-If Simulator' },
     { path: '/explain', icon: ScanSearch, label: 'XAI Explainer' },
     { path: '/next-action', icon: Zap, label: 'Next Best Action' },
+    { path: '/sequencer', icon: ListOrdered, label: 'Sequencer' },
 ];
 
 export default function Sidebar() {
