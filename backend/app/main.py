@@ -34,6 +34,7 @@ from backend.app.routers import simulation_router
 from backend.app.routers import patient_router
 from backend.app.routers import whatif_router
 from backend.app.routers import xai_router
+from backend.app.routers import nba_router
 
 # --- IMPORT SERVICES ---
 from backend.app.services.risk_service import RiskPredictionService
@@ -179,6 +180,11 @@ app.include_router(
     xai_router.router,
     prefix="/api/v1/xai",
     tags=["Explainable AI"]
+)
+app.include_router(
+    nba_router.router,
+    prefix="/api/v1/nba",
+    tags=["Next-Best-Action"]
 )
 
 # --- DIRECT EXECUTION ---

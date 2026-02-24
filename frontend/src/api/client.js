@@ -91,3 +91,10 @@ export const explainRisk = (patientState) =>
         method: 'POST',
         body: JSON.stringify(patientState),
     });
+
+// ─── Next-Best-Action ───────────────────────────────
+export const getNextBestAction = (patientState) =>
+    request('/nba/recommend', {
+        method: 'POST',
+        body: JSON.stringify(patientState),
+    });
