@@ -11,6 +11,7 @@ import XAIExplainer from './pages/XAIExplainer';
 import NextBestAction from './pages/NextBestAction';
 import InterventionSequencer from './pages/InterventionSequencer';
 import UncertaintyExplorer from './pages/UncertaintyExplorer';
+import ClinicalReport from './pages/ClinicalReport';
 import './index.css';
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/next-action" element={<NextBestAction />} />
           <Route path="/sequencer" element={<InterventionSequencer />} />
           <Route path="/uncertainty" element={<UncertaintyExplorer />} />
+          <Route path="/report" element={<ClinicalReport />} />
         </Route>
       </Routes>
     </BrowserRouter>

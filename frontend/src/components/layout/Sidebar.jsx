@@ -10,7 +10,8 @@ import {
     ScanSearch,
     Zap,
     ListOrdered,
-    Gauge
+    Gauge,
+    FileText
 } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
 import { getHealth } from '../../api/client';
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
     { path: '/next-action', icon: Zap, label: 'Next Best Action' },
     { path: '/sequencer', icon: ListOrdered, label: 'Sequencer' },
     { path: '/uncertainty', icon: Gauge, label: 'Uncertainty' },
+    { path: '/report', icon: FileText, label: 'Clinical Report' },
 ];
 
 export default function Sidebar() {

@@ -112,3 +112,10 @@ export const evaluateUncertainty = (payload) =>
         method: 'POST',
         body: JSON.stringify(payload),
     });
+
+// ─── Clinical Reports ───────────────────────────────
+export const generateReport = (payload) =>
+    request('/reports/generate', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });

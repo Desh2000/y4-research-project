@@ -37,6 +37,7 @@ from backend.app.routers import xai_router
 from backend.app.routers import nba_router
 from backend.app.routers import sequence_router
 from backend.app.routers import uncertainty_router
+from backend.app.routers import report_router
 
 # --- IMPORT SERVICES ---
 from backend.app.services.risk_service import RiskPredictionService
@@ -197,6 +198,11 @@ app.include_router(
     uncertainty_router.router,
     prefix="/api/v1/uncertainty",
     tags=["MC Dropout Uncertainty"]
+)
+app.include_router(
+    report_router.router,
+    prefix="/api/v1/reports",
+    tags=["Clinical Reports"]
 )
 
 # --- DIRECT EXECUTION ---
