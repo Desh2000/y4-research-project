@@ -9,7 +9,8 @@ import {
     SlidersHorizontal,
     ScanSearch,
     Zap,
-    ListOrdered
+    ListOrdered,
+    Gauge
 } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
 import { getHealth } from '../../api/client';
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
     { path: '/explain', icon: ScanSearch, label: 'XAI Explainer' },
     { path: '/next-action', icon: Zap, label: 'Next Best Action' },
     { path: '/sequencer', icon: ListOrdered, label: 'Sequencer' },
+    { path: '/uncertainty', icon: Gauge, label: 'Uncertainty' },
 ];
 
 export default function Sidebar() {

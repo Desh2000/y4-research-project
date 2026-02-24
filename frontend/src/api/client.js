@@ -105,3 +105,10 @@ export const runSequence = (payload) =>
         method: 'POST',
         body: JSON.stringify(payload),
     });
+
+// ─── MC Dropout Uncertainty ─────────────────────────
+export const evaluateUncertainty = (payload) =>
+    request('/uncertainty/evaluate', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });

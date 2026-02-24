@@ -10,6 +10,7 @@ import WhatIfSimulator from './pages/WhatIfSimulator';
 import XAIExplainer from './pages/XAIExplainer';
 import NextBestAction from './pages/NextBestAction';
 import InterventionSequencer from './pages/InterventionSequencer';
+import UncertaintyExplorer from './pages/UncertaintyExplorer';
 import './index.css';
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/explain" element={<XAIExplainer />} />
           <Route path="/next-action" element={<NextBestAction />} />
           <Route path="/sequencer" element={<InterventionSequencer />} />
+          <Route path="/uncertainty" element={<UncertaintyExplorer />} />
         </Route>
       </Routes>
     </BrowserRouter>
