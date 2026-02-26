@@ -42,6 +42,8 @@ from backend.app.routers import report_router
 # --- IMPORT SERVICES ---
 from backend.app.services.risk_service import RiskPredictionService
 from backend.app.services.intervention_service import InterventionService
+from backend.app.services.timegan_service import TimeGANService
+from backend.app.services.ctgan_service import CTGANService
 
 # Initialize structured logging BEFORE anything else
 setup_logging()
@@ -58,7 +60,7 @@ async def lifespan(app: FastAPI):
     logger.info("startup_begin", message="MANO AI ENGINE: STARTING UP")
 
     # Track which models loaded successfully (used by /health endpoint)
-    models_status = {"lstm": False, "simulator": False, "agent": False}
+    models_status = {"lstm": False, "simulator": False, "agent": False, "timegan": False, "ctgan": False}
 
     # 1. Hardware Detection
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -99,6 +101,24 @@ async def lifespan(app: FastAPI):
         logger.info("model_loaded", model="amise_engines", status="success")
     except Exception as e:
         logger.error("model_load_failed", model="amise_engines", error=str(e))
+
+    try:
+        # Load TimeGAN (Synthetic Wearable Sequence Generator)
+        logger.info("loading_model", model="timegan")
+        timegan_svc = TimeGANService()
+        models_status["timegan"] = timegan_svc.is_loaded()
+        logger.info("model_loaded", model="timegan", status="success" if models_status["timegan"] else "weights_missing")
+    except Exception as e:
+        logger.error("model_load_failed", model="timegan", error=str(e))
+
+    try:
+        # Load CTGAN (Synthetic Tabular Profile Generator)
+        logger.info("loading_model", model="ctgan")
+        ctgan_svc = CTGANService()
+        models_status["ctgan"] = ctgan_svc.is_loaded()
+        logger.info("model_loaded", model="ctgan", status="success" if models_status["ctgan"] else "pickle_missing")
+    except Exception as e:
+        logger.error("model_load_failed", model="ctgan", error=str(e))
 
     # Store status on app.state for the /health endpoint
     app.state.models_loaded = models_status
